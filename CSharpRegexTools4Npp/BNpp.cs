@@ -163,7 +163,8 @@ namespace CSharpRegexTools4Npp
             get
             {
                 IScintillaGateway scintilla = new ScintillaGateway(PluginBase.GetCurrentScintilla());
-                return BEncoding.GetUtf8TextFromScintillaText(scintilla.GetText(scintilla.GetTextLength()));
+                // Multiply by 2 to managed 2 bytes encoded chars
+                return BEncoding.GetUtf8TextFromScintillaText(scintilla.GetText(scintilla.GetTextLength() * 2));
             }
 
             set
@@ -171,7 +172,7 @@ namespace CSharpRegexTools4Npp
                 IScintillaGateway scintilla = new ScintillaGateway(PluginBase.GetCurrentScintilla());
                 scintilla.ClearAll();
                 string text = BEncoding.GetScintillaTextFromUtf8Text(value, out int length);
-                scintilla.AppendText(length, text);
+                scintilla.SetText(text);
             }
         }
 
