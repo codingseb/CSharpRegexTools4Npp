@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="Regex" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <Color name="Substitution" foreground="Blue" fontWeight="bold"/>
+
+    <RuleSet>
+        <Rule color="Substitution">
+            \$([$`'+_&amp;]|\d+(?!\d)|([{]\w*[}]))
+        </Rule>
+    </RuleSet>
+</SyntaxDefinition>

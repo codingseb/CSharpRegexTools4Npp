@@ -1,106 +1,208 @@
-﻿using System;
+﻿using CSharpRegexTools4Npp.PluginInfrastructure;
+using RegexDialog;
+using System;
 using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Windows.Forms;
-using Kbg.NppPluginNET.PluginInfrastructure;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Interop;
 
-namespace Kbg.NppPluginNET
+namespace CSharpRegexTools4Npp
 {
     class Main
     {
-        internal const string PluginName = "CSharpRegexTools4Npp";
-        static string iniFilePath = null;
-        static bool someSetting = false;
-        static frmMyDlg frmMyDlg = null;
-        static int idMyDlg = -1;
-        static Bitmap tbBmp = Properties.Resources.star;
-        static Bitmap tbBmp_tbTab = Properties.Resources.star_bmp;
-        static Icon tbIcon = null;
+        internal const string PluginName = "C# Regex Tools 4 Npp";
+        static int idMyDlg = 0;
+        static Bitmap tbBmp = Resources.icon;
+        //static RegExToolDialog dialog = null;
+
+        //Import the FindWindow API to find our window
+        [DllImportAttribute("User32.dll")]
+        private static extern int FindWindow(String ClassName, String WindowName);
+
+        //Import the SetForeground API to activate it
+        [DllImportAttribute("User32.dll")]
+        private static extern IntPtr SetForegroundWindow(int hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int windowLongFlags, int dwNewLong);
+
+        [DllImport("user32.dll", SetLastError = true)]
+        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+
+        [DllImport("user32.dll")]
+        static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+
+        public const int GWL_EXSTYLE = -20;
+        public const int WS_EX_LAYERED = 0x80000;
+        public const int LWA_ALPHA = 0x2;
+        public const int LWA_COLORKEY = 0x1;
+
+        private enum WindowLongFlags : int
+        {
+            GWL_EXSTYLE = -20,
+            GWLP_HINSTANCE = -6,
+            GWLP_HWNDPARENT = -8,
+            GWL_ID = -12,
+            GWL_STYLE = -16,
+            GWL_USERDATA = -21,
+            GWL_WNDPROC = -4,
+            DWLP_USER = 0x8,
+            DWLP_MSGRESULT = 0x0,
+            DWLP_DLGPROC = 0x4,
+            WS_EX_LAYERED = 0x80000
+        }
+
+        private enum LayeredWindowAttributesFlags : byte
+        {
+            LWA_COLORKEY = 0x1,
+            LWA_ALPHA = 0x2
+        }
 
         public static void OnNotification(ScNotification notification)
-        {  
-            // This method is invoked whenever something is happening in notepad++
-            // use eg. as
-            // if (notification.Header.Code == (uint)NppMsg.NPPN_xxx)
-            // { ... }
-            // or
-            //
-            // if (notification.Header.Code == (uint)SciMsg.SCNxxx)
-            // { ... }
-        }
+        {}
 
         internal static void CommandMenuInit()
         {
-            StringBuilder sbIniFilePath = new StringBuilder(Win32.MAX_PATH);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETPLUGINSCONFIGDIR, Win32.MAX_PATH, sbIniFilePath);
-            iniFilePath = sbIniFilePath.ToString();
-            if (!Directory.Exists(iniFilePath)) Directory.CreateDirectory(iniFilePath);
-            iniFilePath = Path.Combine(iniFilePath, PluginName + ".ini");
-            someSetting = (Win32.GetPrivateProfileInt("SomeSection", "SomeKey", 0, iniFilePath) != 0);
-
-            PluginBase.SetCommand(0, "MyMenuCommand", myMenuFunction, new ShortcutKey(false, false, false, Keys.None));
-            PluginBase.SetCommand(1, "MyDockableDialog", myDockableDialog); idMyDlg = 1;
+            PluginBase.SetCommand(0, "C# Regex Tools", ShowTheDialog, new ShortcutKey(true, false, true, System.Windows.Forms.Keys.H));
+            idMyDlg = 0;
         }
 
         internal static void SetToolBarIcon()
         {
-            toolbarIcons tbIcons = new toolbarIcons();
-            tbIcons.hToolbarBmp = tbBmp.GetHbitmap();
+            toolbarIcons tbIcons = new toolbarIcons
+            {
+                hToolbarBmp = tbBmp.GetHbitmap()
+            };
+
             IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
             Marshal.StructureToPtr(tbIcons, pTbIcons, false);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_ADDTOOLBARICON, PluginBase._funcItems.Items[idMyDlg]._cmdID, pTbIcons);
+            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_ADDTOOLBARICON, PluginBase._funcItems.Items[idMyDlg]._cmdID, pTbIcons);
             Marshal.FreeHGlobal(pTbIcons);
         }
 
-        internal static void PluginCleanUp()
+        public static void ShowTheDialog()
         {
-            Win32.WritePrivateProfileString("SomeSection", "SomeKey", someSetting ? "1" : "0", iniFilePath);
-        }
 
-
-        internal static void myMenuFunction()
-        {
-            MessageBox.Show("Hello N++!");
-        }
-
-        internal static void myDockableDialog()
-        {
-            if (frmMyDlg == null)
+            try
             {
-                frmMyDlg = new frmMyDlg();
 
-                using (Bitmap newBmp = new Bitmap(16, 16))
+                int hWnd = FindWindow(null, "C# Regex Tools");
+
+                if (hWnd > 0)
                 {
-                    Graphics g = Graphics.FromImage(newBmp);
-                    ColorMap[] colorMap = new ColorMap[1];
-                    colorMap[0] = new ColorMap();
-                    colorMap[0].OldColor = Color.Fuchsia;
-                    colorMap[0].NewColor = Color.FromKnownColor(KnownColor.ButtonFace);
-                    ImageAttributes attr = new ImageAttributes();
-                    attr.SetRemapTable(colorMap);
-                    g.DrawImage(tbBmp_tbTab, new Rectangle(0, 0, 16, 16), 0, 0, 16, 16, GraphicsUnit.Pixel, attr);
-                    tbIcon = Icon.FromHandle(newBmp.GetHicon());
+                    SetForegroundWindow(hWnd);
                 }
+                else
+                {
+                    var dialog = new RegExToolDialog
+                    {
+                        GetText = delegate ()
+                        {
+                            return BNpp.Text;
+                        },
 
-                NppTbData _nppTbData = new NppTbData();
-                _nppTbData.hClient = frmMyDlg.Handle;
-                _nppTbData.pszName = "My dockable dialog";
-                _nppTbData.dlgID = idMyDlg;
-                _nppTbData.uMask = NppTbMsg.DWS_DF_CONT_RIGHT | NppTbMsg.DWS_ICONTAB | NppTbMsg.DWS_ICONBAR;
-                _nppTbData.hIconTab = (uint)tbIcon.Handle;
-                _nppTbData.pszModuleName = PluginName;
-                IntPtr _ptrNppTbData = Marshal.AllocHGlobal(Marshal.SizeOf(_nppTbData));
-                Marshal.StructureToPtr(_nppTbData, _ptrNppTbData, false);
+                        SetText = delegate (string text)
+                        {
+                            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
+                            {
+                                BNpp.CreateNewDocument();
+                            }
 
-                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_DMMREGASDCKDLG, 0, _ptrNppTbData);
+                            BNpp.Text = text;
+                        },
+
+                        SetTextInNew = delegate (string text)
+                        {
+                            BNpp.CreateNewDocument();
+
+                            BNpp.Text = text;
+                        },
+
+                        GetSelectedText = delegate ()
+                        {
+                            return BNpp.SelectedText;
+                        },
+
+                        SetPosition = delegate (int index, int length)
+                        {
+                            BNpp.SelectTextAndShow(index, index + length);
+                        },
+
+                        SetSelection = delegate (int index, int length)
+                        {
+                            BNpp.AddSelection(index, index + length);
+                        },
+
+                        GetSelectionStartIndex = delegate ()
+                        {
+                            return BNpp.SelectionStart;
+                        },
+
+                        GetSelectionLength = delegate ()
+                        {
+                            return BNpp.SelectionLength;
+                        },
+
+                        TryOpen = delegate (string fileName, bool onlyIfAlreadyOpen)
+                        {
+                            try
+                            {
+                                bool result = false;
+
+                                    //MessageBox.Show(BNpp.CurrentPath + "\r\n" + fileName);
+                                    if (BNpp.CurrentPath.ToLower().Equals(fileName.ToLower()))
+                                    result = true;
+                                else if (BNpp.AllOpenedDocuments.Any(delegate (string s) { return s.Equals(fileName, StringComparison.OrdinalIgnoreCase); }))
+                                {
+                                    BNpp.ShowOpenedDocument(fileName);
+                                    result = true;
+                                }
+                                else if (!onlyIfAlreadyOpen)
+                                {
+                                    result = BNpp.OpenFile(fileName);
+                                }
+                                else
+                                {
+                                    result = false;
+                                }
+
+                                hWnd = FindWindow(null, "C# Regex Tool");
+                                if (hWnd > 0)
+                                {
+                                    SetForegroundWindow(hWnd);
+                                }
+
+                                return result;
+                            }
+                            catch
+                            {
+                                return false;
+                            }
+
+                        },
+
+                        GetCurrentFileName = delegate ()
+                        {
+                            return BNpp.CurrentPath;
+                        }
+                    };
+
+                    dialog.Show();
+
+                    SetWindowLong(new WindowInteropHelper(dialog).Handle, (int)WindowLongFlags.GWLP_HWNDPARENT, PluginBase.nppData._nppHandle.ToInt32());
+                    SetWindowLong(new WindowInteropHelper(dialog).Handle, GWL_EXSTYLE, GetWindowLong(new WindowInteropHelper(dialog).Handle, GWL_EXSTYLE) ^ WS_EX_LAYERED);
+                    SetLayeredWindowAttributes(new WindowInteropHelper(dialog).Handle, 0, 128, LWA_ALPHA);
+
+                }
             }
-            else
+            catch (Exception exception)
             {
-                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_DMMSHOW, 0, frmMyDlg.Handle);
+                MessageBox.Show(exception.Message + "\r\n" + exception.StackTrace, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
+
+
         }
     }
 }

@@ -2,9 +2,9 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using static Kbg.NppPluginNET.PluginInfrastructure.Win32;
+using static CSharpRegexTools4Npp.PluginInfrastructure.Win32;
 
-namespace Kbg.NppPluginNET.PluginInfrastructure
+namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
     /// <summary>
     /// This it the plugin-writers primary interface to Notepad++/Scintilla.

@@ -1,8 +1,8 @@
 ﻿// NPP plugin platform for .Net v0.94.00 by Kasper B. Graversen etc.
 using System;
-using static Kbg.NppPluginNET.PluginInfrastructure.Win32;
+using static CSharpRegexTools4Npp.PluginInfrastructure.Win32;
 
-namespace Kbg.NppPluginNET.PluginInfrastructure
+namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
 
     /// <summary>

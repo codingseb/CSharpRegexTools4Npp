@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="Regex" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+    <Color name="CharClass" foreground="Blue" fontWeight="bold"/>
+    <Color name="NegativeCharClass" foreground="OrangeRed" fontWeight="bold"/>
+    <Color name="Quantifier" foreground="DarkViolet" fontWeight="bold"/>
+    <Color name="QuantifierNumber" foreground="Red" fontWeight="normal"/>
+    <Color name="CharEscape" foreground="Gray" fontWeight="normal"/>
+    <Color name="Comment" foreground="Green"/>
+    <Color name="GroupName" foreground="CornflowerBlue" fontWeight="bold"/>
+    
+    <RuleSet>
+        
+        <Rule color="CharClass">
+            (\\[dsw])|[.]
+        </Rule>
+        
+         <Rule color="NegativeCharClass">
+            \\[DSW]
+        </Rule>
+        
+        <!-- span for escape sequences -->
+        <Span color="CharEscape" begin="\\(?![dswDSW])" end="(\d+)|(x[0-9a-fA-F]+)|(0[0-7]+)|(c[.])|(u\d{4,4})|."/>
+        
+        <Span color="Comment" begin="\(\?\#" end="\)" />
+        <Span color="Comment" begin="\#" end="[\r\n]" />
+        
+        <Span color="NegativeCharClass" multiline="true">
+            <Begin>\[\^</Begin>
+            <End>\]</End>
+            <RuleSet>
+                <!-- span for escape sequences -->
+                <Span begin="\\" end="."/>
+            </RuleSet>
+        </Span>    
+    
+        <Span color="CharClass" multiline="true">
+            <Begin>\[</Begin>
+            <End>\]</End>
+            <RuleSet>
+                <!-- span for escape sequences -->
+                <Span begin="\\" end="."/>
+            </RuleSet>
+        </Span>
+        
+        <Span color="Quantifier" >
+            <Begin>\{(?=\d+([,]\d*)?\})</Begin>
+            <End>\}</End>
+            <RuleSet>
+                <Rule color="QuantifierNumber" >
+                    \d
+                </Rule>
+            </RuleSet>
+        </Span>
+
+        <Rule color ="GroupName">
+            (
+                ((?&lt;=\([?][&lt;])
+                [a-zA-Z][a-zA-Z0-9_]*
+                (?=(\-[a-zA-Z][a-zA-Z0-9_]*)?[&gt;]))
+            )
+        </Rule>
+
+        <Rule color ="GroupName">
+            (
+                ((?&lt;=\([?][&lt;](([a-zA-Z][a-zA-Z0-9_]*)?\-))
+                [a-zA-Z][a-zA-Z0-9_]*
+                (?=[&gt;]))
+            )
+        </Rule>
+        
+        <Rule color ="GroupName">
+            (
+                ((?&lt;=\([?]['])
+                [a-zA-Z][a-zA-Z0-9_]*
+                (?=(\-[a-zA-Z][a-zA-Z0-9_]*)?[']))
+            )
+        </Rule>
+
+        <Rule color ="GroupName">
+            (
+                ((?&lt;=\([?]['](([a-zA-Z][a-zA-Z0-9_]*)?\-))
+                [a-zA-Z][a-zA-Z0-9_]*
+                (?=[']))
+            )
+        </Rule>
+        
+        <!--Pour ne pas évalué le ? comme quantifier lorsque utiliser dans un groupe spécial-->
+        <Rule>
+            \([?](([&lt;][=!]?)|\(|[:=&gt;'])
+        </Rule>
+            
+        <Rule color="Quantifier" >
+            [*+?]
+        </Rule>
+        
+    </RuleSet>
+</SyntaxDefinition>

@@ -7,7 +7,7 @@
 
 using System;
 
-namespace Kbg.NppPluginNET.PluginInfrastructure
+namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
     class Constants
     {

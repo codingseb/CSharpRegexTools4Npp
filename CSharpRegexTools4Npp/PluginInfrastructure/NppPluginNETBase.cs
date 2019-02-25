@@ -1,7 +1,7 @@
 ﻿// NPP plugin platform for .Net v0.94.00 by Kasper B. Graversen etc.
 using System;
 
-namespace Kbg.NppPluginNET.PluginInfrastructure
+namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
     class PluginBase
     {
@@ -25,9 +25,12 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
         
         internal static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer, ShortcutKey shortcut, bool checkOnInit)
         {
-            FuncItem funcItem = new FuncItem();
-            funcItem._cmdID = index;
-            funcItem._itemName = commandName;
+            FuncItem funcItem = new FuncItem
+            {
+                _cmdID = index,
+                _itemName = commandName
+            };
+
             if (functionPointer != null)
                 funcItem._pFunc = new NppFuncItemDelegate(functionPointer);
             if (shortcut._key != 0)
@@ -38,8 +41,7 @@ namespace Kbg.NppPluginNET.PluginInfrastructure
 
         internal static IntPtr GetCurrentScintilla()
         {
-            int curScintilla;
-            Win32.SendMessage(nppData._nppHandle, (uint) NppMsg.NPPM_GETCURRENTSCINTILLA, 0, out curScintilla);
+            Win32.SendMessage(nppData._nppHandle, (uint)NppMsg.NPPM_GETCURRENTSCINTILLA, 0, out int curScintilla);
             return (curScintilla == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
         }
 

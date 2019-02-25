@@ -3,7 +3,7 @@ using System;
 using System.Text;
 using NppPluginNET.PluginInfrastructure;
 
-namespace Kbg.NppPluginNET.PluginInfrastructure
+namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
 	public interface INotepadPPGateway
 	{

@@ -1,0 +1,44 @@
+﻿{
+    "Data": [
+        {
+            "Name": "Value of matched group by group number ",
+            "Description": "Substitutes the last substring matched by group number (decimal).",
+            "Value": "$number"
+        },
+        {
+            "Name": "Value of matched group by group name ",
+            "Description": "Substitutes the last substring matched by group name (string).",
+            "Value":"${name}"
+        },
+        {
+            "Name": "Dollar sign ",
+            "Description": "Substitutes a single \"$\" literal.",
+            "Value":"$$"
+        },
+        {
+            "Name": "Entire match ",
+            "Description": "Substitutes a copy of the entire match itself.",
+            "Value":"$&"
+        },
+        {
+            "Name": "All text before match ",
+            "Description": "Substitutes all the text of the input string before the match.",
+            "Value":"$`"
+        },
+        {
+            "Name": "All text after match ",
+            "Description": "Substitutes all the text of the input string after the match.",
+            "Value":"$'"
+        },
+        {
+            "Name": "Last group captured ",
+            "Description": "Substitutes the last group captured.",
+            "Value":"$+"
+        },
+        {
+            "Name": "Entire input string ",
+            "Description": "Substitutes the entire input string.",
+            "Value":"$_"
+        }
+    ]
+}
