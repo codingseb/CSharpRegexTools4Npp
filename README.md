@@ -11,7 +11,7 @@ use :
 [AvalonEdit](https://github.com/icsharpcode/AvalonEdit) For Regex edition and syntax Highlighting  (under MIT license)  
 [CS-Script](https://github.com/oleg-shilo/cs-script/) For C# Match replace (under MIT license)  
 [Newtonsoft.Json](https://www.newtonsoft.com/json) (under MIT license)  
-[Ookii.Dialogs](http://www.ookii.org/software/dialogs/) (For Open and Save dialogs under specific license)  
+[Ookii.Dialogs](http://www.ookii.org/software/dialogs/) (For Open and Save dialogs [under specific license](https://github.com/codingseb/CSharpRegexTools4Npp/blob/master/Licenses/Ooki%20license.txt))  
 [PropertyChanged.Fody](https://github.com/Fody/PropertyChanged) (under MIT license)  
 [Costura.fody](https://github.com/Fody/Costura) Merge all in one DLL, without it it doesn't work (under MIT license)  
 
