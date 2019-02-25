@@ -2,7 +2,7 @@
 Some tools for using C# Regex in Notepad++ (As Notepad++ Plugin)
 
 Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the machine and the right to write in the plugin directory.
-(At least version 7.6.3, older versions can work but need modification of the file [NppPlugin.DllExport.targets](https://github.com/codingseb/CSharpRegexTools4Npp/blob/master/CSharpRegexTools4Npp/PluginInfrastructure/DllExport/NppPlugin.DllExport.targets))
+(At least version 7.6.3, older versions can work but need modification of the file [NppPlugin.DllExport.targets](https://github.com/codingseb/CSharpRegexTools4Npp/blob/master/CSharpRegexTools4Npp/PluginInfrastructure/DllExport/NppPlugin.DllExport.targets) see [Notepad++ plugins new directories structures](https://notepad-plus-plus.org/community/topic/16996/new-plugins-home-round-2))
 
 ## Features
 * Syntax Highlight of the C# Regex
@@ -18,7 +18,7 @@ Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the m
 ## Installation
 
 * Clone this repo
-* Give write access to "%NOTEPAD++Root%\plugins" directory
+* Give write access to "%PROGRAMFILES%\Notepad++\plugins\" directory
 * Launch CSharpRegexTools4Npp.sln in Visual Studio
 * Select the target platform x86 or x64 depending on your version of Notepad++
 * Compile and launch (F5) (It will copy the plugin in the right place and launch Notepad++)
