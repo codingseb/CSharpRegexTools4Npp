@@ -8,12 +8,12 @@ Need a [Notepad++](https://notepad-plus-plus.org/) installed on the machine and 
 ## Credits
 Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) (under the Apache-2.0 license)  
 use :  
-[AvalonEdit](https://github.com/icsharpcode/AvalonEdit) For Regex edition and syntax Highlighting  (under MIT license)
+[AvalonEdit](https://github.com/icsharpcode/AvalonEdit) For Regex edition and syntax Highlighting  (under MIT license)  
 [CS-Script](https://github.com/oleg-shilo/cs-script/) For C# Match replace (under MIT license)  
-[Newtonsoft.Json](https://www.newtonsoft.com/json) (under MIT license)
+[Newtonsoft.Json](https://www.newtonsoft.com/json) (under MIT license)  
 [Ookii.Dialogs](http://www.ookii.org/software/dialogs/) (For Open and Save dialogs under specific license)  
-[PropertyChanged.Fody](https://github.com/Fody/PropertyChanged) (under MIT license)
-[Costura.fody](https://github.com/Fody/Costura) Merge all in one DLL, without it it doesn't work (under MIT license)
+[PropertyChanged.Fody](https://github.com/Fody/PropertyChanged) (under MIT license)  
+[Costura.fody](https://github.com/Fody/Costura) Merge all in one DLL, without it it doesn't work (under MIT license)  
 
 And for icons :
 
