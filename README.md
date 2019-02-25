@@ -12,6 +12,8 @@ Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the m
 * Extract All matches in a new Notepad++ tab
 * Work on current Notepad++ tab text, on current selection or in a directory
 * Named groups, lookbehind, lookforward and all features of C# Regex
+* Keep an history of typed regex
+* Save/Reload Regex
 
 ## Installation
 
