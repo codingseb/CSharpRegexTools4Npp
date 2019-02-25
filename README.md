@@ -23,6 +23,15 @@ Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the m
 * Select the target platform x86 or x64 depending on your version of Notepad++
 * Compile and launch (F5) (It will copy the plugin in the right place and launch Notepad++)
 
+## Usage
+
+To Launch the tools use one of these 3 methods :
+* Click on the toolbar button ![ToolbarIcon](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/CSharpRegexTools4Npp/img/icon.png)
+* Click on Menu "Plugins" -> "C# Regex Tools 4 Npp" -> "C# Regex Tools"
+* Press "Ctrl+Shift+H" on your keyboard
+
+
+
 ## Credits
 Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) (under the [Apache-2.0 license](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/blob/master/LICENSE.md))  
 use :  
