@@ -7,7 +7,7 @@ Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the m
 ## Installation
 
 * Clone this repo
-* Give write access to %NOTEPAD++Root%\plugins directory
+* Give write access to "%NOTEPAD++Root%\plugins" directory
 * Launch CSharpRegexTools4Npp.sln in Visual Studio
 * Select the target platform x86 or x64 depending on your version of Notepad++
 * Compile and launch (F5) (It will copy the plugin in the right place and launch Notepad++)
