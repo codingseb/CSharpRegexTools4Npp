@@ -4,6 +4,15 @@ Some tools for using C# Regex in Notepad++ (As Notepad++ Plugin)
 Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the machine and the right to write in the plugin directory.
 (At least version 7.6.3, older versions can work but need modification of the file [NppPlugin.DllExport.targets](https://github.com/codingseb/CSharpRegexTools4Npp/blob/master/CSharpRegexTools4Npp/PluginInfrastructure/DllExport/NppPlugin.DllExport.targets))
 
+## Features
+* Syntax Highlight of the C# Regex
+* List all matches (With groups and captures)
+* Select All matches
+* Replace All matches (with replace syntax or C#)
+* Extract All matches in a new Notepad++ tab
+* Work on current Notepad++ tab text, on current selection or in a directory
+* Named groups, lookbehind, lookforward and all features of C# Regex
+
 ## Installation
 
 * Clone this repo
