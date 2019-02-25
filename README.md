@@ -6,7 +6,7 @@ Need a [Notepad++](https://notepad-plus-plus.org/) installed on the machine and 
 
 
 ## Credits
-Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) (under the Apache-2.0 license)  
+Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) (under the [Apache-2.0 license](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/blob/master/LICENSE.md))  
 use :  
 [AvalonEdit](https://github.com/icsharpcode/AvalonEdit) For Regex edition and syntax Highlighting  (under MIT license)  
 [CS-Script](https://github.com/oleg-shilo/cs-script/) For C# Match replace (under MIT license)  
