@@ -1,7 +1,7 @@
 # CSharpRegexTools4Npp
-Some tools for using C# Regex for Notepad++ (As Notepad++ Plugin)
+Some tools for using C# Regex in Notepad++ (As Notepad++ Plugin)
 
-Need a [Notepad++](https://notepad-plus-plus.org/) installed on the machine and the right to write in the plugin directory.
+Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the machine and the right to write in the plugin directory.
 (At least version 7.6.3, older versions can work but need modification of the file [NppPlugin.DllExport.targets](https://github.com/codingseb/CSharpRegexTools4Npp/blob/master/CSharpRegexTools4Npp/PluginInfrastructure/DllExport/NppPlugin.DllExport.targets))
 
 
