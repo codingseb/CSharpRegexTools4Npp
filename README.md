@@ -6,15 +6,15 @@ Need a [Notepad++](https://notepad-plus-plus.org/) installed on the machine and 
 
 
 ## Credits
-Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) under under the Apache-2.0 license
+Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) (under the Apache-2.0 license)  
 use :  
-[AvalonEdit](https://github.com/icsharpcode/AvalonEdit) For Regex edition and syntax Highlighting  
-[CS-Script](https://github.com/oleg-shilo/cs-script/) For C# Match replace  
-[Newtonsoft.Json](https://www.newtonsoft.com/json)  
-[Ookii.Dialogs](http://www.ookii.org/software/dialogs/)
-[PropertyChanged.Fody](https://github.com/Fody/PropertyChanged)  
-[Costura.fody](https://github.com/Fody/Costura) (Merge all in one DLL, without it it doesn't work)
+[AvalonEdit](https://github.com/icsharpcode/AvalonEdit) For Regex edition and syntax Highlighting  (under MIT license)
+[CS-Script](https://github.com/oleg-shilo/cs-script/) For C# Match replace (under MIT license)  
+[Newtonsoft.Json](https://www.newtonsoft.com/json) (under MIT license)
+[Ookii.Dialogs](http://www.ookii.org/software/dialogs/) (For Open and Save dialogs under specific license)  
+[PropertyChanged.Fody](https://github.com/Fody/PropertyChanged) (under MIT license)
+[Costura.fody](https://github.com/Fody/Costura) Merge all in one DLL, without it it doesn't work (under MIT license)
 
 And for icons :
 
-[FatCow](https://www.fatcow.com/free-icons)
+[FatCow](https://www.fatcow.com/free-icons) (under [Creative Commons 3.0](https://creativecommons.org/licenses/by/3.0/us/))
