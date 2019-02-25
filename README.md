@@ -7,10 +7,10 @@ And the right to write in the plugin directory
 ## Credits
 Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net)  
 use :  
-[AvalonEdit](https://github.com/icsharpcode/AvalonEdit)  
-[CS-Script](https://github.com/oleg-shilo/cs-script/)  
+[AvalonEdit](https://github.com/icsharpcode/AvalonEdit) For Regex edition and syntax Highlighting  
+[CS-Script](https://github.com/oleg-shilo/cs-script/) For C# Match replace  
 [Newtonsoft.Json](https://www.newtonsoft.com/json)  
-[Ookii.Dialogs](http://www.ookii.org/software/dialogs/)  
+[Ookii.Dialogs](http://www.ookii.org/software/dialogs/)
 [PropertyChanged.Fody](https://github.com/Fody/PropertyChanged)  
 [Costura.fody](https://github.com/Fody/Costura)  
 
