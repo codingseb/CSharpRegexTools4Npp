@@ -31,6 +31,7 @@ To Launch the tools use one of these 3 methods :
 * Press "Ctrl+Shift+H" on your keyboard
 
 ![List-Matches-Preview](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/List-Matches.gif)
+![Use-Regex-Snippets](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Use-Snippet.gif)
 
 ## Credits
 Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) (under the [Apache-2.0 license](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/blob/master/LICENSE.md))  
