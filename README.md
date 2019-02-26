@@ -1,9 +1,6 @@
 # CSharpRegexTools4Npp
 Some tools for using C# Regex in Notepad++ (As Notepad++ Plugin)
 
-Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the machine and the right to write in the plugin directory.
-(At least version 7.6.3, older versions can work but need modification of the file [NppPlugin.DllExport.targets](https://github.com/codingseb/CSharpRegexTools4Npp/blob/master/CSharpRegexTools4Npp/PluginInfrastructure/DllExport/NppPlugin.DllExport.targets) see [Notepad++ plugins new directories structures](https://notepad-plus-plus.org/community/topic/16996/new-plugins-home-round-2))
-
 ## Features
 * Syntax Highlight of the C# Regex
 * List all matches (With groups and captures)
@@ -14,6 +11,12 @@ Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the m
 * Named groups, lookbehind, lookforward and all features of C# Regex
 * Keep an history of typed regex
 * Save/Reload Regex
+
+## Prerequistes
+Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the machine and the right to write in the plugin directory.
+(At least version 7.6.3, older versions can work but need modification of the file [NppPlugin.DllExport.targets](https://github.com/codingseb/CSharpRegexTools4Npp/blob/master/CSharpRegexTools4Npp/PluginInfrastructure/DllExport/NppPlugin.DllExport.targets) see [Notepad++ plugins new directories structures](https://notepad-plus-plus.org/community/topic/16996/new-plugins-home-round-2))
+
+Need .Net Framework 4.6 or greater
 
 ## Installation
 
