@@ -8,6 +8,8 @@
         xmlns:behaviors="clr-namespace:RegexDialog.Behaviors"
         Title="C# Regex Tools" 
         Height="422.75" 
+        MinHeight="300"
+        MinWidth="600"
         Width="1427.97" 
         WindowStyle="ToolWindow"
         Closing="Window_Closing"
@@ -511,29 +513,29 @@
                 <TabItem Name="RegexTabItem" Header="Regex _Language Elements" >
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition x:Name="RegexLanguageElementFirstRow" Height="*" />
+                            <RowDefinition x:Name="RegexLanguageElementFirstRow" Height="*" MinHeight="50" />
                             <RowDefinition Height="5" />
                             <RowDefinition Height="0.1*" />
                         </Grid.RowDefinitions>
                         <TreeView Name="RegexLanguagesElementsTreeView" SelectedItemChanged="RegexLanguagesElementsTreeView_SelectedItemChanged">
-                            <TreeView.Resources>
-                                <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElementGroup}" ItemsSource="{Binding Elements}">
-                                    <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}">
-                                        <Image Source="{StaticResource RegexLanguageElementsGroupPicture}" Width="16" Height="16" Margin="3,0"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Value}" Foreground="Blue"/>
-                                    </StackPanel>
-                                </HierarchicalDataTemplate>
-                                <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElement}">
-                                    <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}" MouseDown="RegexLanguageElement_StackPanel_MouseDown" MouseUp="RegexLanguageElement_StackPanel_MouseUp">
-                                        <Image Source="{StaticResource RegexLanguageElementPicture}" Width="16" Height="16" Margin="3,0"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Value}" Foreground="Blue"/>
-                                    </StackPanel>
-                                </HierarchicalDataTemplate>
-                            </TreeView.Resources>
-                        </TreeView>
-                        <GridSplitter
+                                <TreeView.Resources>
+                                    <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElementGroup}" ItemsSource="{Binding Elements}">
+                                        <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}">
+                                            <Image Source="{StaticResource RegexLanguageElementsGroupPicture}" Width="16" Height="16" Margin="3,0"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                            <TextBlock Text="{Binding Value}" Foreground="Blue"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                    <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElement}">
+                                        <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}" MouseDown="RegexLanguageElement_StackPanel_MouseDown" MouseUp="RegexLanguageElement_StackPanel_MouseUp">
+                                            <Image Source="{StaticResource RegexLanguageElementPicture}" Width="16" Height="16" Margin="3,0"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                            <TextBlock Text="{Binding Value}" Foreground="Blue"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.Resources>
+                            </TreeView>
+                            <GridSplitter
                             Grid.Row="1"
                             VerticalAlignment="Stretch" 
                             HorizontalAlignment="Stretch"/>
@@ -549,9 +551,9 @@
                 <TabItem Name="ReplaceTabItem" Header="_Replace Elements" >
                     <Grid>
                         <Grid.RowDefinitions>
-                            <RowDefinition x:Name="ReplaceLanguageElementFirstRow" Height="*" />
+                            <RowDefinition x:Name="ReplaceLanguageElementFirstRow" Height="*" MinHeight="50" />
                             <RowDefinition Height="5" />
-                            <RowDefinition Height="0.1*" />
+                            <RowDefinition Height="0.1*" MinHeight="30" />
                         </Grid.RowDefinitions>
                         <ListView Name="ReplaceLanguageElementsListView" SelectionChanged="ReplaceLanguageElementsListView_SelectionChanged">
                             <ListView.ItemTemplate>
