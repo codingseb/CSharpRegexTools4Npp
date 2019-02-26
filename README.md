@@ -38,6 +38,19 @@ To Launch the tools use one of these 3 methods :
 ![Replace-all-](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Replace-All.gif)
 #### Replace with C# script
 ![Replace-With-C#](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Replace-with-CSharp.gif)
+#### Standards Regex operations from the toolbar
+![Toolbar-Actions](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Standard-Operations.png)
+1. **Is Match ?** : Show a "Yes" if at least one match is found in the text source. Show a "No" otherwise
+2. **Matches** : Fill the list of all found matches with Groups and Captures
+3. **Select All Matches** : Select all found matches in the current Notepad++ tab (Can be use for multi-edition)
+4. **Extract All** : Extract all matches results in a new Notepad++ tab
+5. **Replace All** : Replace all matches in the text source
+#### Some others functionalities (options) preview
+![Replace-Elements](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Replace-elements.png)  
+  
+![Replace-Elements](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Regex-Options.png) 
+  
+![Text-sources](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Text-Sources.png) 
 
 ## Credits
 Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) (under the [Apache-2.0 license](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/blob/master/LICENSE.md))  
