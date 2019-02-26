@@ -34,6 +34,8 @@ To Launch the tools use one of these 3 methods :
 ![List-Matches-Preview](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/List-Matches.gif)
 #### Use Regex snippets
 ![Use-Regex-Snippets](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Use-Snippet.gif)
+#### Replace all occurences
+![Replace-all-](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Replace-All.gif)
 
 ## Credits
 Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) (under the [Apache-2.0 license](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/blob/master/LICENSE.md))  
