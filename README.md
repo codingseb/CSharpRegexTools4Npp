@@ -30,7 +30,10 @@ To Launch the tools use one of these 3 methods :
 * Click on Menu "Plugins" -> "C# Regex Tools 4 Npp" -> "C# Regex Tools"
 * Press "Ctrl+Shift+H" on your keyboard
 
+#### Show matches of the Regex
 ![List-Matches-Preview](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/List-Matches.gif)
+#### Use Regex snippets
+![Use-Regex-Snippets](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Use-Snippet.gif)
 
 ## Credits
 Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) (under the [Apache-2.0 license](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/blob/master/LICENSE.md))  
