@@ -17,6 +17,11 @@ Need a [Notepad++](https://notepad-plus-plus.org/) x86 or x64 installed on the m
 
 ## Installation
 
+* Download the [last release zip or 7z](https://github.com/codingseb/CSharpRegexTools4Npp/releases)
+* Uncompress it in the "%PROGRAMFILES%\Notepad++\plugins\" directory
+
+**Or**
+
 * Clone this repo
 * Give write access to "%PROGRAMFILES%\Notepad++\plugins\" directory
 * Launch CSharpRegexTools4Npp.sln in Visual Studio
