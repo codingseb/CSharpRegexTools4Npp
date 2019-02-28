@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("CSharpRegexTools4Npp")]
+[assembly: AssemblyTitle("C# Regex Tools 4 Npp")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("CodingSeb")]
-[assembly: AssemblyProduct("CSharpRegexTools4Npp")]
+[assembly: AssemblyProduct("C# Regex Tools 4 Npp")]
 [assembly: AssemblyCopyright("Copyright © CodingSeb 2019")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
