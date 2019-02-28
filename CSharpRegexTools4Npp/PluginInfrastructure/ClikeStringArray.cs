@@ -13,27 +13,29 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public ClikeStringArray(int num, int stringCapacity)
         {
-            _nativeArray = Marshal.AllocHGlobal((num + 1) * IntPtr.Size);
+            int intPtrSize = IntPtr.Size;
+            _nativeArray = Marshal.AllocHGlobal((num + 1) * (int)intPtrSize);
             _nativeItems = new List<IntPtr>();
             for (int i = 0; i < num; i++)
             {
                 IntPtr item = Marshal.AllocHGlobal(stringCapacity);
-                Marshal.WriteIntPtr((IntPtr)((int)_nativeArray + (i * IntPtr.Size)), item);
+                Marshal.WriteIntPtr(_nativeArray + (i * intPtrSize), item);
                 _nativeItems.Add(item);
             }
-            Marshal.WriteIntPtr((IntPtr)((int)_nativeArray + (num * IntPtr.Size)), IntPtr.Zero);
+            Marshal.WriteIntPtr(_nativeArray + (num * intPtrSize), IntPtr.Zero);
         }
         public ClikeStringArray(List<string> lstStrings)
         {
-            _nativeArray = Marshal.AllocHGlobal((lstStrings.Count + 1) * IntPtr.Size);
+            int intPtrSize = IntPtr.Size;
+            _nativeArray = Marshal.AllocHGlobal((lstStrings.Count + 1) * intPtrSize);
             _nativeItems = new List<IntPtr>();
             for (int i = 0; i < lstStrings.Count; i++)
             {
-                IntPtr item = Marshal.StringToHGlobalUni(lstStrings[i]);
-                Marshal.WriteIntPtr((IntPtr)((int)_nativeArray + (i * IntPtr.Size)), item);
+                IntPtr item = Marshal.StringToHGlobalUni(lstStrings[(int)i]);
+                Marshal.WriteIntPtr(_nativeArray + (i * intPtrSize), item);
                 _nativeItems.Add(item);
             }
-            Marshal.WriteIntPtr((IntPtr)((int)_nativeArray + (lstStrings.Count * IntPtr.Size)), IntPtr.Zero);
+            Marshal.WriteIntPtr(_nativeArray + (lstStrings.Count * intPtrSize), IntPtr.Zero);
         }
 
         public IntPtr NativePointer { get { return _nativeArray; } }

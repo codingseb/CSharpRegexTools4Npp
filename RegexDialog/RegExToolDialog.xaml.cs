@@ -650,21 +650,20 @@ namespace RegexDialog
                                             files++;
                                         }
                                     }
-                                    else
+                                }
+                                else
+                                {
+                                    text = File.ReadAllText(fileName);
+                                    int matchesCount = regex.Matches(text).Count;
+                                    nbrOfElementToReplace += matchesCount;
+
+                                    if (matchesCount > 0)
                                     {
-                                        text = File.ReadAllText(fileName);
-                                        int matchesCount = regex.Matches(text).Count;
-                                        nbrOfElementToReplace += matchesCount;
+                                        File.WriteAllText(fileName, regex.Replace(text, replaceText));
 
-                                        if (matchesCount > 0)
-                                        {
-                                            File.WriteAllText(fileName, regex.Replace(text, replaceText));
-
-                                            files++;
-                                        }
+                                        files++;
                                     }
                                 }
-
                             });
 
                             break;

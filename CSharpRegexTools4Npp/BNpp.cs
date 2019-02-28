@@ -64,13 +64,13 @@ namespace CSharpRegexTools4Npp
             {
                 List<string> result = new List<string>();
                 int nbr = NbrOfOpenedFiles;
-                ClikeStringArray cStringArray = new ClikeStringArray(nbr, PATH_MAX);
 
-                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_GETOPENFILENAMES, cStringArray.NativePointer, nbr);
+                using (var cStringArray = new ClikeStringArray(nbr, PATH_MAX))
+                {
+                    Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_GETOPENFILENAMES, cStringArray.NativePointer, nbr);
 
-                result = cStringArray.ManagedStringsUnicode;
-
-                cStringArray.Dispose();
+                    result = cStringArray.ManagedStringsUnicode;
+                }
 
                 return result;
             }
