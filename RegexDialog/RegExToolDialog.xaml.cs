@@ -585,7 +585,7 @@ namespace RegexDialog
 
                                             try
                                             {
-                                                SaveCurrentDocument();
+                                                SaveCurrentDocument?.Invoke();
                                             }
                                             catch {}
 
