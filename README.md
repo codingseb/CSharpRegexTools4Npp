@@ -20,7 +20,7 @@ Need .Net Framework 4.6 or greater
 
 ## Installation
 
-* Download the [last release zip or 7z](https://github.com/codingseb/CSharpRegexTools4Npp/releases)
+* Download the [last release zip](https://github.com/codingseb/CSharpRegexTools4Npp/releases)
 * Uncompress it in the "%PROGRAMFILES%\Notepad++\plugins\" directory
 
 **Or**
