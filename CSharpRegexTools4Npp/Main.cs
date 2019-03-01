@@ -135,15 +135,11 @@ namespace CSharpRegexTools4Npp
                             BNpp.AddSelection(index, index + length);
                         },
 
-                        GetSelectionStartIndex = delegate ()
-                        {
-                            return BNpp.SelectionStart;
-                        },
+                        GetSelectionStartIndex = () => BNpp.SelectionStart,
 
-                        GetSelectionLength = delegate ()
-                        {
-                            return BNpp.SelectionLength;
-                        },
+                        GetSelectionLength = () => BNpp.SelectionLength,
+
+                        SaveCurrentDocument = () => BNpp.SaveCurrentDocument(),
 
                         TryOpen = delegate (string fileName, bool onlyIfAlreadyOpen)
                         {

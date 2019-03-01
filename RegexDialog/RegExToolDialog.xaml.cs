@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -90,6 +89,11 @@ namespace RegexDialog
         /// Try to Open or show in front in the editor the specified fileName
         /// </summary>
         public TryOpenDelegate TryOpen { get; set; }
+
+        /// <summary>
+        /// Save the document in the current tab
+        /// </summary>
+        public Action SaveCurrentDocument { get; set; }
 
         /// <summary>
         /// Get the name of the current fileName in the editor
@@ -578,6 +582,12 @@ namespace RegexDialog
                                                 nbrOfElementToReplace++;
                                                 return script.Replace(match, index, fileName, nbrOfElementToReplace, files);
                                             }));
+
+                                            try
+                                            {
+                                                SaveCurrentDocument();
+                                            }
+                                            catch {}
 
                                             files++;
                                         }
