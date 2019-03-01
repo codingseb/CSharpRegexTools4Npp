@@ -105,7 +105,11 @@ namespace CSharpRegexTools4Npp
 
             if (File.Exists(fileName))
             {
-                result = Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_DOOPEN, 0, fileName).ToInt32() == 1;
+                #if X64
+                result = Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_DOOPEN, 0, fileName).ToInt64() == 1;
+                #else
+                result = Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_DOOPEN, 0, fileName).ToInt32() == 1;
+                #endif
             }
 
             return result;

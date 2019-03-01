@@ -84,7 +84,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// If gateways are missing or incomplete, please help extend them and send your code to the project 
         /// at https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net
         /// </summary>
-        [DllImport("user32")]
+        [DllImport("user32", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] string lParam);
 
         /// <summary>
@@ -93,7 +93,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// If gateways are missing or incomplete, please help extend them and send your code to the project 
         /// at https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net
         /// </summary>
-        [DllImport("user32")]
+        [DllImport("user32", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, [MarshalAs(UnmanagedType.LPWStr)] StringBuilder lParam);
 
         /// <summary>
@@ -102,7 +102,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// If gateways are missing or incomplete, please help extend them and send your code to the project 
         /// at https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net
         /// </summary>
-        [DllImport("user32")]
+        [DllImport("user32", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, IntPtr lParam);
 
         /// <summary>
@@ -111,7 +111,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// If gateways are missing or incomplete, please help extend them and send your code to the project 
         /// at https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net
         /// </summary>
-        [DllImport("user32")]
+        [DllImport("user32", CharSet = CharSet.Auto)]
         public static extern IntPtr SendMessage(IntPtr hWnd, UInt32 Msg, IntPtr wParam, out IntPtr lParam);
 
         /// <summary>

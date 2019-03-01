@@ -98,12 +98,9 @@ namespace CSharpRegexTools4Npp
                 {
                     var dialog = new RegExToolDialog
                     {
-                        GetText = delegate ()
-                        {
-                            return BNpp.Text;
-                        },
+                        GetText = () => BNpp.Text,
 
-                        SetText = delegate (string text)
+                        SetText = (string text) =>
                         {
                             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                             {
@@ -113,27 +110,18 @@ namespace CSharpRegexTools4Npp
                             BNpp.Text = text;
                         },
 
-                        SetTextInNew = delegate (string text)
+                        SetTextInNew = (string text) =>
                         {
                             BNpp.CreateNewDocument();
 
                             BNpp.Text = text;
                         },
 
-                        GetSelectedText = delegate ()
-                        {
-                            return BNpp.SelectedText;
-                        },
+                        GetSelectedText = () => BNpp.SelectedText,
 
-                        SetPosition = delegate (int index, int length)
-                        {
-                            BNpp.SelectTextAndShow(index, index + length);
-                        },
+                        SetPosition = (int index, int length) => BNpp.SelectTextAndShow(index, index + length),
 
-                        SetSelection = delegate (int index, int length)
-                        {
-                            BNpp.AddSelection(index, index + length);
-                        },
+                        SetSelection = (int index, int length) => BNpp.AddSelection(index, index + length),
 
                         GetSelectionStartIndex = () => BNpp.SelectionStart,
 
@@ -141,16 +129,16 @@ namespace CSharpRegexTools4Npp
 
                         SaveCurrentDocument = () => BNpp.SaveCurrentDocument(),
 
-                        TryOpen = delegate (string fileName, bool onlyIfAlreadyOpen)
+                        TryOpen = (string fileName, bool onlyIfAlreadyOpen) =>
                         {
                             try
                             {
                                 bool result = false;
 
-                                    //MessageBox.Show(BNpp.CurrentPath + "\r\n" + fileName);
-                                    if (BNpp.CurrentPath.ToLower().Equals(fileName.ToLower()))
+                                //MessageBox.Show(BNpp.CurrentPath + "\r\n" + fileName);
+                                if (BNpp.CurrentPath.ToLower().Equals(fileName.ToLower()))
                                     result = true;
-                                else if (BNpp.AllOpenedDocuments.Any(delegate (string s) { return s.Equals(fileName, StringComparison.OrdinalIgnoreCase); }))
+                                else if (BNpp.AllOpenedDocuments.Any((string s) => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                                 {
                                     BNpp.ShowOpenedDocument(fileName);
                                     result = true;
@@ -179,10 +167,7 @@ namespace CSharpRegexTools4Npp
 
                         },
 
-                        GetCurrentFileName = delegate ()
-                        {
-                            return BNpp.CurrentPath;
-                        }
+                        GetCurrentFileName = () => BNpp.CurrentPath
                     };
 
                     dialog.Show();

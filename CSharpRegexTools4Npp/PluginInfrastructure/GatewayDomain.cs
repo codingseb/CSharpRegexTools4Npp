@@ -147,7 +147,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public override int GetHashCode()
         {
-            return pos;
+            return (int)pos;
         }
     }
 

@@ -596,7 +596,6 @@ namespace RegexDialog
                                     {
                                         text = File.ReadAllText(fileName);
                                         int matchesCount = regex.Matches(text).Count;
-                                        nbrOfElementToReplace += matchesCount;
 
                                         if (matchesCount > 0)
                                         {
@@ -652,10 +651,16 @@ namespace RegexDialog
                                     {
                                         text = GetText();
                                         int matchesCount = regex.Matches(text).Count;
-
+                                        nbrOfElementToReplace += matchesCount;
                                         if (matchesCount > 0)
                                         {
                                             SetText(regex.Replace(text, replaceText));
+
+                                            try
+                                            {
+                                                SaveCurrentDocument?.Invoke();
+                                            }
+                                            catch { }
 
                                             files++;
                                         }
@@ -910,7 +915,7 @@ namespace RegexDialog
         {
             try
             {
-                RegexResult regexResult = MatchResultsTreeView.SelectedValue as RegexResult;
+                RegexResult regexResult = e.NewValue as RegexResult;
 
                 if(regexResult != null && regexResult.FileName.Length > 0)
                 {
