@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
+    
     public class ClikeStringArray : IDisposable
     {
         IntPtr _nativeArray;

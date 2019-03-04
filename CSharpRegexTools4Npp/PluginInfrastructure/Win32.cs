@@ -6,6 +6,7 @@ using System.Text;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
+    
     public class Win32
     {
         /// <summary>
@@ -266,7 +267,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// If gateways are missing or incomplete, please help extend them and send your code to the project
         /// at https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net
         /// </summary>
-	public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, ref LangType lParam)
+	    public static IntPtr SendMessage(IntPtr hWnd, uint Msg, int wParam, ref LangType lParam)
         {
             IntPtr outVal;
             IntPtr retval = SendMessage(hWnd, (UInt32)Msg, new IntPtr(wParam), out outVal);

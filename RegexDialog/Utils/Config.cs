@@ -71,11 +71,11 @@ namespace RegexDialog
         public virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
+        }        
 
-        #endregion
+    #endregion
 
-        private void Init()
+    private void Init()
         {
         }
 

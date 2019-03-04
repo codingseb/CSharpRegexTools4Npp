@@ -10,7 +10,8 @@ using System.Windows.Interop;
 
 namespace CSharpRegexTools4Npp
 {
-    class Main
+    
+    public class Main
     {
         internal const string PluginName = "C# Regex Tools 4 Npp";
         static int idMyDlg = 0;

@@ -174,16 +174,11 @@ namespace RegexDialog
             //CSScript.GlobalSettings.RoslynDir = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\.nuget\packages\Microsoft.Net.Compilers\2.2.0\tools");
 
             // Initialisation des delegates de base
-            GetText = delegate()
-            { return ""; };
+            GetText = () => string.Empty;
 
-            SetText = delegate(string text)
-            { };
+            SetText = (string text) => { };
 
-            SetTextInNew = delegate(string text)
-            {
-                MessageBox.Show("Not Implemented");
-            };
+            SetTextInNew = (string text) => MessageBox.Show("Not Implemented");
 
             // Application de la coloration syntaxique pour les expressions régulières
             XmlReader reader = XmlReader.Create(new StringReader(Res.Regex_syntax_color));
@@ -954,7 +949,7 @@ namespace RegexDialog
                     if (TryOpen?.Invoke(regexResult.FileName, false) ?? false)
                     {
                         if(!(regexResult is RegexFileResult))
-                            SetPosition(regexResult.Index, regexResult.Length);
+                            SetPosition?.Invoke(regexResult.Index, regexResult.Length);
                     }
                 }
 
@@ -971,7 +966,7 @@ namespace RegexDialog
                     if (TryOpen?.Invoke(regexResult.FileName, false) ?? false)
                     {
                         if (!(regexResult is RegexFileResult))
-                            SetPosition(regexResult.Index, regexResult.Length);
+                            SetPosition?.Invoke(regexResult.Index, regexResult.Length);
                     }
 
                     e.Handled = true;
@@ -1310,10 +1305,13 @@ namespace RegexDialog
                                 index++;
                                 return script.Replace(match, index, regexFileResult.FileName, index + (regexFileResult.Children.Count > 0 ? regexFileResult.Children[0].RegexElementNb : 0), regexFileResult.RegexElementNb - 1);
                             }));
+
+                            SaveCurrentDocument?.Invoke();
                         }
                         else
                         {
                             SetText(regex.Replace(text, ReplaceEditor.Text));
+                            SaveCurrentDocument?.Invoke();
                         }
 
                         MessageBox.Show(nbrOfElementToReplace.ToString() + " elements has been replaced");
@@ -1389,6 +1387,8 @@ namespace RegexDialog
                         else
                         {
                             SetText(newText);
+
+                            SaveCurrentDocument?.Invoke();
 
                             SetPosition(regexResult.Index, ReplaceEditor.Text.Length);
                         }

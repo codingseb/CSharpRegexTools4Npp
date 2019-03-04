@@ -6,6 +6,7 @@ using NppPlugin.DllExport;
 
 namespace CSharpRegexTools4Npp
 {
+    
     class UnmanagedExports
     {
         [DllExport(CallingConvention=CallingConvention.Cdecl)]

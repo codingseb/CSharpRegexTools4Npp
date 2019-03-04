@@ -2968,6 +2968,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         SC_SEARCHRESULT_LINEBUFFERMAXLENGTH = 1024
     }
 
+    
     public class TextToFind : IDisposable
     {
         Sci_TextToFind _sciTextToFind;
