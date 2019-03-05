@@ -11,7 +11,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     /// If you set all intensities to 255, the colour is white. If you set all intensities to 0, the colour is black.
     /// When you set a colour, you are making a request. What you will get depends on the capabilities of the system and the current screen mode.
     /// </summary>
-    
     public class Colour
     {
         public readonly int Red, Green, Blue;
@@ -62,7 +61,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     /// If you use messages, there is nothing to stop you setting a position that is in the middle of a CRLF pair, or in the middle of a 2 byte character.
     /// However, keyboard commands will not move the caret into such positions.
     /// </summary>
-    
     public class Position : IEquatable<Position>
     {
         private readonly int pos;
@@ -129,7 +127,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
 		public override string ToString()
         {
-            return "Postion: " + pos;
+            return "Position: " + pos;
         }
 
         public bool Equals(Position other)
@@ -149,7 +147,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public override int GetHashCode()
         {
-            return (int)pos;
+            return (int) pos;
         }
     }
 
@@ -164,7 +162,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     /// On OS X, the Command key is mapped to SCMOD_CTRL and the Control key to SCMOD_META.SCMOD_SUPER is only available on GTK+ which is commonly the Windows key.
     /// If you are building a table, you might want to use SCMOD_NORM, which has the value 0, to mean no modifiers.
     /// </summary>
-    
     public class KeyModifier
     {
         private readonly int value;
@@ -197,7 +194,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         public int cpMax;
     }
 
-    
     public class Cells
     {
         char[] charactersAndStyles;
@@ -210,7 +206,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         public char[] Value { get { return charactersAndStyles; } }
     }
 
-    
     public class TextRange : IDisposable
     {
         Sci_TextRange _sciTextRange;

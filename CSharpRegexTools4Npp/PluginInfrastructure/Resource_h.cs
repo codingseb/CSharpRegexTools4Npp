@@ -4,9 +4,8 @@
 // "notepad-plus-plus/scintilla/include/Scintilla.iface"
 // found at
 // https://github.com/notepad-plus-plus/notepad-plus-plus/blob/master/scintilla/include/Scintilla.iface
-using CSharpRegexTools4Npp.PluginInfrastructure;
 
-namespace NppPluginNET.PluginInfrastructure
+namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
     public enum Resource
 	{

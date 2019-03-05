@@ -12,7 +12,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     ///
     /// See http://www.scintilla.org/ScintillaDoc.html for further details.
     /// </summary>
-    
     public class ScintillaGateway : IScintillaGateway
     {
         private const int Unused = 0;

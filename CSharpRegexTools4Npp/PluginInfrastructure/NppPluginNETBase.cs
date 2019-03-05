@@ -3,7 +3,6 @@ using System;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
-    
     public class PluginBase
     {
         internal static NppData nppData;

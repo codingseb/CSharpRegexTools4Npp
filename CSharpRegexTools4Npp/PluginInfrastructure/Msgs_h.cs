@@ -9,7 +9,7 @@ using System;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
-    class Constants
+    public class Constants
     {
         public const int WM_USER = 0x400;
         public const int NPPMSG = WM_USER + 1000;

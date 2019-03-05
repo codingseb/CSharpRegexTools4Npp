@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace NppPlugin.DllExport
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    partial class DllExportAttribute : Attribute
+    public partial class DllExportAttribute : Attribute
     {
         public DllExportAttribute()
         {

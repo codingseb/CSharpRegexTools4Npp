@@ -6,8 +6,7 @@ using NppPlugin.DllExport;
 
 namespace CSharpRegexTools4Npp
 {
-    
-    class UnmanagedExports
+    public class UnmanagedExports
     {
         [DllExport(CallingConvention=CallingConvention.Cdecl)]
         static bool isUnicode()

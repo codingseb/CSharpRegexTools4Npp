@@ -1,7 +1,6 @@
 ﻿// NPP plugin platform for .Net v0.94.00 by Kasper B. Graversen etc.
 using System;
 using System.Text;
-using NppPluginNET.PluginInfrastructure;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
@@ -14,12 +13,11 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 		void SetCurrentLanguage(LangType language);
 	}
 
-    /// <summary>
-    /// This class holds helpers for sending messages defined in the Msgs_h.cs file. It is at the moment
-    /// incomplete. Please help fill in the blanks.
-    /// </summary>
-    
-    public class NotepadPPGateway : INotepadPPGateway
+	/// <summary>
+	/// This class holds helpers for sending messages defined in the Msgs_h.cs file. It is at the moment
+	/// incomplete. Please help fill in the blanks.
+	/// </summary>
+	public class NotepadPPGateway : INotepadPPGateway
 	{
 		private const int Unused = 0;
 
@@ -54,12 +52,11 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 		}
 	}
 
-    /// <summary>
-    /// This class holds helpers for sending messages defined in the Resource_h.cs file. It is at the moment
-    /// incomplete. Please help fill in the blanks.
-    /// </summary>
-    
-    public class NppResource
+	/// <summary>
+	/// This class holds helpers for sending messages defined in the Resource_h.cs file. It is at the moment
+	/// incomplete. Please help fill in the blanks.
+	/// </summary>
+	public class NppResource
 	{
 		private const int Unused = 0;
 

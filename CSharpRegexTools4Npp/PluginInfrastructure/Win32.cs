@@ -6,7 +6,7 @@ using System.Text;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
-    
+
     public class Win32
     {
         /// <summary>

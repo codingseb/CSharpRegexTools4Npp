@@ -45,7 +45,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         public ShortcutKey _pShKey;
     }
 
-    
     public class FuncItems : IDisposable
     {
         List<FuncItem> _funcItems;
