@@ -168,11 +168,6 @@ namespace RegexDialog
         /// </summary>
         private void Init()
         {
-            //var localDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-
-            //CSScript.GlobalSettings.UseAlternativeCompiler = Path.Combine(localDir, "CSSRoslynProvider.dll");
-            //CSScript.GlobalSettings.RoslynDir = Environment.ExpandEnvironmentVariables(@"%USERPROFILE%\.nuget\packages\Microsoft.Net.Compilers\2.2.0\tools");
-
             // Initialisation des delegates de base
             GetText = () => string.Empty;
 
@@ -926,6 +921,8 @@ namespace RegexDialog
             {
                 SetPosition(0,0);
             }
+
+            e.Handled = true;
 
             if(MatchResultsTreeView.SelectedValue != null)
             {
@@ -1776,6 +1773,11 @@ namespace RegexDialog
                 SetPosition?.Invoke(lastSelectionStart, lastSelectionLength);
             }
             catch { }
+        }
+
+        private void TreeViewItem_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            e.Handled = true;
         }
     }
 }

@@ -62,7 +62,9 @@ namespace CSharpRegexTools4Npp
         }
 
         public static void OnNotification(ScNotification notification)
-        {}
+        {
+
+        }
 
         internal static void CommandMenuInit()
         {
