@@ -1407,7 +1407,11 @@ namespace RegexDialog
 
         private void InsertValueInReplaceField_MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            if (MatchResultsTreeView.SelectedValue is RegexResult regexResult)
+            if(MatchResultsTreeView.SelectedValue is RegexFileResult regexfileResult)
+            {
+                ReplaceEditor.Document.Replace(ReplaceEditor.SelectionStart, ReplaceEditor.SelectionLength, regexfileResult.FileName);
+            }
+            else if (MatchResultsTreeView.SelectedValue is RegexResult regexResult)
             {
                 ReplaceEditor.Document.Replace(ReplaceEditor.SelectionStart, ReplaceEditor.SelectionLength, regexResult.Value);
             }
