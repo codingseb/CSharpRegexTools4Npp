@@ -1,9 +1,8 @@
 ﻿// NPP plugin platform for .Net v0.94.00 by Kasper B. Graversen etc.
-using System;
-using System.Runtime.InteropServices;
-using System.Windows;
 using CSharpRegexTools4Npp.PluginInfrastructure;
 using NppPlugin.DllExport;
+using System;
+using System.Runtime.InteropServices;
 
 namespace CSharpRegexTools4Npp
 {
@@ -47,26 +46,19 @@ namespace CSharpRegexTools4Npp
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
         static void beNotified(IntPtr notifyCode)
         {
-            try
+            ScNotification notification = (ScNotification)Marshal.PtrToStructure(notifyCode, typeof(ScNotification));
+            if (notification.Header.Code == (uint)NppMsg.NPPN_TBMODIFICATION)
             {
-                ScNotification notification = (ScNotification)Marshal.PtrToStructure(notifyCode, typeof(ScNotification));
-                if (notification.Header.Code == (uint)NppMsg.NPPN_TBMODIFICATION)
-                {
-                    PluginBase._funcItems.RefreshItems();
-                    Main.SetToolBarIcon();
-                }
-                else if (notification.Header.Code == (uint)NppMsg.NPPN_SHUTDOWN)
-                {
-                    Marshal.FreeHGlobal(_ptrPluginName);
-                }
-                else
-                {
-                    Main.OnNotification(notification);
-                }
+                PluginBase._funcItems.RefreshItems();
+                Main.SetToolBarIcon();
             }
-            catch(Exception exception)
+            else if (notification.Header.Code == (uint)NppMsg.NPPN_SHUTDOWN)
             {
-                MessageBox.Show(exception.Message, $"Error in {nameof(beNotified)}", MessageBoxButton.OK, MessageBoxImage.Error);
+                Marshal.FreeHGlobal(_ptrPluginName);
+            }
+            else
+            {
+                Main.OnNotification(notification);
             }
         }
     }
