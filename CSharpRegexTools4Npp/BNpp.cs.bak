@@ -1,12 +1,138 @@
 ﻿using CSharpRegexTools4Npp.PluginInfrastructure;
 using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Text;
+
 
 namespace CSharpRegexTools4Npp
 {
     public class BNpp
     {
-        public static NotepadPPGateway NotepadPP { get; private set; } = new NotepadPPGateway();
+        public static NotepadPPGateway NotepadPPGateway { get; private set; } = new NotepadPPGateway();
+
+        /// <summary>
+        /// Constante défini au niveau des APIs Windows qui défini le nombre max de caractères
+        /// que peut prendre un chemin d'accès complet d'un fichier
+        /// </summary>
+        public const int PATH_MAX = 260;
+
+
+        /// <summary>
+        /// Récupère le chemin d'accès au fichier courant ouvert dans Notepad++
+        /// </summary>
+        public static string CurrentPath
+        {
+            get
+            {
+                var path = new StringBuilder(2000);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_GETFULLCURRENTPATH, path.Capacity, path);
+                return path.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Récupère le chemin d'accès au dossier ou se trouve l'exécutable de l'instance courante de Notepad++
+        /// </summary>
+        public static string NppBinDirectoryPath
+        {
+            get
+            {
+                var path = new StringBuilder(2000);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_GETNPPDIRECTORY, path.Capacity, path);
+                return path.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Récupère le nombre de fichiers ouverts dans Notepad++
+        /// </summary>
+        public static int NbrOfOpenedFiles
+        {
+            get
+            {
+                try
+                {
+                    // le - 1 enlève le "new 1" en trop, toujours présent dans la liste des fichier ouverts
+                    return Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_GETNBOPENFILES, 0, (uint)NppMsg.ALL_OPEN_FILES)
+                        .ToInt32() - 1;
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Récupère la liste de tous les chemins d'accès aux fichiers ouverts dans Notepad++
+        /// </summary>
+        public static List<string> AllOpenedDocuments
+        {
+            get
+            {
+                return NotepadPPGateway.GetOpenFilesSafe();
+            }
+        }
+
+        /// <summary>
+        /// Affiche le tab du document déjà ouvert spécifié dans Notepad++
+        /// </summary>
+        /// <param name="tabPath">Le chemin d'accès du fichier ouvert dans Notepad++ que l'on veut afficher</param>
+        /// <see>AllOpenedFilesPaths</see>
+        public static void ShowOpenedDocument(string tabPath)
+        {
+            try
+            {
+                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_SWITCHTOFILE, 0, tabPath);
+            }
+            catch { }
+        }
+
+        /// <summary>
+        /// Crée un nouveau document dans Notepad++ dans un nouveau tab.
+        /// </summary>
+        public static void CreateNewDocument()
+        {
+            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_MENUCOMMAND, 0, NppMenuCmd.IDM_FILE_NEW);
+        }
+
+        /// <summary>
+        /// Essai d'ouvrir le fichier spécifié dans Notepad++
+        /// </summary>
+        /// <param name="fileName">Le chemin d'accès du fichier à ouvrir dans Notepad++</param>
+        /// <returns><c>True</c> Si le fichier à pu s'ouvrir correctement <c>False</c> si le fichier spécifié ne peut pas être ouvert</returns>
+        public static bool OpenFile(string fileName)
+        {
+            bool result = false;
+
+            if (File.Exists(fileName))
+            {
+                #if X64
+                result = Win32.SendMessage(PluginBase.nppData._nppHandle, (uint) NppMsg.NPPM_DOOPEN, 0, fileName).ToInt64() == 1;
+                #else
+                result = Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_DOOPEN, 0, fileName).ToInt32() == 1;
+                #endif
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Sauvegarde le document courant
+        /// </summary>
+        public static void SaveCurrentDocument()
+        {
+            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_SAVECURRENTFILE, 0, 0);
+        }
+
+        /// <summary>
+        /// Sauvegarde tous les documents actuellement ouverts dans Notepad++
+        /// </summary>
+        public static void SaveAllOpenedDocuments()
+        {
+            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_SAVEALLFILES, 0, 0);
+        }
 
         /// <summary>
         /// Récupère les caractères de fin de lignes courant

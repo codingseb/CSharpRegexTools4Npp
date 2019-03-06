@@ -5,25 +5,25 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
     public class PluginBase
     {
-        internal static NppData nppData;
-        internal static FuncItems _funcItems = new FuncItems();
+        public static NppData nppData;
+        public static FuncItems _funcItems = new FuncItems();
 
-        internal static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer)
+        public static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer)
         {
             SetCommand(index, commandName, functionPointer, new ShortcutKey(), false);
         }
-        
-        internal static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer, ShortcutKey shortcut)
+
+        public static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer, ShortcutKey shortcut)
         {
             SetCommand(index, commandName, functionPointer, shortcut, false);
         }
-        
-        internal static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer, bool checkOnInit)
+
+        public static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer, bool checkOnInit)
         {
             SetCommand(index, commandName, functionPointer, new ShortcutKey(), checkOnInit);
         }
-        
-        internal static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer, ShortcutKey shortcut, bool checkOnInit)
+
+        public static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer, ShortcutKey shortcut, bool checkOnInit)
         {
             FuncItem funcItem = new FuncItem
             {
@@ -39,14 +39,14 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             _funcItems.Add(funcItem);
         }
 
-        internal static IntPtr GetCurrentScintilla()
+        public static IntPtr GetCurrentScintilla()
         {
             Win32.SendMessage(nppData._nppHandle, (uint)NppMsg.NPPM_GETCURRENTSCINTILLA, 0, out int curScintilla);
             return (curScintilla == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
         }
 
 
-        static readonly Func<IScintillaGateway> gatewayFactory = () => new ScintillaGateway(GetCurrentScintilla());
+        public static readonly Func<IScintillaGateway> gatewayFactory = () => new ScintillaGateway(GetCurrentScintilla());
 
         public static Func<IScintillaGateway> GetGatewayFactory()
         {

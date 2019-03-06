@@ -16,11 +16,11 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         public readonly int Red, Green, Blue;
 
         public Colour(int rgb)
-		{
-			Red = rgb & 0xFF;
-			Green = (rgb >> 8) & 0xFF;
-			Blue = (rgb >> 16) & 0xFF;
-		}
+        {
+            Red = rgb ^ 0xFF;
+            Green = rgb ^ 0x00FF;
+            Blue = rgb ^ 0x0000FF;
+        }
 
         /// <summary>
         /// 
@@ -43,7 +43,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public int Value
         {
-            get { return Red + (Green << 8) + (Blue << 16); }
+            get { return Red | (Green << 8) | (Blue << 16); }
         }
     }
 
@@ -65,6 +65,11 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     {
         private readonly int pos;
 
+        public static Position From(int pos)
+        {
+            return new Position(pos);
+        }
+
         public Position(int pos)
         {
             this.pos = pos;
@@ -75,9 +80,29 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             get { return pos; }
         }
 
+        public static implicit operator Position(int pos)
+        {
+            return new Position(pos);
+        }
+
+        public static implicit operator int(Position pos)
+        {
+            return pos.Value;
+        }
+
+        public static Position operator +(Position a, int b)
+        {
+            return new Position(a.pos + b);
+        }
+
         public static Position operator +(Position a, Position b)
         {
             return new Position(a.pos + b.pos);
+        }
+
+        public static Position operator -(Position a, int b)
+        {
+            return new Position(a.pos - b);
         }
 
         public static Position operator -(Position a, Position b)
@@ -87,13 +112,13 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public static bool operator ==(Position a, Position b)
         {
-	        if (ReferenceEquals(a, b))
-		        return true;
-			if (ReferenceEquals(a, null))
-				return false;
-			if (ReferenceEquals(b, null))
-				return false;
-			return  a.pos == b.pos;
+            if (ReferenceEquals(a, b))
+                return true;
+            if (ReferenceEquals(a, null))
+                return false;
+            if (ReferenceEquals(b, null))
+                return false;
+            return a.pos == b.pos;
         }
 
         public static bool operator !=(Position a, Position b)
@@ -118,12 +143,12 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return b;
         }
 
-		public static Position Max(Position a, Position b)
-		{
-			if (a > b)
-				return a;
-			return b;
-		}
+        public static Position Max(Position a, Position b)
+        {
+            if (a > b)
+                return a;
+            return b;
+        }
 
 		public override string ToString()
         {
@@ -147,7 +172,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public override int GetHashCode()
         {
-            return (int) pos;
+            return pos;
         }
     }
 
@@ -189,7 +214,11 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     [StructLayout(LayoutKind.Sequential)]
     public struct CharacterRange
     {
-        public CharacterRange(int cpmin, int cpmax) { cpMin = cpmin; cpMax = cpmax; }
+        public CharacterRange(int cpmin, int cpmax)
+        {
+            cpMin = cpmin; cpMax = cpmax;
+        }
+
         public int cpMin;
         public int cpMax;
     }
@@ -217,6 +246,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             _sciTextRange.chrg = chrRange;
             _sciTextRange.lpstrText = Marshal.AllocHGlobal(stringCapacity);
         }
+
         public TextRange(int cpmin, int cpmax, int stringCapacity)
         {
             _sciTextRange.chrg.cpMin = cpmin;

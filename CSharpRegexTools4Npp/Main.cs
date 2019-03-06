@@ -19,21 +19,21 @@ namespace CSharpRegexTools4Npp
         //static RegExToolDialog dialog = null;
 
         //Import the FindWindow API to find our window
-        [DllImportAttribute("User32.dll")]
-        private static extern int FindWindow(String ClassName, String WindowName);
+        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr FindWindow([MarshalAs(UnmanagedType.LPWStr)] string ClassName, [MarshalAs(UnmanagedType.LPWStr)] string WindowName);
 
         //Import the SetForeground API to activate it
-        [DllImportAttribute("User32.dll")]
-        private static extern IntPtr SetForegroundWindow(int hWnd);
+        [DllImport("User32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SetForegroundWindow(IntPtr hWnd);
 
-        [DllImport("user32.dll")]
-        private static extern int SetWindowLong(IntPtr hWnd, int windowLongFlags, int dwNewLong);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern IntPtr SetWindowLong(IntPtr hWnd, int windowLongFlags, IntPtr dwNewLong);
 
-        [DllImport("user32.dll", SetLastError = true)]
+        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
         static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
-        [DllImport("user32.dll")]
-        static extern bool SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        static extern long SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
 
         public const int GWL_EXSTYLE = -20;
         public const int WS_EX_LAYERED = 0x80000;
@@ -91,9 +91,9 @@ namespace CSharpRegexTools4Npp
             try
             {
 
-                int hWnd = FindWindow(null, "C# Regex Tools");
+                IntPtr hWnd = FindWindow(null, "C# Regex Tools");
 
-                if (hWnd > 0)
+                if (hWnd.ToInt64() > 0)
                 {
                     SetForegroundWindow(hWnd);
                 }
@@ -107,7 +107,7 @@ namespace CSharpRegexTools4Npp
                         {
                             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                             {
-                                BNpp.CreateNewDocument();
+                                BNpp.NotepadPP.FileNew();
                             }
 
                             BNpp.Text = text;
@@ -115,7 +115,7 @@ namespace CSharpRegexTools4Npp
 
                         SetTextInNew = (string text) =>
                         {
-                            BNpp.CreateNewDocument();
+                            BNpp.NotepadPP.FileNew();
 
                             BNpp.Text = text;
                         },
@@ -130,7 +130,7 @@ namespace CSharpRegexTools4Npp
 
                         GetSelectionLength = () => BNpp.SelectionLength,
 
-                        SaveCurrentDocument = () => BNpp.SaveCurrentDocument(),
+                        SaveCurrentDocument = () => BNpp.NotepadPP.SaveCurrentFile(),
 
                         TryOpen = (string fileName, bool onlyIfAlreadyOpen) =>
                         {
@@ -138,17 +138,16 @@ namespace CSharpRegexTools4Npp
                             {
                                 bool result = false;
 
-                                //MessageBox.Show(BNpp.CurrentPath + "\r\n" + fileName);
-                                if (BNpp.CurrentPath.ToLower().Equals(fileName.ToLower()))
+                                if (NotepadPPGateway.Instance.CurrentFileName.ToLower().Equals(fileName.ToLower()))
                                     result = true;
-                                else if (BNpp.AllOpenedDocuments.Any((string s) => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                                else if (NotepadPPGateway.Instance.GetAllOpenedDocuments.Any((string s) => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                                 {
-                                    BNpp.ShowOpenedDocument(fileName);
+                                    BNpp.NotepadPP.ShowOpenedDocument(fileName);
                                     result = true;
                                 }
                                 else if (!onlyIfAlreadyOpen)
                                 {
-                                    result = BNpp.OpenFile(fileName);
+                                    result = BNpp.NotepadPP.OpenFile(fileName);
                                 }
                                 else
                                 {
@@ -156,7 +155,7 @@ namespace CSharpRegexTools4Npp
                                 }
 
                                 hWnd = FindWindow(null, "C# Regex Tool");
-                                if (hWnd > 0)
+                                if (hWnd.ToInt64() > 0)
                                 {
                                     SetForegroundWindow(hWnd);
                                 }
@@ -170,13 +169,12 @@ namespace CSharpRegexTools4Npp
 
                         },
 
-                        GetCurrentFileName = () => BNpp.CurrentPath
+                        GetCurrentFileName = () => NotepadPPGateway.Instance.CurrentFileName
                     };
 
                     dialog.Show();
 
-                    SetWindowLong(new WindowInteropHelper(dialog).Handle, (int)WindowLongFlags.GWLP_HWNDPARENT, PluginBase.nppData._nppHandle.ToInt32());
-                    SetWindowLong(new WindowInteropHelper(dialog).Handle, GWL_EXSTYLE, GetWindowLong(new WindowInteropHelper(dialog).Handle, GWL_EXSTYLE) ^ WS_EX_LAYERED);
+                    SetWindowLong(new WindowInteropHelper(dialog).Handle, (int)WindowLongFlags.GWLP_HWNDPARENT, PluginBase.nppData._nppHandle);
                     SetLayeredWindowAttributes(new WindowInteropHelper(dialog).Handle, 0, 128, LWA_ALPHA);
 
                 }

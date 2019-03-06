@@ -1,6 +1,7 @@
 ﻿// NPP plugin platform for .Net v0.94.00 by Kasper B. Graversen etc.
 using System;
 using System.Runtime.InteropServices;
+using System.Windows;
 using CSharpRegexTools4Npp.PluginInfrastructure;
 using NppPlugin.DllExport;
 
@@ -46,19 +47,26 @@ namespace CSharpRegexTools4Npp
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
         static void beNotified(IntPtr notifyCode)
         {
-            ScNotification notification = (ScNotification)Marshal.PtrToStructure(notifyCode, typeof(ScNotification));
-            if (notification.Header.Code == (uint)NppMsg.NPPN_TBMODIFICATION)
+            try
             {
-                PluginBase._funcItems.RefreshItems();
-                Main.SetToolBarIcon();
+                ScNotification notification = (ScNotification)Marshal.PtrToStructure(notifyCode, typeof(ScNotification));
+                if (notification.Header.Code == (uint)NppMsg.NPPN_TBMODIFICATION)
+                {
+                    PluginBase._funcItems.RefreshItems();
+                    Main.SetToolBarIcon();
+                }
+                else if (notification.Header.Code == (uint)NppMsg.NPPN_SHUTDOWN)
+                {
+                    Marshal.FreeHGlobal(_ptrPluginName);
+                }
+                else
+                {
+                    Main.OnNotification(notification);
+                }
             }
-            else if (notification.Header.Code == (uint)NppMsg.NPPN_SHUTDOWN)
+            catch(Exception exception)
             {
-                Marshal.FreeHGlobal(_ptrPluginName);
-            }
-            else
-            {
-	            Main.OnNotification(notification);
+                MessageBox.Show(exception.Message, $"Error in {nameof(beNotified)}", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
     }

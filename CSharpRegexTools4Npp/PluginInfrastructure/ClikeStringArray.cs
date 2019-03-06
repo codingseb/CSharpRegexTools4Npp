@@ -13,29 +13,27 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public ClikeStringArray(int num, int stringCapacity)
         {
-            int intPtrSize = IntPtr.Size;
-            _nativeArray = Marshal.AllocHGlobal((num + 1) * (int)intPtrSize);
+            _nativeArray = Marshal.AllocHGlobal((num + 1) * IntPtr.Size);
             _nativeItems = new List<IntPtr>();
             for (int i = 0; i < num; i++)
             {
                 IntPtr item = Marshal.AllocHGlobal(stringCapacity);
-                Marshal.WriteIntPtr(_nativeArray + (i * intPtrSize), item);
+                Marshal.WriteIntPtr(_nativeArray + (i * IntPtr.Size), item);
                 _nativeItems.Add(item);
             }
-            Marshal.WriteIntPtr(_nativeArray + (num * intPtrSize), IntPtr.Zero);
+            Marshal.WriteIntPtr(_nativeArray + (num * IntPtr.Size), IntPtr.Zero);
         }
         public ClikeStringArray(List<string> lstStrings)
         {
-            int intPtrSize = IntPtr.Size;
-            _nativeArray = Marshal.AllocHGlobal((lstStrings.Count + 1) * intPtrSize);
+            _nativeArray = Marshal.AllocHGlobal((lstStrings.Count + 1) * IntPtr.Size);
             _nativeItems = new List<IntPtr>();
             for (int i = 0; i < lstStrings.Count; i++)
             {
-                IntPtr item = Marshal.StringToHGlobalUni(lstStrings[(int)i]);
-                Marshal.WriteIntPtr(_nativeArray + (i * intPtrSize), item);
+                IntPtr item = Marshal.StringToHGlobalUni(lstStrings[i]);
+                Marshal.WriteIntPtr(_nativeArray + (i * IntPtr.Size), item);
                 _nativeItems.Add(item);
             }
-            Marshal.WriteIntPtr(_nativeArray + (lstStrings.Count * intPtrSize), IntPtr.Zero);
+            Marshal.WriteIntPtr(_nativeArray + (lstStrings.Count * IntPtr.Size), IntPtr.Zero);
         }
 
         public IntPtr NativePointer { get { return _nativeArray; } }
@@ -56,10 +54,14 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         {
             if (!_disposed)
             {
-                for (int i = 0; i < _nativeItems.Count; i++)
-                    if (_nativeItems[i] != IntPtr.Zero) Marshal.FreeHGlobal(_nativeItems[i]);
-                if (_nativeArray != IntPtr.Zero) Marshal.FreeHGlobal(_nativeArray);
                 _disposed = true;
+                try
+                {
+                    for (int i = 0; i < _nativeItems.Count; i++)
+                        if (_nativeItems[i] != IntPtr.Zero) Marshal.FreeHGlobal(_nativeItems[i]);
+                    if (_nativeArray != IntPtr.Zero) Marshal.FreeHGlobal(_nativeArray);
+                }
+                catch { }
             }
         }
         ~ClikeStringArray()

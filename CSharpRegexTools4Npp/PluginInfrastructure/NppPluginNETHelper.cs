@@ -4,6 +4,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using System.Linq;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
@@ -20,6 +21,17 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     [StructLayout(LayoutKind.Sequential)]
     public struct ShortcutKey
     {
+        public ShortcutKey(string data)
+        {
+            //Ctrl+Shift+Alt+Key
+            var parts = data.Split('+');
+            _key = Convert.ToByte(Enum.Parse(typeof(Keys), parts.Last()));
+            parts = parts.Take(parts.Length - 1).ToArray();
+            _isCtrl = Convert.ToByte(parts.Contains("Ctrl"));
+            _isShift = Convert.ToByte(parts.Contains("Shift"));
+            _isAlt = Convert.ToByte(parts.Contains("Alt"));
+        }
+
         public ShortcutKey(bool isCtrl, bool isAlt, bool isShift, Keys key)
         {
             // the types 'bool' and 'char' have a size of 1 byte only!
@@ -28,6 +40,12 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             _isShift = Convert.ToByte(isShift);
             _key = Convert.ToByte(key);
         }
+
+        public bool IsCtrl { get { return _isCtrl != 0; } }
+        public bool IsShift { get { return _isShift != 0; } }
+        public bool IsAlt { get { return _isAlt != 0; } }
+        public Keys Key { get { return (Keys)_key; } }
+
         public byte _isCtrl;
         public byte _isAlt;
         public byte _isShift;
@@ -124,9 +142,13 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         {
             if (!_disposed)
             {
-                foreach (IntPtr ptr in _shortCutKeys) Marshal.FreeHGlobal(ptr);
-                if (_nativePointer != IntPtr.Zero) Marshal.FreeHGlobal(_nativePointer);
                 _disposed = true;
+                try
+                {
+                    foreach (IntPtr ptr in _shortCutKeys) Marshal.FreeHGlobal(ptr);
+                    if (_nativePointer != IntPtr.Zero) Marshal.FreeHGlobal(_nativePointer);
+                }
+                catch { }
             }
         }
         ~FuncItems()
