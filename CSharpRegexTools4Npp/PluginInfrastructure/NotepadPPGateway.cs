@@ -23,8 +23,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     /// </summary>
     public class NotepadPPGateway : INotepadPPGateway
     {
-        public static NotepadPPGateway Instance { get; private set; } = new NotepadPPGateway();
-
         public IntPtr Handle { get { return PluginBase.nppData._nppHandle; } }
 
         private const int Unused = 0;

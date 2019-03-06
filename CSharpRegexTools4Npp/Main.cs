@@ -138,9 +138,9 @@ namespace CSharpRegexTools4Npp
                             {
                                 bool result = false;
 
-                                if (NotepadPPGateway.Instance.CurrentFileName.ToLower().Equals(fileName.ToLower()))
+                                if (BNpp.NotepadPP.CurrentFileName.ToLower().Equals(fileName.ToLower()))
                                     result = true;
-                                else if (NotepadPPGateway.Instance.GetAllOpenedDocuments.Any((string s) => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                                else if (BNpp.NotepadPP.GetAllOpenedDocuments.Any((string s) => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                                 {
                                     BNpp.NotepadPP.ShowOpenedDocument(fileName);
                                     result = true;
@@ -169,7 +169,7 @@ namespace CSharpRegexTools4Npp
 
                         },
 
-                        GetCurrentFileName = () => NotepadPPGateway.Instance.CurrentFileName
+                        GetCurrentFileName = () => BNpp.NotepadPP.CurrentFileName
                     };
 
                     dialog.Show();
