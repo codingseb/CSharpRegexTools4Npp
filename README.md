@@ -1,8 +1,6 @@
 # CSharpRegexTools4Npp
 Some tools for using C# Regex in Notepad++ (As Notepad++ Plugin)
 
-**For now x64 version have some bugs and is unstable**
-
 ## Features
 * Syntax Highlight of the C# Regex
 * List all matches (With groups and captures)
