@@ -51,7 +51,6 @@ namespace CSharpRegexTools4Npp
             set
             {
                 IScintillaGateway scintilla = new ScintillaGateway(PluginBase.GetCurrentScintilla());
-                scintilla.ClearAll();
                 string text = BEncoding.GetScintillaTextFromUtf8Text(value, out int length);
                 scintilla.SetText(text);
             }
