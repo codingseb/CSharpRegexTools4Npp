@@ -64,31 +64,12 @@ namespace CSharpRegexTools4Npp
         {
             get
             {
-                int curPos = (int)Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_GETSELECTIONSTART, 0, 0);
-                IScintillaGateway scintilla = new ScintillaGateway(PluginBase.GetCurrentScintilla());
-                string beginingText = scintilla.GetText(curPos);
-                string text = BEncoding.GetScintillaTextFromUtf8Text(beginingText, out int length);
-                return length;
+                return new ScintillaGateway(PluginBase.GetCurrentScintilla()).GetSelectionStart();
             }
 
             set
             {
-                string allText = Text;
-                int startToUse = value;
-
-                if (value < 0)
-                {
-                    startToUse = 0;
-                }
-                else if (value > allText.Length)
-                {
-                    startToUse = allText.Length;
-                }
-
-                string beforeText = allText.Substring(0, startToUse);
-                string beforeTextInDefaultEncoding = BEncoding.GetScintillaTextFromUtf8Text(beforeText, out int defaultStart);
-
-                Win32.SendMessage(PluginBase.GetCurrentScintilla(), SciMsg.SCI_SETSELECTIONSTART, defaultStart, 0);
+                new ScintillaGateway(PluginBase.GetCurrentScintilla()).SetSelectionStart(new Position(value));
             }
         }
 
@@ -155,8 +136,9 @@ namespace CSharpRegexTools4Npp
         {
             get
             {
-                int start = SelectionStart;
-                int end = SelectionEnd;
+                IScintillaGateway scintillaGateway = new ScintillaGateway(PluginBase.GetCurrentScintilla());
+                int start = scintillaGateway.GetSelectionStart().Value;
+                int end = scintillaGateway.GetSelectionEnd().Value;
 
                 return end - start == 0 ? "" : Text.Substring(start, end - start);
             }
