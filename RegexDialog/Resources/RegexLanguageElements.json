@@ -10,8 +10,8 @@
                     "Value": "\\a"
                 },
                 {
-                    "Name": "Backspace ",
-                    "Description": "Matches a backspace \\u0008 if in a [] character class",
+                    "Name": "Backspace or word boundary ",
+                    "Description": "Matches a backspace \\u0008 if in a [] character class, otherwise define a word boundary",
                     "Value": "\\b"
                 },
                 {
