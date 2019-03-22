@@ -2,7 +2,7 @@
     "Data": [
         {
             "Name": "Character Escapes",
-            "Description": "Escape characters that signal to the regular expression parser that the character",
+            "Description": "Escape characters that signal to the regular expression parser a special char",
             "Elements": [
                 {
                     "Name": "Bell ",
@@ -10,8 +10,8 @@
                     "Value": "\\a"
                 },
                 {
-                    "Name": "Backspace or word boundary ",
-                    "Description": "Matches a backspace \\u0008 if in a [] character class, otherwise define a word boundary",
+                    "Name": "Backspace ",
+                    "Description": "Matches a backspace \\u0008 if in a [] character class",
                     "Value": "\\b"
                 },
                 {
