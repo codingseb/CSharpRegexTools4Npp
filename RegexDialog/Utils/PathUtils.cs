@@ -24,7 +24,7 @@ namespace RegexDialog
         {
             get
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "RegexDialog");
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CSharpRegexTools4Npp");
             }
         }
 
@@ -35,7 +35,7 @@ namespace RegexDialog
         {
             get
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "RegexDialog");
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CSharpRegexTools4Npp");
             }
         }
 
