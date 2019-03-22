@@ -208,8 +208,9 @@ namespace RegexDialog
 
             WindowState = Config.Instance.DialogMaximized ? WindowState.Maximized : WindowState.Normal;
 
-            FirstColumn.Width = new GridLength(Config.Instance.GridFirstColumnWidth ?? FirstColumn.Width.Value);
-            SecondColumn.Width = new GridLength(Config.Instance.GridSecondColumnWidth ?? SecondColumn.Width.Value);
+            FirstColumn.Width = Config.Instance.GridFirstColumnWidth;
+            SecondColumn.Width = Config.Instance.GridSecondColumnWidth;
+            ThirdColumn.Width = Config.Instance.GridThirdColumnWidth;
             RegexEditorRow.Height = new GridLength(Config.Instance.GridRegexEditorRowHeight ?? RegexEditorRow.Height.Value);
             RegexLanguageElementFirstRow.Height = new GridLength(Config.Instance.GridRegexLanguageElementsFirstRowHeight ?? RegexLanguageElementFirstRow.Height.Value);
 
@@ -1121,8 +1122,9 @@ namespace RegexDialog
         {
             try
             {
-                Config.Instance.GridFirstColumnWidth = FirstColumn.ActualWidth;
-                Config.Instance.GridSecondColumnWidth = SecondColumn.ActualWidth;
+                Config.Instance.GridFirstColumnWidth = FirstColumn.Width;
+                Config.Instance.GridSecondColumnWidth = SecondColumn.Width;
+                Config.Instance.GridThirdColumnWidth = ThirdColumn.Width;
                 Config.Instance.GridRegexEditorRowHeight = RegexEditorRow.ActualHeight;
                 Config.Instance.GridRegexLanguageElementsFirstRowHeight = RegexLanguageElementFirstRow.ActualHeight;
 
@@ -1147,8 +1149,8 @@ namespace RegexDialog
                     RegexLanguageElementFirstRow.MaxHeight = Root.ActualHeight - RegexLanguagesElementsTreeView.TransformToAncestor(Root).Transform(new Point(0, 0)).Y - 5 - 40;
                 if (OptionTabControl.SelectedItem.Equals(ReplaceTabItem))
                     ReplaceLanguageElementFirstRow.MaxHeight = Root.ActualHeight - ReplaceLanguageElementsListView.TransformToAncestor(Root).Transform(new Point(0, 0)).Y - 5 - 40;
-                FirstColumn.MaxWidth = Math.Max(Root.ActualWidth - 10 - 100, 0);
-                SecondColumn.MaxWidth = Math.Max(Root.ActualWidth - Math.Min(FirstColumn.ActualWidth, Root.ActualWidth) - 10 - 40, 0);
+                //FirstColumn.MaxWidth = Math.Max(Root.ActualWidth - 10 - 100, 0);
+                //SecondColumn.MaxWidth = Math.Max(Root.ActualWidth - Math.Min(FirstColumn.ActualWidth, Root.ActualWidth) - 10 - 40, 0);
             }
             catch { }
         }

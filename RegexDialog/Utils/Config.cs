@@ -97,8 +97,9 @@ namespace RegexDialog
         public double? DialogHeight { get; set; } = 400;
         public bool DialogMaximized { get; set; } = false;
 
-        public double? GridFirstColumnWidth { get; set; } = 250;
-        public double? GridSecondColumnWidth { get; set; } = 250;
+        public GridLength GridFirstColumnWidth { get; set; } = new GridLength(1, GridUnitType.Star);
+        public GridLength GridSecondColumnWidth { get; set; } = new GridLength(1, GridUnitType.Star);
+        public GridLength GridThirdColumnWidth { get; set; } = new GridLength(1, GridUnitType.Star);
         public double? GridRegexEditorRowHeight { get; set; } = 150;
         public double? GridRegexLanguageElementsFirstRowHeight { get; set; } = 300;
 

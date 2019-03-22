@@ -51,14 +51,8 @@
         </Style>
         
     </Window.Resources>
-    <Grid Background="WhiteSmoke" Name="MainGrid">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <Menu BorderBrush="Silver" BorderThickness="0,0,0,1">
+    <DockPanel Background="WhiteSmoke" >
+        <Menu DockPanel.Dock="Top" BorderBrush="Silver" BorderThickness="0,0,0,1">
             <MenuItem Header="_File" >
                 <MenuItem Header="_New" Click="New_MenuItem_Click" >
                     <MenuItem.Icon>
@@ -143,8 +137,8 @@
                 <MenuItem Header="Clear Directory Filter History" Click="ClearDirectoryFilterHistory_Click" />
             </MenuItem>
         </Menu>
-        <Border Grid.Row="1" >
-            <WrapPanel Grid.Row="1">
+        <Border DockPanel.Dock="Top">
+            <WrapPanel >
                 <WrapPanel.Resources>
                     <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button" />
                     <Style BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" TargetType="ToggleButton" />
@@ -221,13 +215,13 @@
                 </ToggleButton>
             </WrapPanel>
         </Border>
-        <Grid Grid.Row="3" Margin="0,5,0,0">
+        <Grid Margin="0,5,0,0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition x:Name="FirstColumn" Width="*" />
+                <ColumnDefinition x:Name="FirstColumn"  />
                 <ColumnDefinition Width="5" />
-                <ColumnDefinition x:Name="SecondColumn" Width="*" />
+                <ColumnDefinition x:Name="SecondColumn"  />
                 <ColumnDefinition Width="5" />
-                <ColumnDefinition Width="*" />
+                <ColumnDefinition x:Name="ThirdColumn"/>
             </Grid.ColumnDefinitions>
             <Grid>
                 <Grid.RowDefinitions>
@@ -394,16 +388,16 @@
                     </Border>
                 </Grid>
             </Grid>
-            <GridSplitter Grid.Column="1"                         
-                          VerticalAlignment="Stretch" 
+            <GridSplitter Grid.Column="1"   
+                          ResizeBehavior="PreviousAndNext"
+                          VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
-            <Grid Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="Auto" />
-                </Grid.RowDefinitions>
-                <Label Name="MatchesResultLabel" Target="{Binding ElementName=MatchResultsTreeView}" >Matches [Index,Length]</Label>
+            <DockPanel Grid.Column="2">
+                <Label DockPanel.Dock="Top" Name="MatchesResultLabel" Target="{Binding ElementName=MatchResultsTreeView}" >Matches [Index,Length]</Label>
+                <Button DockPanel.Dock="Bottom"
+                        Content="Restore Last Search _Selection"
+                        Visibility="{Binding TextSourceOn, Converter={converters:ChainingConverter Converter1={converters:EnumBooleanConverter}, Converter2={converters:CustomBoolToVisibilityConverter}, Converter1Parameter='CurrentSelection'}}"
+                        Click="RestoreLastMachesSelectionButton_Click" />
                 <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="0">
                     <TreeView Name="MatchResultsTreeView"
                         VirtualizingPanel.IsVirtualizing="True"
@@ -499,13 +493,10 @@
                         </TreeView.Resources>
                     </TreeView>
                 </Border>
-                <Button Grid.Row="2" 
-                        Content="Restore Last Search _Selection"
-                        Visibility="{Binding TextSourceOn, Converter={converters:ChainingConverter Converter1={converters:EnumBooleanConverter}, Converter2={converters:CustomBoolToVisibilityConverter}, Converter1Parameter='CurrentSelection'}}"
-                        Click="RestoreLastMachesSelectionButton_Click" />
-            </Grid>
-            <GridSplitter Grid.Column="3"                         
-                          VerticalAlignment="Stretch" 
+            </DockPanel>
+            <GridSplitter Grid.Column="3" 
+                          ResizeBehavior="PreviousAndNext"
+                          VerticalAlignment="Stretch"
                           HorizontalAlignment="Stretch"/>
             <TabControl
                 Name="OptionTabControl"
@@ -665,5 +656,5 @@
                 </TabItem>
             </TabControl>
         </Grid>
-    </Grid>
+    </DockPanel>
 </Window>
