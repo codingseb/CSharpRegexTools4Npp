@@ -8,6 +8,8 @@ namespace CSharpRegexTools4Npp
     {
         public static NotepadPPGateway NotepadPP { get; private set; } = new NotepadPPGateway();
 
+        public static ScintillaGateway Scintilla => new ScintillaGateway(PluginBase.GetCurrentScintilla());
+
         /// <summary>
         /// Récupère les caractères de fin de lignes courant
         /// !!! Attention pour le moment bug. !!! Enlève la coloration syntaxique du fichier courant
@@ -17,14 +19,14 @@ namespace CSharpRegexTools4Npp
             get
             {
                 string eol = "\n";
-                int value = Win32.SendMessage(PluginBase.nppData._nppHandle, SciMsg.SCI_GETEOLMODE, 0, 0).ToInt32();
+                int value = Scintilla.GetEOLMode();
 
-                switch (value)
+                switch ((SciMsg)value)
                 {
-                    case 0:
+                    case SciMsg.SC_EOL_CRLF:
                         eol = "\r\n";
                         break;
-                    case 1:
+                    case SciMsg.SC_EOL_CR:
                         eol = "\r";
                         break;
                     default:
