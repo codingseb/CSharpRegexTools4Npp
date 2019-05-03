@@ -613,9 +613,6 @@
                                     <CheckBox x:Name="OpenFilesForReplaceCheckBox" 
                                           IsChecked="{Binding OpenFilesForReplace}"
                                           Content="_Open files to replace in editor (otherwise modify the file on the disk)" />
-                                    <CheckBox x:Name="ShowEmptiesMatchesCheckBox" 
-                                          IsChecked="{Binding ShowEmptyMatches}"
-                                          Content="Show _empties matches" />
 
                                 </StackPanel>
 
@@ -647,6 +644,9 @@
                                           IsEditable="True"/>
                             </DockPanel>
                             <StackPanel Margin="5,0">
+                                <CheckBox x:Name="ShowEmptiesMatchesCheckBox" 
+                                          IsChecked="{Binding ShowEmptyMatches}"
+                                          Content="Show _empties matches" />
                                 <CheckBox x:Name="PrintFileNamesWhenExtractCheckBox" 
                                           IsChecked="{Binding PrintFileNameWhenExtract}"
                                           Content="Print Filenames when extract" />
