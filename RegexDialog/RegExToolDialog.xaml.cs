@@ -45,6 +45,8 @@ namespace RegexDialog
 
         private bool mustSelectEditor = false;
 
+        private Regex cSharpReplacePartSplitter = new Regex("#global(?<global>.*)#endglobal", RegexOptions.Compiled);
+
         private BracketColorizer currentBracketColorizer = new BracketColorizer();
         private BracketColorizer matchingBracketColorizer = new BracketColorizer();
 
@@ -548,7 +550,10 @@ namespace RegexDialog
 
                 if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                 {
-                    dynamic script = CSScript.Evaluator.LoadCode(Res.CSharpReplaceContainer.Replace("//code", ReplaceEditor.Text));
+                    dynamic script = CSScript.Evaluator.LoadCode(
+                        Res.CSharpReplaceContainer
+                            .Replace("//code", cSharpReplacePartSplitter.Replace(ReplaceEditor.Text, string.Empty))
+                            .Replace("//global", cSharpReplacePartSplitter.Match(ReplaceEditor.Text).Groups["global"].Value));
 
                     int index = -1;
 
@@ -753,9 +758,14 @@ namespace RegexDialog
                 dynamic script = null;
 
                 if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
-                    script = CSScript.Evaluator.LoadCode(Res.CSharpReplaceContainer.Replace("//code", ReplaceEditor.Text));
+                {
+                    script = CSScript.Evaluator.LoadCode(
+                        Res.CSharpReplaceContainer
+                            .Replace("//code", cSharpReplacePartSplitter.Replace(ReplaceEditor.Text, string.Empty))
+                            .Replace("//global", cSharpReplacePartSplitter.Match(ReplaceEditor.Text).Groups["global"].Value));
+                }
 
-                    void Extract(string text, string fileName = "")
+                void Extract(string text, string fileName = "")
                 {
                     List<Match> matches = regex.Matches(text)
                         .Cast<Match>()
@@ -1386,7 +1396,10 @@ namespace RegexDialog
 
                         if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                         {
-                            dynamic script = CSScript.Evaluator.LoadCode(Res.CSharpReplaceContainer.Replace("//code", ReplaceEditor.Text));
+                            dynamic script = CSScript.Evaluator.LoadCode(
+                                Res.CSharpReplaceContainer
+                                    .Replace("//code", cSharpReplacePartSplitter.Replace(ReplaceEditor.Text, string.Empty))
+                                    .Replace("//global", cSharpReplacePartSplitter.Match(ReplaceEditor.Text).Groups["global"].Value));
 
                             int index = -1;
 
@@ -1431,7 +1444,10 @@ namespace RegexDialog
 
                         if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                         {
-                            dynamic script = CSScript.Evaluator.LoadCode(Res.CSharpReplaceContainer.Replace("//code", ReplaceEditor.Text));
+                            dynamic script = CSScript.Evaluator.LoadCode(
+                                Res.CSharpReplaceContainer
+                                    .Replace("//code", cSharpReplacePartSplitter.Replace(ReplaceEditor.Text, string.Empty))
+                                    .Replace("//global", cSharpReplacePartSplitter.Match(ReplaceEditor.Text).Groups["global"].Value));
 
                             if (regexResult is RegexMatchResult regexMatchResult)
                                 newText = beforeMatch + script.Replace((Match)regexMatchResult.RegexElement, regexMatchResult.RegexElementNb, regexResult.FileName, regexMatchResult.RegexElementNb, 0) + afterMatch;

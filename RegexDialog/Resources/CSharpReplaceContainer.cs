@@ -7,6 +7,8 @@ using System.Windows;
 
 public class Script
 {
+    //global
+
     public string Replace(Match match, int index, string fileName, int globalIndex, int fileIndex)
     {
         //code
