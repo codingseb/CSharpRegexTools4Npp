@@ -1606,33 +1606,29 @@ namespace RegexDialog
 
                 bool? result = dialog.ShowDialog(this);
 
-                if (result.HasValue && result.Value)
+                if (result.HasValue && result.Value && File.Exists(dialog.FileName))
                 {
-                    if (File.Exists(dialog.FileName))
+                    try
                     {
-                        try
-                        {
-                            SetToHistory();
+                        SetToHistory();
 
-                            XmlDocument xmlDoc = new XmlDocument();
-                            xmlDoc.Load(dialog.FileName);
+                        XmlDocument xmlDoc = new XmlDocument();
+                        string content = File.ReadAllText(dialog.FileName);
+                        xmlDoc.LoadXml(content);
 
-                            XmlElement root = xmlDoc.DocumentElement;
+                        XmlElement root = xmlDoc.DocumentElement;
 
-                            RegexEditor.Text = root.SelectSingleNode("//FindPattern").InnerText;
-                            ReplaceEditor.Text = root.SelectSingleNode("//ReplacePattern").InnerText;
+                        CSharpReplaceCheckbox.IsChecked = content.Contains("<!--ReplaceIsCSharp-->");
+                        RegexEditor.Text = root.SelectSingleNode("//FindPattern").InnerText;
+                        ReplaceEditor.Text = root.SelectSingleNode("//ReplacePattern").InnerText;
 
-                            string[] xOptions = root.SelectSingleNode("//Options").InnerText.Split(' ');
+                        string[] xOptions = root.SelectSingleNode("//Options").InnerText.Split(' ');
 
-                            regExOptionViewModelsList.ForEach(delegate (RegExOptionViewModel optionModel)
-                            {
-                                optionModel.Selected = xOptions.Contains(optionModel.Name);
-                            });
-                        }
-                        catch (Exception ex)
-                        {
-                            MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                        }
+                        regExOptionViewModelsList.ForEach((RegExOptionViewModel optionModel) => optionModel.Selected = xOptions.Contains(optionModel.Name));
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
@@ -1652,13 +1648,13 @@ namespace RegexDialog
 
                 bool? result = dialog.ShowDialog(this);
 
-                if (result.HasValue && result.Value)
+                if (result == true)
                 {
                     try
                     {
                         XmlDocument xmlDoc = new XmlDocument();
 
-                        XmlDeclaration xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", null, null);
+                        XmlDeclaration xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", null, null);                     
 
                         XmlElement root = xmlDoc.CreateElement("SavedRegex");
                         xmlDoc.InsertBefore(xmlDeclaration, xmlDoc.DocumentElement);
@@ -1672,6 +1668,8 @@ namespace RegexDialog
                         XmlElement optionsElement = xmlDoc.CreateElement("Options");
 
                         root.AppendChild(findPatternElement);
+                        if (CSharpReplaceCheckbox.IsChecked ?? false)
+                            root.AppendChild(xmlDoc.CreateComment("ReplaceIsCSharp"));
                         root.AppendChild(replacePatternElement);
                         root.AppendChild(optionsElement);
 
@@ -1679,7 +1677,7 @@ namespace RegexDialog
                         XmlText replacePatternText = xmlDoc.CreateTextNode(ReplaceEditor.Text);
 
                         string sOptionsText = regExOptionViewModelsList
-                            .Aggregate<RegExOptionViewModel, string>("", (total, next) => total + (next.Selected ? next.Name + " " : ""))
+                            .Aggregate("", (total, next) => total + (next.Selected ? next.Name + " " : ""))
                             .Trim();
 
                         XmlText optionsText = xmlDoc.CreateTextNode(sOptionsText);
@@ -1714,7 +1712,7 @@ namespace RegexDialog
             {
                 if (e.Key == Key.Escape)
                 {
-                    this.Close();
+                    Close();
                     e.Handled = true;
                 }
                 else if (e.Key == Key.F5)
