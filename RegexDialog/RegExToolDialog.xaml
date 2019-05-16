@@ -510,29 +510,30 @@
                             <RowDefinition Height="5" />
                             <RowDefinition Height="0.1*" MinHeight="30"/>
                         </Grid.RowDefinitions>
-                        <TreeView Name="RegexLanguagesElementsTreeView" SelectedItemChanged="RegexLanguagesElementsTreeView_SelectedItemChanged">
-                                <TreeView.Resources>
-                                    <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElementGroup}" ItemsSource="{Binding Elements}">
-                                        <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}">
-                                            <Image Source="{StaticResource RegexLanguageElementsGroupPicture}" Width="16" Height="16" Margin="3,0"/>
-                                            <TextBlock Text="{Binding Name}"/>
-                                            <TextBlock Text="{Binding Value}" Foreground="Blue"/>
-                                        </StackPanel>
-                                    </HierarchicalDataTemplate>
-                                    <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElement}">
-                                        <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}" MouseDown="RegexLanguageElement_StackPanel_MouseDown" MouseUp="RegexLanguageElement_StackPanel_MouseUp">
-                                            <Image Source="{StaticResource RegexLanguageElementPicture}" Width="16" Height="16" Margin="3,0"/>
-                                            <TextBlock Text="{Binding Name}"/>
-                                            <TextBlock Text="{Binding Value}" Foreground="Blue"/>
-                                        </StackPanel>
-                                    </HierarchicalDataTemplate>
-                                </TreeView.Resources>
-                            </TreeView>
-                            <GridSplitter
+                        <TreeView Name="RegexLanguagesElementsTreeView" 
+                                  SelectedItemChanged="RegexLanguagesElementsTreeView_SelectedItemChanged">
+                            <TreeView.Resources>
+                                <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElementGroup}" ItemsSource="{Binding Elements}">
+                                    <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}">
+                                        <Image Source="{StaticResource RegexLanguageElementsGroupPicture}" Width="16" Height="16" Margin="3,0"/>
+                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock Text="{Binding Value}" Foreground="Blue"/>
+                                    </StackPanel>
+                                </HierarchicalDataTemplate>
+                                <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElement}">
+                                    <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}" MouseDown="RegexLanguageElement_StackPanel_MouseDown" MouseUp="RegexLanguageElement_StackPanel_MouseUp">
+                                        <Image Source="{StaticResource RegexLanguageElementPicture}" Width="16" Height="16" Margin="3,0"/>
+                                        <TextBlock Text="{Binding Name}"/>
+                                        <TextBlock Text="{Binding Value}" Foreground="Blue"/>
+                                    </StackPanel>
+                                </HierarchicalDataTemplate>
+                            </TreeView.Resources>
+                        </TreeView>
+                        <GridSplitter 
                                 Grid.Row="1"
                                 VerticalAlignment="Stretch" 
                                 HorizontalAlignment="Stretch"/>
-                        <TextBox Name="tbxRegexLanguageElementDescription" 
+                            <TextBox Name="tbxRegexLanguageElementDescription" 
                                      IsReadOnly="True"
                                      TextWrapping="Wrap"
                                      Grid.Row="2"

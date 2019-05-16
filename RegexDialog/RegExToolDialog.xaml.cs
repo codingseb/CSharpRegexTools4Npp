@@ -224,7 +224,6 @@ namespace RegexDialog
             SecondColumn.Width = Config.Instance.GridSecondColumnWidth;
             ThirdColumn.Width = Config.Instance.GridThirdColumnWidth;
             RegexEditorRow.Height = new GridLength(Config.Instance.GridRegexEditorRowHeight ?? RegexEditorRow.Height.Value);
-            RegexLanguageElementFirstRow.Height = new GridLength(Config.Instance.GridRegexLanguageElementsFirstRowHeight ?? RegexLanguageElementFirstRow.Height.Value);
 
             // Set Treeview Matches Result base contextMenu
             MatchResultsTreeView.ContextMenu = MatchResultsTreeView.Resources["cmMatchResultsMenu"] as ContextMenu;
