@@ -45,10 +45,20 @@ namespace RegexDialog
 
         private bool mustSelectEditor = false;
 
-        private Regex cSharpReplacePartSplitter = new Regex("#global(?<global>.*)#endglobal", RegexOptions.Compiled);
-
         private BracketColorizer currentBracketColorizer = new BracketColorizer();
         private BracketColorizer matchingBracketColorizer = new BracketColorizer();
+
+        private Regex cSharpReplacePartSplitter = new Regex(@"(?<=^|\s)\#global(?=\s)(?<global>.*)(?<=\s)\#endglobal(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
+
+        public object ReplaceScript
+        {
+            get
+            {
+                return CSScript.Evaluator.LoadCode(Res.CSharpReplaceContainer
+                    .Replace("//code", cSharpReplacePartSplitter.Replace(ReplaceEditor.Text, string.Empty))
+                    .Replace("//global", cSharpReplacePartSplitter.Match(ReplaceEditor.Text).Groups["global"].Value));
+            }
+        }
 
         public delegate string GetTextDelegate();
         public delegate string GetCurrentFileNameDelegate();
@@ -330,7 +340,7 @@ namespace RegexDialog
         }
 
         /// <summary>
-        /// 
+        /// Ajoute les champs textes courant spécifié à leur historique
         /// </summary>
         /// <param name="historyNbr">1 = seulement regex, 2 = seulement replace, 0 = tout</param>
         private void SetToHistory(int historyNbr = 0)
@@ -550,10 +560,7 @@ namespace RegexDialog
 
                 if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                 {
-                    dynamic script = CSScript.Evaluator.LoadCode(
-                        Res.CSharpReplaceContainer
-                            .Replace("//code", cSharpReplacePartSplitter.Replace(ReplaceEditor.Text, string.Empty))
-                            .Replace("//global", cSharpReplacePartSplitter.Match(ReplaceEditor.Text).Groups["global"].Value));
+                    dynamic script = ReplaceScript;
 
                     int index = -1;
 
@@ -759,10 +766,7 @@ namespace RegexDialog
 
                 if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                 {
-                    script = CSScript.Evaluator.LoadCode(
-                        Res.CSharpReplaceContainer
-                            .Replace("//code", cSharpReplacePartSplitter.Replace(ReplaceEditor.Text, string.Empty))
-                            .Replace("//global", cSharpReplacePartSplitter.Match(ReplaceEditor.Text).Groups["global"].Value));
+                    script = ReplaceScript;
                 }
 
                 void Extract(string text, string fileName = "")
@@ -1396,10 +1400,7 @@ namespace RegexDialog
 
                         if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                         {
-                            dynamic script = CSScript.Evaluator.LoadCode(
-                                Res.CSharpReplaceContainer
-                                    .Replace("//code", cSharpReplacePartSplitter.Replace(ReplaceEditor.Text, string.Empty))
-                                    .Replace("//global", cSharpReplacePartSplitter.Match(ReplaceEditor.Text).Groups["global"].Value));
+                            dynamic script = ReplaceScript;
 
                             int index = -1;
 
@@ -1444,10 +1445,7 @@ namespace RegexDialog
 
                         if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                         {
-                            dynamic script = CSScript.Evaluator.LoadCode(
-                                Res.CSharpReplaceContainer
-                                    .Replace("//code", cSharpReplacePartSplitter.Replace(ReplaceEditor.Text, string.Empty))
-                                    .Replace("//global", cSharpReplacePartSplitter.Match(ReplaceEditor.Text).Groups["global"].Value));
+                            dynamic script = ReplaceScript;
 
                             if (regexResult is RegexMatchResult regexMatchResult)
                                 newText = beforeMatch + script.Replace((Match)regexMatchResult.RegexElement, regexMatchResult.RegexElementNb, regexResult.FileName, regexMatchResult.RegexElementNb, 0) + afterMatch;

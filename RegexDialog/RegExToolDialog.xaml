@@ -336,13 +336,14 @@
                                   Content="_C#">
                             <CheckBox.ToolTip>
                                 <StackPanel>
-                                    <TextBlock>You must use at least one return keyword to return a string</TextBlock>
+                                    <TextBlock>You must use at least one <Bold>return</Bold> keyword to return a string</TextBlock>
                                     <TextBlock>You can use the following variables :</TextBlock>
-                                    <TextBlock>- match : Contains the current Regex Match</TextBlock>
-                                    <TextBlock>- index : The index of the current match in the current file</TextBlock>
-                                    <TextBlock>- fileName : (If in directory search) the fileName where the match was found</TextBlock>
-                                    <TextBlock>- globalIndex : (If in directory search) the index of the match in all files</TextBlock>
-                                    <TextBlock>- fileIndex : (If in directory search) the index of the file</TextBlock>
+                                    <TextBlock>- <Bold>match</Bold> : Contains the current Regex Match</TextBlock>
+                                    <TextBlock>- <Bold>index</Bold> : The index of the current match in the current file</TextBlock>
+                                    <TextBlock>- <Bold>fileName</Bold> : (If in directory search) the fileName where the match was found</TextBlock>
+                                    <TextBlock>- <Bold>globalIndex</Bold> : (If in directory search) the index of the match in all files</TextBlock>
+                                    <TextBlock>- <Bold>fileIndex</Bold> : (If in directory search) the index of the file</TextBlock>
+                                    <TextBlock Margin="0,5">You can declare shared variables, properties or methods putting code between <Bold>#global</Bold> and <Bold>#endglobal</Bold></TextBlock>
                                 </StackPanel>
                             </CheckBox.ToolTip>
                         </CheckBox>
@@ -507,7 +508,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition x:Name="RegexLanguageElementFirstRow" Height="*" MinHeight="50" />
                             <RowDefinition Height="5" />
-                            <RowDefinition Height="0.1*" />
+                            <RowDefinition Height="0.1*" MinHeight="30"/>
                         </Grid.RowDefinitions>
                         <TreeView Name="RegexLanguagesElementsTreeView" SelectedItemChanged="RegexLanguagesElementsTreeView_SelectedItemChanged">
                                 <TreeView.Resources>
@@ -528,9 +529,9 @@
                                 </TreeView.Resources>
                             </TreeView>
                             <GridSplitter
-                            Grid.Row="1"
-                            VerticalAlignment="Stretch" 
-                            HorizontalAlignment="Stretch"/>
+                                Grid.Row="1"
+                                VerticalAlignment="Stretch" 
+                                HorizontalAlignment="Stretch"/>
                         <TextBox Name="tbxRegexLanguageElementDescription" 
                                      IsReadOnly="True"
                                      TextWrapping="Wrap"
