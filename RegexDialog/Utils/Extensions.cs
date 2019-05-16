@@ -1,8 +1,13 @@
-﻿using System.Security;
+﻿using System;
+using System.Linq;
+using System.Reflection;
+using System.Security;
+using System.Text.RegularExpressions;
+using System.Windows.Media;
 
 namespace RegexDialog
 {
-    internal static class XmlStringExtension
+    internal static class Extensions
     {
         public static string EscapeXml(this string s)
         {

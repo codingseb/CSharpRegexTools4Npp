@@ -211,6 +211,7 @@
     <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.ValueTuple.4.5.0\lib\netstandard1.0\System.ValueTuple.dll</HintPath>
     </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.SDK.Expression.Blend.1.0.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
     </Reference>
@@ -254,6 +255,7 @@
     <Compile Include="Model\RegexCaptureResult.cs" />
     <Compile Include="Model\RegexGroupResult.cs" />
     <Compile Include="Utils\ExpressionEvaluator.cs" />
+    <Compile Include="Utils\IniFile.cs" />
     <Compile Include="Utils\ObservableDictionary.cs" />
     <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Model\RegexLanguageElement.cs" />
@@ -274,7 +276,7 @@
     </Compile>
     <Compile Include="Converters\ShowOnOneLineConverter.cs" />
     <Compile Include="Utils\RegexTextSource.cs" />
-    <Compile Include="Utils\XmlStringExtension.cs" />
+    <Compile Include="Utils\Extensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <Page Include="RegExToolDialog.xaml">

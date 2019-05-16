@@ -26,8 +26,8 @@ namespace RegexDialog
     public partial class RegExToolDialog : Window
     {
         private List<RegExOptionViewModel> regExOptionViewModelsList = new List<RegExOptionViewModel>();
-        List<Regex> bracketsRegexList = (new Regex[] 
-            { 
+        private List<Regex> bracketsRegexList = (new Regex[]
+            {
                 new Regex(@"(?<!(?<![\\])([\\]{2})*[\\])[\(\)]", RegexOptions.Compiled),
                 new Regex(@"(?<!(?<![\\])([\\]{2})*[\\])[\[\]]", RegexOptions.Compiled),
                 new Regex(@"(?<!(?<![\\])([\\]{2})*[\\])[{}]", RegexOptions.Compiled),
@@ -48,15 +48,23 @@ namespace RegexDialog
         private BracketColorizer currentBracketColorizer = new BracketColorizer();
         private BracketColorizer matchingBracketColorizer = new BracketColorizer();
 
-        private Regex cSharpReplacePartSplitter = new Regex(@"(?<=^|\s)\#global(?=\s)(?<global>.*)(?<=\s)\#endglobal(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpReplaceSpecialZoneCleaningRegex = new Regex(@"(?<=^|\s)\#(?<name>\w+)(?=\s).*(?<=\s)\#end\k<name>(?=\s|$)\s*", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpReplaceGlobalPartRegex = new Regex(@"(?<=^|\s)\#global(?=\s)(?<global>.*)(?<=\s)\#endglobal(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpReplaceBeforePartRegex = new Regex(@"(?<=^|\s)\#before(?=\s)(?<before>.*)(?<=\s)\#endbefore(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpReplaceAfterPartRegex = new Regex(@"(?<=^|\s)\#after(?=\s)(?<after>.*)(?<=\s)\#endafter(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
 
         public object ReplaceScript
         {
             get
             {
+                Match beforeMatch = cSharpReplaceBeforePartRegex.Match(ReplaceEditor.Text);
+                Match afterMatch = cSharpReplaceAfterPartRegex.Match(ReplaceEditor.Text);
+
                 return CSScript.Evaluator.LoadCode(Res.CSharpReplaceContainer
-                    .Replace("//code", cSharpReplacePartSplitter.Replace(ReplaceEditor.Text, string.Empty))
-                    .Replace("//global", cSharpReplacePartSplitter.Match(ReplaceEditor.Text).Groups["global"].Value));
+                    .Replace("//code", cSharpReplaceSpecialZoneCleaningRegex.Replace(ReplaceEditor.Text, string.Empty))
+                    .Replace("//global", cSharpReplaceGlobalPartRegex.Match(ReplaceEditor.Text).Groups["global"].Value)
+                    .Replace("//before", beforeMatch.Success ? beforeMatch.Groups["before"].Value : "return text;")
+                    .Replace("//after", afterMatch.Success ? afterMatch.Groups["after"].Value : "return text;"));
             }
         }
 
@@ -127,7 +135,7 @@ namespace RegexDialog
         /// Fonction qui récupère la position du début de la sélection dans le texte
         /// </summary>
         public GetIntDelegate GetSelectionStartIndex { get; set; }
-        
+
         /// <summary>
         /// Fonction qui récupère la longueur de la sélection
         /// </summary>
@@ -138,12 +146,12 @@ namespace RegexDialog
         /// </summary>
         public string RegexPatternText
         {
-            get 
+            get
             {
                 return RegexEditor.Text;
             }
 
-            set 
+            set
             {
                 RegexEditor.Text = value;
             }
@@ -154,12 +162,12 @@ namespace RegexDialog
         /// </summary>
         public string ReplacePatternText
         {
-            get 
+            get
             {
                 return ReplaceEditor.Text;
             }
 
-            set 
+            set
             {
                 ReplaceEditor.Text = value;
             }
@@ -183,13 +191,13 @@ namespace RegexDialog
             // Initialisation des delegates de base
             GetText = () => string.Empty;
 
-            SetText = (string text) => { };
+            SetText = (string _) => { };
 
-            SetTextInNew = (string text) => MessageBox.Show("Not Implemented");
+            SetTextInNew = (string _) => MessageBox.Show("Not Implemented");
 
             // Application de la coloration syntaxique pour les expressions régulières
             XmlReader reader = XmlReader.Create(new StringReader(Res.Regex_syntax_color));
-                                                         
+
             RegexEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
 
             // Application de la coloration syntaxique pour les chaines de remplacement
@@ -223,7 +231,8 @@ namespace RegexDialog
             FirstColumn.Width = Config.Instance.GridFirstColumnWidth;
             SecondColumn.Width = Config.Instance.GridSecondColumnWidth;
             ThirdColumn.Width = Config.Instance.GridThirdColumnWidth;
-            RegexEditorRow.Height = new GridLength(Config.Instance.GridRegexEditorRowHeight ?? RegexEditorRow.Height.Value);
+            RegexEditorRow.Height = Config.Instance.GridRegexEditorRowHeight;
+            ReplaceEditorRow.Height = Config.Instance.GridReplaceEditorRowHeight;
 
             // Set Treeview Matches Result base contextMenu
             MatchResultsTreeView.ContextMenu = MatchResultsTreeView.Resources["cmMatchResultsMenu"] as ContextMenu;
@@ -234,7 +243,7 @@ namespace RegexDialog
             Enum.GetValues(typeof(RegexOptions))
                 .Cast<RegexOptions>()
                 .ToList()
-                .ForEach(delegate(RegexOptions regexOption)
+                .ForEach(delegate (RegexOptions regexOption)
                 {
                     if (regexOption != RegexOptions.None && regexOption != RegexOptions.Compiled)
                     {
@@ -274,12 +283,12 @@ namespace RegexDialog
 
                 Dictionary<string, int> posStringToMatchingPosDict = new Dictionary<string, int>();
 
-                bracketsRegexList.ForEach(delegate(Regex regex)
+                bracketsRegexList.ForEach(regex =>
                 {
                     List<Match> matches = regex.Matches(RegexEditor.Text).Cast<Match>().ToList();
                     Stack<Match> stackMatches = new Stack<Match>();
 
-                    matches.ForEach(delegate(Match match)
+                    matches.ForEach(match =>
                     {
                         if (openingBrackets.Contains(match.Value))
                         {
@@ -318,7 +327,7 @@ namespace RegexDialog
                     handled = true;
                 }
 
-                if(handled)
+                if (handled)
                 {
                     RegexEditor.TextArea.TextView.LineTransformers.Add(currentBracketColorizer);
                     RegexEditor.TextArea.TextView.LineTransformers.Add(matchingBracketColorizer);
@@ -363,7 +372,7 @@ namespace RegexDialog
                 if (Config.Instance.ReplaceHistory.Contains(ReplaceEditor.Text))
                     Config.Instance.ReplaceHistory.Remove(ReplaceEditor.Text);
 
-                if(ReplaceEditor.Text.Length > 0)
+                if (ReplaceEditor.Text.Length > 0)
                     Config.Instance.ReplaceHistory.Insert(0, ReplaceEditor.Text);
 
                 while (Config.Instance.ReplaceHistory.Count > Config.Instance.HistoryToKeep)
@@ -372,7 +381,7 @@ namespace RegexDialog
                 }
             }
 
-            if(historyNbr == 0 && Directory.Exists(Config.Instance.TextSourceDirectoryPath))
+            if (historyNbr == 0 && Directory.Exists(Config.Instance.TextSourceDirectoryPath))
             {
                 string keepValue = Config.Instance.TextSourceDirectoryPath;
 
@@ -390,7 +399,7 @@ namespace RegexDialog
                 Config.Instance.TextSourceDirectoryPath = keepValue;
             }
 
-            if(historyNbr == 0)
+            if (historyNbr == 0)
             {
                 string keepValue = Config.Instance.TextSourceDirectorySearchFilter;
 
@@ -439,7 +448,7 @@ namespace RegexDialog
 
         private string GetCurrentText()
         {
-            if(Config.Instance.TextSourceOn == RegexTextSource.CurrentSelection)
+            if (Config.Instance.TextSourceOn == RegexTextSource.CurrentSelection)
             {
                 return GetSelectedText();
             }
@@ -472,15 +481,15 @@ namespace RegexDialog
                         return matches
                             .Cast<Match>()
                             .ToList()
-                            .FindAll(delegate (Match m)
+                            .FindAll(match =>
                             {
                                 countAllCaptures++;
 
-                                return m.Length > 0 || Config.Instance.ShowEmptyMatches;
+                                return match.Length > 0 || Config.Instance.ShowEmptyMatches;
                             })
-                            .ConvertAll(delegate (Match m)
+                            .ConvertAll(match =>
                             {
-                                RegexResult result = new RegexMatchResult(regex, m, i, fileName, selectionIndex);
+                                RegexResult result = new RegexMatchResult(regex, match, i, fileName, selectionIndex);
 
                                 i++;
 
@@ -510,7 +519,7 @@ namespace RegexDialog
                             })
                             .Where(regexFileResult => Config.Instance.TextSourceDirectoryShowNotMatchedFiles || regexFileResult.Children.Count > 0);
 
-                        MatchesResultLabel.Content = $"{i} matches [Index,Length] + {(countAllCaptures - i)} empties matches found in {ff}/{ft} files";
+                        MatchesResultLabel.Content = $"{i} matches [Index,Length] + {countAllCaptures - i} empties matches found in {ff}/{ft} files";
                     }
                     else
                     {
@@ -528,7 +537,7 @@ namespace RegexDialog
                             MatchResultsTreeView.ItemsSource = GetMatchesFor(GetCurrentText());
                         }
 
-                        MatchesResultLabel.Content = $"{i} matches [Index,Length] + {(countAllCaptures - i)} empties matches";
+                        MatchesResultLabel.Content = $"{i} matches [Index,Length] + {countAllCaptures - i} empties matches";
                     }
 
                     if (i > 0)
@@ -551,7 +560,7 @@ namespace RegexDialog
                 SetToHistory();
 
                 int files = 0;
-                string text = GetCurrentText() ; 
+                string text = GetCurrentText();
 
                 Regex regex = new Regex(RegexEditor.Text, GetRegexOptions());
 
@@ -563,7 +572,7 @@ namespace RegexDialog
 
                     int index = -1;
 
-                    switch(Config.Instance.TextSourceOn)
+                    switch (Config.Instance.TextSourceOn)
                     {
                         case RegexTextSource.Directory:
                             if (!Config.Instance.OpenFilesForReplace && MessageBox.Show("This will modify files directly on the disk.\r\nModifications can not be cancel\r\nDo you want to continue ?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
@@ -573,7 +582,7 @@ namespace RegexDialog
                             {
                                 if (Config.Instance.OpenFilesForReplace)
                                 {
-                                    if(TryOpen?.Invoke(fileName, false) ?? false)
+                                    if (TryOpen?.Invoke(fileName, false) ?? false)
                                     {
                                         text = GetText();
                                         int matchesCount = regex.Matches(text).Count;
@@ -593,7 +602,7 @@ namespace RegexDialog
                                             {
                                                 SaveCurrentDocument?.Invoke();
                                             }
-                                            catch {}
+                                            catch { }
 
                                             files++;
                                         }
@@ -697,7 +706,7 @@ namespace RegexDialog
                     }
                 }
 
-                if(Config.Instance.TextSourceOn == RegexTextSource.Directory)
+                if (Config.Instance.TextSourceOn == RegexTextSource.Directory)
                     MessageBox.Show(nbrOfElementToReplace.ToString() + $" elements have been replaced in {files} files");
                 else
                     MessageBox.Show(nbrOfElementToReplace.ToString() + " elements have been replaced");
@@ -705,9 +714,9 @@ namespace RegexDialog
 
                 ShowMatches();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                MessageBox.Show(ex.Message);    
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -738,7 +747,7 @@ namespace RegexDialog
                     SetPosition(0, 0);
 
 
-                matches.ForEach(delegate(Match match)
+                matches.ForEach(match =>
                 {
                     try
                     {
@@ -747,7 +756,7 @@ namespace RegexDialog
                     catch { }
                 });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -777,7 +786,7 @@ namespace RegexDialog
                     if (matches.Count > 0 || Config.Instance.TextSourceDirectoryShowNotMatchedFiles)
                     {
                         if (Config.Instance.PrintFileNameWhenExtract)
-                            sb.AppendLine("\r\n" + fileName);
+                            sb.Append("\r\n").AppendLine(fileName);
 
                         if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                         {
@@ -799,12 +808,9 @@ namespace RegexDialog
                     }
                 }
 
-                if(Config.Instance.TextSourceOn == RegexTextSource.Directory)
+                if (Config.Instance.TextSourceOn == RegexTextSource.Directory)
                 {
-                    GetFiles().ForEach(fileName =>
-                    {
-                        Extract(File.ReadAllText(fileName), fileName);
-                    });
+                    GetFiles().ForEach(fileName => Extract(File.ReadAllText(fileName), fileName));
                 }
                 else
                 {
@@ -845,14 +851,14 @@ namespace RegexDialog
             try
             {
                 SetToHistory();
-                if(Config.Instance.TextSourceOn == RegexTextSource.Directory)
+                if (Config.Instance.TextSourceOn == RegexTextSource.Directory)
                 {
                     List<string> files = GetFiles();
 
                     bool found = false;
                     string fileName = string.Empty;
 
-                    for(int i = 0; i < files.Count && !found; i++)
+                    for (int i = 0; i < files.Count && !found; i++)
                     {
                         found = Regex.IsMatch(File.ReadAllText(files[i]), RegexEditor.Text, GetRegexOptions());
 
@@ -870,7 +876,7 @@ namespace RegexDialog
                     MessageBox.Show(this, Regex.IsMatch(GetCurrentText(), RegexEditor.Text, GetRegexOptions()) ? "Yes" : "No");
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -888,16 +894,10 @@ namespace RegexDialog
                 Regex regex = new Regex(RegexEditor.Text, GetRegexOptions());
 
                 regex.GetGroupNames().ToList()
-                    .ForEach(delegate(string groupName)
-                        {
-                            cmiReplaceGroupByName.Items.Add("${" + groupName + "}");
-                        });
+                    .ForEach(groupName => cmiReplaceGroupByName.Items.Add("${" + groupName + "}"));
 
                 regex.GetGroupNumbers().ToList()
-                    .ForEach(delegate(int groupNumber)
-                    {
-                        cmiReplaceGroupByNumber.Items.Add("$" + groupNumber.ToString());    
-                    });
+                    .ForEach(groupNumber => cmiReplaceGroupByNumber.Items.Add("$" + groupNumber.ToString()));
             }
             catch { }
             finally
@@ -916,7 +916,7 @@ namespace RegexDialog
 
         private void ReplaceEditor_TextChanged(object sender, EventArgs e)
         {
-            Config.Instance.ReplaceEditorText = ReplaceEditor.Text;   
+            Config.Instance.ReplaceEditorText = ReplaceEditor.Text;
         }
 
         private void MatchResultsTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -927,7 +927,7 @@ namespace RegexDialog
                 {
                     RegexResult regexResult = e.NewValue as RegexResult;
 
-                    if (regexResult != null && regexResult.FileName.Length > 0)
+                    if (regexResult?.FileName.Length > 0)
                     {
                         if ((TryOpen?.Invoke(regexResult.FileName, true) ?? false) && !(regexResult is RegexFileResult))
                             SetPosition(regexResult.Index, regexResult.Length);
@@ -965,13 +965,12 @@ namespace RegexDialog
             {
                 if (sender is TreeViewItem treeViewItem && treeViewItem.DataContext is RegexResult regexResult)
                 {
-                    if (regexResult.FileName.Length > 0 && !GetCurrentFileName().ToLower().Equals(regexResult.FileName.ToLower()))
+                    if (regexResult.FileName.Length > 0
+                        && !GetCurrentFileName().Equals(regexResult.FileName, StringComparison.OrdinalIgnoreCase)
+                        && (TryOpen?.Invoke(regexResult.FileName, false) ?? false)
+                        && !(regexResult is RegexFileResult))
                     {
-                        if (TryOpen?.Invoke(regexResult.FileName, false) ?? false)
-                        {
-                            if (!(regexResult is RegexFileResult))
-                                SetPosition?.Invoke(regexResult.Index, regexResult.Length);
-                        }
+                        SetPosition?.Invoke(regexResult.Index, regexResult.Length);
                     }
 
                     e.Handled = true;
@@ -984,18 +983,19 @@ namespace RegexDialog
         {
             try
             {
-                if (e.Key == Key.Enter && sender is TreeViewItem treeViewItem && treeViewItem.DataContext is RegexResult regexResult)
+                if (e.Key == Key.Enter
+                    && sender is TreeViewItem treeViewItem
+                    && treeViewItem.DataContext is RegexResult regexResult
+                    && regexResult.FileName.Length > 0
+                    && !GetCurrentFileName().Equals(regexResult.FileName, StringComparison.OrdinalIgnoreCase))
                 {
-                    if (regexResult.FileName.Length > 0 && !GetCurrentFileName().ToLower().Equals(regexResult.FileName.ToLower()))
+                    if ((TryOpen?.Invoke(regexResult.FileName, false) ?? false)
+                        && !(regexResult is RegexFileResult))
                     {
-                        if (TryOpen?.Invoke(regexResult.FileName, false) ?? false)
-                        {
-                            if (!(regexResult is RegexFileResult))
-                                SetPosition?.Invoke(regexResult.Index, regexResult.Length);
-                        }
-
-                        e.Handled = true;
+                        SetPosition?.Invoke(regexResult.Index, regexResult.Length);
                     }
+
+                    e.Handled = true;
                 }
             }
             catch { }
@@ -1007,26 +1007,25 @@ namespace RegexDialog
             {
                 if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount >= 2 && sender is FrameworkElement)
                 {
+                    RegexLanguageElement rle = (RegexLanguageElement)((FrameworkElement)sender).DataContext;
 
-                        RegexLanguageElement rle = (RegexLanguageElement)((FrameworkElement)sender).DataContext;
+                    int moveCaret = 0;
 
-                        int moveCaret = 0;
+                    if (RegexEditor.SelectionLength > 0)
+                    {
+                        RegexEditor.Document.Remove(RegexEditor.SelectionStart, RegexEditor.SelectionLength);
+                        moveCaret = rle.Value.Length;
+                    }
 
-                        if (RegexEditor.SelectionLength > 0)
-                        {
-                            RegexEditor.Document.Remove(RegexEditor.SelectionStart, RegexEditor.SelectionLength);
-                            moveCaret = rle.Value.Length;
-                        }
+                    RegexEditor.Document.Insert(RegexEditor.TextArea.Caret.Offset, rle.Value);
 
-                        RegexEditor.Document.Insert(RegexEditor.TextArea.Caret.Offset, rle.Value);
+                    RegexEditor.TextArea.Caret.Offset += moveCaret;
+                    RegexEditor.SelectionStart = RegexEditor.TextArea.Caret.Offset;
+                    RegexEditor.SelectionLength = 0;
 
-                        RegexEditor.TextArea.Caret.Offset += moveCaret;
-                        RegexEditor.SelectionStart = RegexEditor.TextArea.Caret.Offset;
-                        RegexEditor.SelectionLength = 0;
+                    mustSelectEditor = true;
 
-                        mustSelectEditor = true;
-
-                        e.Handled = true;
+                    e.Handled = true;
                 }
             }
             catch
@@ -1035,7 +1034,7 @@ namespace RegexDialog
 
         private void RegexLanguageElement_StackPanel_MouseUp(object sender, MouseButtonEventArgs e)
         {
-            if(mustSelectEditor)
+            if (mustSelectEditor)
             {
                 RegexEditor.Focus();
                 mustSelectEditor = false;
@@ -1049,25 +1048,25 @@ namespace RegexDialog
                 if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount >= 2 && sender is FrameworkElement)
                 {
 
-                        ReplaceLanguageElement rle = (ReplaceLanguageElement)((FrameworkElement)sender).DataContext;
+                    ReplaceLanguageElement rle = (ReplaceLanguageElement)((FrameworkElement)sender).DataContext;
 
-                        int moveCaret = 0;
+                    int moveCaret = 0;
 
-                        if (RegexEditor.SelectionLength > 0)
-                        {
-                            ReplaceEditor.Document.Remove(ReplaceEditor.SelectionStart, ReplaceEditor.SelectionLength);
-                            moveCaret = rle.Value.Length;
-                        }
+                    if (RegexEditor.SelectionLength > 0)
+                    {
+                        ReplaceEditor.Document.Remove(ReplaceEditor.SelectionStart, ReplaceEditor.SelectionLength);
+                        moveCaret = rle.Value.Length;
+                    }
 
-                        ReplaceEditor.Document.Insert(ReplaceEditor.TextArea.Caret.Offset, rle.Value);
+                    ReplaceEditor.Document.Insert(ReplaceEditor.TextArea.Caret.Offset, rle.Value);
 
-                        ReplaceEditor.TextArea.Caret.Offset += moveCaret;
-                        ReplaceEditor.SelectionStart = ReplaceEditor.TextArea.Caret.Offset;
-                        ReplaceEditor.SelectionLength = 0;
+                    ReplaceEditor.TextArea.Caret.Offset += moveCaret;
+                    ReplaceEditor.SelectionStart = ReplaceEditor.TextArea.Caret.Offset;
+                    ReplaceEditor.SelectionLength = 0;
 
-                        mustSelectEditor = true;
+                    mustSelectEditor = true;
 
-                        e.Handled = true;
+                    e.Handled = true;
 
                 }
             }
@@ -1108,10 +1107,10 @@ namespace RegexDialog
         {
             try
             {
-                if (ReplaceLanguageElementsListView.SelectedValue != null)
+                if (ReplaceLanguageElementsListView.SelectedValue != null
+                    && ReplaceLanguageElementsListView.SelectedValue is ReplaceLanguageElement)
                 {
-                    if (ReplaceLanguageElementsListView.SelectedValue is ReplaceLanguageElement)
-                        tbxReplacLanguageElementDescription.Text = ((ReplaceLanguageElement)ReplaceLanguageElementsListView.SelectedValue).Description;
+                    tbxReplacLanguageElementDescription.Text = ((ReplaceLanguageElement)ReplaceLanguageElementsListView.SelectedValue).Description;
                 }
             }
             catch
@@ -1138,15 +1137,17 @@ namespace RegexDialog
                 Config.Instance.GridFirstColumnWidth = FirstColumn.Width;
                 Config.Instance.GridSecondColumnWidth = SecondColumn.Width;
                 Config.Instance.GridThirdColumnWidth = ThirdColumn.Width;
-                Config.Instance.GridRegexEditorRowHeight = RegexEditorRow.ActualHeight;
-                Config.Instance.GridRegexLanguageElementsFirstRowHeight = RegexLanguageElementFirstRow.ActualHeight;
+                Config.Instance.GridRegexEditorRowHeight = RegexEditorRow.Height;
+                Config.Instance.GridReplaceEditorRowHeight = ReplaceEditorRow.Height;
 
-                Config.Instance.DialogLeft = this.Left;
-                Config.Instance.DialogTop = this.Top;
-                Config.Instance.DialogWidth = this.ActualWidth;
-                Config.Instance.DialogHeight = this.ActualHeight;
+                Config.Instance.GridRegexLanguageElementsFirstRowHeight = RegexLanguageElementFirstRow.Height;
 
-                Config.Instance.DialogMaximized = this.WindowState == WindowState.Maximized;
+                Config.Instance.DialogLeft = Left;
+                Config.Instance.DialogTop = Top;
+                Config.Instance.DialogWidth = ActualWidth;
+                Config.Instance.DialogHeight = ActualHeight;
+
+                Config.Instance.DialogMaximized = WindowState == WindowState.Maximized;
 
                 Config.Instance.Save();
             }
@@ -1155,11 +1156,11 @@ namespace RegexDialog
 
         private void SetMaxSizes()
         {
-            try
-            {
-                RegexEditorRow.MaxHeight = Root.ActualHeight - RegexEditor.TransformToAncestor(Root).Transform(new Point(0, 0)).Y - 5 - 10;
-            }
-            catch { }
+            //try
+            //{
+            //    RegexEditorRow.MaxHeight = Root.ActualHeight - RegexEditor.TransformToAncestor(Root).Transform(new Point(0, 0)).Y - 5 - 10;
+            //}
+            //catch { }
         }
 
         private void RegexEditor_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -1362,11 +1363,11 @@ namespace RegexDialog
                     using (Dispatcher.DisableProcessing())
                     {
                         ((List<RegexResult>)MatchResultsTreeView.ItemsSource)
-                            .ForEach(delegate(RegexResult regRes)
+                            .ForEach(delegate (RegexResult regRes)
                             {
                                 regRes.RefreshExpands();
                             });
-                    }                
+                    }
                 }
                 else
                 {
@@ -1443,9 +1444,9 @@ namespace RegexDialog
                             if (regexResult is RegexMatchResult regexMatchResult)
                                 newText = beforeMatch + script.Replace((Match)regexMatchResult.RegexElement, regexMatchResult.RegexElementNb, regexResult.FileName, regexMatchResult.RegexElementNb, 0) + afterMatch;
                             else if (regexResult is RegexGroupResult regexGroupResult)
-                                newText = beforeMatch + script.Replace((Match)regexGroupResult.Parent.RegexElement, (Group)regexGroupResult.RegexElement , regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
+                                newText = beforeMatch + script.Replace((Match)regexGroupResult.Parent.RegexElement, (Group)regexGroupResult.RegexElement, regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
                             else if (regexResult is RegexCaptureResult regexCaptureResult)
-                                newText = beforeMatch + script.Replace((Match)regexCaptureResult.Parent.Parent.RegexElement,(Group)regexCaptureResult.Parent.RegexElement, (Capture)regexCaptureResult.RegexElement , regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
+                                newText = beforeMatch + script.Replace((Match)regexCaptureResult.Parent.Parent.RegexElement, (Group)regexCaptureResult.Parent.RegexElement, (Capture)regexCaptureResult.RegexElement, regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
                         }
                         else
                         {
@@ -1502,7 +1503,7 @@ namespace RegexDialog
             {
                 MessageBox.Show(exception.Message);
             }
-           
+
         }
 
         private void InsertValueInReplaceField_MenuItem_Click(object sender, RoutedEventArgs e)
@@ -1661,7 +1662,7 @@ namespace RegexDialog
                     {
                         XmlDocument xmlDoc = new XmlDocument();
 
-                        XmlDeclaration xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", null, null);                     
+                        XmlDeclaration xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", null, null);
 
                         XmlElement root = xmlDoc.CreateElement("SavedRegex");
                         xmlDoc.InsertBefore(xmlDeclaration, xmlDoc.DocumentElement);
@@ -1708,7 +1709,7 @@ namespace RegexDialog
         {
             try
             {
-                this.Close();
+                Close();
             }
             catch { }
         }
@@ -1800,7 +1801,7 @@ namespace RegexDialog
             {
                 ReplaceEditor.Copy();
             }
-            catch {}
+            catch { }
         }
 
         private void cmiReplacePaste_Click(object sender, RoutedEventArgs e)
@@ -1809,7 +1810,7 @@ namespace RegexDialog
             {
                 ReplaceEditor.Paste();
             }
-            catch {}
+            catch { }
         }
 
         private void cmiRegexSelectAll_Click(object sender, RoutedEventArgs e)
@@ -1818,7 +1819,7 @@ namespace RegexDialog
             {
                 RegexEditor.SelectAll();
             }
-            catch {}
+            catch { }
         }
 
         private void cmiReplaceSelectAll_Click(object sender, RoutedEventArgs e)
@@ -1836,13 +1837,13 @@ namespace RegexDialog
             {
                 SetToHistory(1);
 
-                if(RegexEditor.SelectionLength > 0)
+                if (RegexEditor.SelectionLength > 0)
                 {
                     RegexEditor.SelectedText = IndentRegexPattern(RegexEditor.SelectedText);
                 }
                 else
                     RegexEditor.Text = IndentRegexPattern(RegexEditor.Text);
-                
+
                 regExOptionViewModelsList.Find(vm => vm.RegexOptions == RegexOptions.IgnorePatternWhitespace).Selected = true;
             }
             catch (Exception ex)

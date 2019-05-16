@@ -100,8 +100,9 @@ namespace RegexDialog
         public GridLength GridFirstColumnWidth { get; set; } = new GridLength(1, GridUnitType.Star);
         public GridLength GridSecondColumnWidth { get; set; } = new GridLength(1, GridUnitType.Star);
         public GridLength GridThirdColumnWidth { get; set; } = new GridLength(1, GridUnitType.Star);
-        public double? GridRegexEditorRowHeight { get; set; } = 150;
-        public double? GridRegexLanguageElementsFirstRowHeight { get; set; } = 300;
+        public GridLength GridRegexEditorRowHeight { get; set; } = new GridLength(1, GridUnitType.Star);
+        public GridLength GridReplaceEditorRowHeight { get; set; } = new GridLength(1, GridUnitType.Star);
+        public GridLength GridRegexLanguageElementsFirstRowHeight { get; set; } = new GridLength(1, GridUnitType.Star);
 
         public int MatchesShowLevel { get; set; } = 1;
 
