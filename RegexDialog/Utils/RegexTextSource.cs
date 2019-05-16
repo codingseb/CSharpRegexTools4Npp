@@ -4,6 +4,7 @@
     {
         CurrentTab,
         CurrentSelection,
-        Directory
+        Directory,
+        CSharpScript
     }
 }

@@ -582,10 +582,11 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </TabItem>
-                <TabItem x:Name="TextSourceTabItem" Header="Text _Source">
+                <TabItem x:Name="TextSourceTabItem" Header="Ot_her Options">
                     <DockPanel>
-                        <GroupBox  Header="Other Options" DockPanel.Dock="Bottom">
-                            <StackPanel Margin="5,0">
+                        <GroupBox Header="Results" 
+                                  DockPanel.Dock="Bottom">
+                            <StackPanel Margin="5,5,5,0">
                                 <CheckBox x:Name="ShowEmptiesMatchesCheckBox" 
                                           IsChecked="{Binding ShowEmptyMatches}"
                                           Content="Show _empties matches" />
@@ -594,7 +595,7 @@
                                           Content="Print Filenames when extract" />
                             </StackPanel>
                         </GroupBox>
-                        <GroupBox Header="Execute Regex on :">
+                        <GroupBox Header="Text Source">
                             <GroupBox.Resources>
                                 <Style TargetType="RadioButton">
                                     <Setter Property="Margin" Value="0,0,0,5" />
@@ -603,8 +604,8 @@
                                     <Setter Property="Margin" Value="1,0,0,0" />
                                 </Style>
                             </GroupBox.Resources>
-                            <StackPanel>
-                                <WrapPanel Margin="5">
+                            <DockPanel>
+                                <WrapPanel Margin="5" DockPanel.Dock="Top">
                                 <RadioButton x:Name="CurrentTabTextSourceRadioButton" 
                                          Margin="5,0"
                                          Content="Current _tab" 
@@ -617,24 +618,29 @@
                                          Margin="5,0"
                                          Content="Specified _directory"
                                          IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='Directory'}"/>
+                                <RadioButton x:Name="CSharpScriptTextSourceRadioButton" 
+                                         Margin="5,0"
+                                         Content="C# _Script"
+                                         IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CSharpScript'}"/>
                                 </WrapPanel>
-                                <DockPanel Visibility="{Binding IsChecked, ElementName=SpecifiedDirectoryTextSourceRadioButton, Converter={converters:CustomBoolToVisibilityConverter}}">
-                                    <StackPanel DockPanel.Dock="Bottom"
-                                            Margin="5,0">
-                                        <CheckBox x:Name="SearchSubDirectoriesCheckBox" 
-                                          IsChecked="{Binding TextSourceDirectorySearchSubDirectories}"
-                                          Content="Su_b directories" />
-                                        <CheckBox x:Name="ShowNotMatchedFilesCheckBox" 
-                                          IsChecked="{Binding TextSourceDirectoryShowNotMatchedFiles}"
-                                          Content="Show _not matched files" />
-                                        <CheckBox x:Name="OpenFilesForReplaceCheckBox" 
-                                          IsChecked="{Binding OpenFilesForReplace}"
-                                          Content="_Open files to replace in editor (otherwise modify the file on the disk)" />
+                                
+                                <StackPanel Margin="5" 
+                                            DockPanel.Dock="Top"
+                                            Visibility="{Binding IsChecked, ElementName=SpecifiedDirectoryTextSourceRadioButton, Converter={converters:CustomBoolToVisibilityConverter}}">
 
-                                    </StackPanel>
-
-                                    <Grid DockPanel.Dock="Bottom"
-                                      Margin="0,5">
+                                    <DockPanel>
+                                        <Button x:Name="SpecifiedDirectoryTextSourcePathButton"
+                                        Content="..." 
+                                        Padding="10,0" 
+                                        DockPanel.Dock="Right"
+                                        Click="SpecifiedDirectoryTextSourcePathButton_Click"/>
+                                        <ComboBox x:Name="SpecifiedDirectoryTextSourcePathComboBox" 
+                                          Text="{Binding TextSourceDirectoryPath, UpdateSourceTrigger=PropertyChanged}"
+                                          ItemsSource="{Binding TextSourceDirectoryPathHistory}"
+                                          IsEditable="True"/>
+                                    </DockPanel>
+                                    
+                                    <Grid Margin="0,5">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
                                             <ColumnDefinition Width="*" />
@@ -650,17 +656,33 @@
                                               VerticalAlignment="Center"
                                               IsEditable="True"/>
                                     </Grid>
-                                    <Button x:Name="SpecifiedDirectoryTextSourcePathButton"
-                                        Content="..." 
-                                        Padding="10,0" 
-                                        DockPanel.Dock="Right"
-                                        Click="SpecifiedDirectoryTextSourcePathButton_Click"/>
-                                    <ComboBox x:Name="SpecifiedDirectoryTextSourcePathComboBox" 
-                                          Text="{Binding TextSourceDirectoryPath, UpdateSourceTrigger=PropertyChanged}"
-                                          ItemsSource="{Binding TextSourceDirectoryPathHistory}"
-                                          IsEditable="True"/>
-                                </DockPanel>
-                            </StackPanel>
+
+                                    <StackPanel Margin="5">
+                                        <CheckBox x:Name="SearchSubDirectoriesCheckBox" 
+                                          IsChecked="{Binding TextSourceDirectorySearchSubDirectories}"
+                                          Content="Su_b directories" />
+                                        <CheckBox x:Name="ShowNotMatchedFilesCheckBox" 
+                                          IsChecked="{Binding TextSourceDirectoryShowNotMatchedFiles}"
+                                          Content="Show _not matched files" />
+                                        <CheckBox x:Name="OpenFilesForReplaceCheckBox" 
+                                          IsChecked="{Binding OpenFilesForReplace}"
+                                          Content="_Open files to replace in editor (otherwise modify the file on the disk)" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <Border BorderBrush="Gray" 
+                                        BorderThickness="1"
+                                        Visibility="{Binding IsChecked, ElementName=CSharpScriptTextSourceRadioButton, Converter={converters:CustomBoolToVisibilityConverter}}">
+                                    <avalonEdit:TextEditor
+                                        Name="TextSourceEditor"
+                                        FontFamily="Consolas"
+                                        FontSize="12"
+                                        SyntaxHighlighting="C#"
+                                        ShowLineNumbers="True"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+                                </Border>
+                            </DockPanel>
+                                
                         </GroupBox>
                     </DockPanel>
                 </TabItem>
