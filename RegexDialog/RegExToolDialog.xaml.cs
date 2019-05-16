@@ -1158,12 +1158,6 @@ namespace RegexDialog
             try
             {
                 RegexEditorRow.MaxHeight = Root.ActualHeight - RegexEditor.TransformToAncestor(Root).Transform(new Point(0, 0)).Y - 5 - 10;
-                if (OptionTabControl.SelectedItem.Equals(RegexTabItem))
-                    RegexLanguageElementFirstRow.MaxHeight = Root.ActualHeight - RegexLanguagesElementsTreeView.TransformToAncestor(Root).Transform(new Point(0, 0)).Y - 5 - 40;
-                if (OptionTabControl.SelectedItem.Equals(ReplaceTabItem))
-                    ReplaceLanguageElementFirstRow.MaxHeight = Root.ActualHeight - ReplaceLanguageElementsListView.TransformToAncestor(Root).Transform(new Point(0, 0)).Y - 5 - 40;
-                //FirstColumn.MaxWidth = Math.Max(Root.ActualWidth - 10 - 100, 0);
-                //SecondColumn.MaxWidth = Math.Max(Root.ActualWidth - Math.Min(FirstColumn.ActualWidth, Root.ActualWidth) - 10 - 40, 0);
             }
             catch { }
         }
