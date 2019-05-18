@@ -226,6 +226,26 @@ namespace RegexDialog
             Width = Config.Instance.DialogWidth ?? Width;
             Height = Config.Instance.DialogHeight ?? Height;
 
+            if (Top < SystemParameters.VirtualScreenTop)
+            {
+                Top = SystemParameters.VirtualScreenTop;
+            }
+
+            if (Left < SystemParameters.VirtualScreenLeft)
+            {
+                Left = SystemParameters.VirtualScreenLeft;
+            }
+
+            if (Left + Width > SystemParameters.VirtualScreenLeft + SystemParameters.VirtualScreenWidth)
+            {
+                Left = SystemParameters.VirtualScreenWidth + SystemParameters.VirtualScreenLeft - Width;
+            }
+
+            if (Top + Height > SystemParameters.VirtualScreenTop + SystemParameters.VirtualScreenHeight)
+            {
+                Top = SystemParameters.VirtualScreenHeight + SystemParameters.VirtualScreenTop - Height;
+            }
+
             WindowState = Config.Instance.DialogMaximized ? WindowState.Maximized : WindowState.Normal;
 
             FirstColumn.Width = Config.Instance.GridFirstColumnWidth;
