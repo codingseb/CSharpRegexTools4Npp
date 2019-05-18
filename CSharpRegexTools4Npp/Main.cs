@@ -9,13 +9,12 @@ using System.Windows.Input;
 using System.Windows.Interop;
 
 namespace CSharpRegexTools4Npp
-{
-    
+{   
     public class Main
     {
         internal const string PluginName = "C# Regex Tools 4 Npp";
-        static int idMyDlg = 0;
-        static Bitmap tbBmp = Resources.icon;
+        private static int idMyDlg = 0;
+        private static readonly Bitmap tbBmp = Resources.icon;
         //static RegExToolDialog dialog = null;
 
         //Import the FindWindow API to find our window
@@ -30,10 +29,10 @@ namespace CSharpRegexTools4Npp
         private static extern IntPtr SetWindowLong(IntPtr hWnd, int windowLongFlags, IntPtr dwNewLong);
 
         [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        static extern long SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
+        private static extern long SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
 
         public const int GWL_EXSTYLE = -20;
         public const int WS_EX_LAYERED = 0x80000;
@@ -103,7 +102,7 @@ namespace CSharpRegexTools4Npp
                     {
                         GetText = () => BNpp.Text,
 
-                        SetText = (string text) =>
+                        SetText = text =>
                         {
                             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                             {
@@ -113,7 +112,7 @@ namespace CSharpRegexTools4Npp
                             BNpp.Text = text;
                         },
 
-                        SetTextInNew = (string text) =>
+                        SetTextInNew = text =>
                         {
                             BNpp.NotepadPP.FileNew();
 
@@ -122,9 +121,9 @@ namespace CSharpRegexTools4Npp
 
                         GetSelectedText = () => BNpp.SelectedText,
 
-                        SetPosition = (int index, int length) => BNpp.SelectTextAndShow(index, index + length),
+                        SetPosition = (index, length) => BNpp.SelectTextAndShow(index, index + length),
 
-                        SetSelection = (int index, int length) => BNpp.AddSelection(index, index + length),
+                        SetSelection = (index, length) => BNpp.AddSelection(index, index + length),
 
                         GetSelectionStartIndex = () => BNpp.SelectionStart,
 
@@ -132,15 +131,17 @@ namespace CSharpRegexTools4Npp
 
                         SaveCurrentDocument = () => BNpp.NotepadPP.SaveCurrentFile(),
 
-                        TryOpen = (string fileName, bool onlyIfAlreadyOpen) =>
+                        TryOpen = (fileName, onlyIfAlreadyOpen) =>
                         {
                             try
                             {
                                 bool result = false;
 
-                                if (BNpp.NotepadPP.CurrentFileName.ToLower().Equals(fileName.ToLower()))
+                                if (BNpp.NotepadPP.CurrentFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                                {
                                     result = true;
-                                else if (BNpp.NotepadPP.GetAllOpenedDocuments.Any((string s) => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                                }
+                                else if (BNpp.NotepadPP.GetAllOpenedDocuments.Any(s => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                                 {
                                     BNpp.NotepadPP.ShowOpenedDocument(fileName);
                                     result = true;

@@ -26,6 +26,7 @@ namespace RegexDialog
     public partial class RegExToolDialog : Window
     {
         private readonly List<RegExOptionViewModel> regExOptionViewModelsList = new List<RegExOptionViewModel>();
+
         private readonly List<Regex> bracketsRegexList = (new Regex[]
             {
                 new Regex(@"(?<!(?<![\\])([\\]{2})*[\\])[\(\)]", RegexOptions.Compiled),
@@ -68,42 +69,38 @@ namespace RegexDialog
             }
         }
 
-        public delegate string GetTextDelegate();
-        public delegate string GetCurrentFileNameDelegate();
-        public delegate void SetTextDelegate(string text);
         public delegate bool TryOpenDelegate(string fileName, bool onlyIfAlreadyOpen);
         public delegate void SetPositionDelegate(int index, int length);
-        public delegate int GetIntDelegate();
 
         /// <summary>
         /// Fonction de récupération du texte à utiliser comme input pour l'expression régulière
         /// public delegate string GetTextDelegate()
         /// </summary>
-        public GetTextDelegate GetText { get; set; }
+        public Func<string> GetText { get; set; }
 
         /// <summary>
         /// Fonction envoyant le résultat du replace dans une chaine texte
         /// public delegate void SetTextDelegate(string text)
         /// </summary>
-        public SetTextDelegate SetText { get; set; }
+        public Action<string> SetText { get; set; }
 
         /// <summary>
         /// Fonction de récupération du texte sélectionné à utiliser comme input pour l'expression régulière
         /// public delegate string GetTextDelegate()
         /// </summary>
-        public GetTextDelegate GetSelectedText { get; set; }
+        public Func<string> GetSelectedText { get; set; }
 
         /// <summary>
         /// Fonction envoyant le résultat du replace dans une chaine texte lorsque à remplacer dans la sélection
         /// public delegate void SetTextDelegate(string text)
         /// </summary>
-        public SetTextDelegate SetSelectedText { get; set; }
+        public Action<string> SetSelectedText { get; set; }
 
         /// <summary>
         /// Fonction envoyant le résultat de l'extraction des matches
         /// public delegate void SetTextDelegate(string text)
         /// </summary>
-        public SetTextDelegate SetTextInNew { get; set; }
+        public Action<string> SetTextInNew { get; set; }
 
         /// <summary>
         /// Try to Open or show in front in the editor the specified fileName
@@ -118,13 +115,13 @@ namespace RegexDialog
         /// <summary>
         /// Get the name of the current fileName in the editor
         /// </summary>
-        public GetCurrentFileNameDelegate GetCurrentFileName { get; set; }
+        public Func<string> GetCurrentFileName { get; set; }
 
         /// <summary>
         /// Fonction permettant de faire une sélection dans le text source
         /// public delegate void SetPositionDelegate(int index, int length)
         /// </summary>
-        public SetPositionDelegate SetPosition { get; set; } = (x, y) => { };
+        public SetPositionDelegate SetPosition { get; set; } = (_, __) => { };
 
         /// <summary>
         /// Fonction permettant d'ajouter une sélection de texte (La multi sélection doit être active sur le composant final)
@@ -134,12 +131,12 @@ namespace RegexDialog
         /// <summary>
         /// Fonction qui récupère la position du début de la sélection dans le texte
         /// </summary>
-        public GetIntDelegate GetSelectionStartIndex { get; set; }
+        public Func<int> GetSelectionStartIndex { get; set; }
 
         /// <summary>
         /// Fonction qui récupère la longueur de la sélection
         /// </summary>
-        public GetIntDelegate GetSelectionLength { get; set; }
+        public Func<int> GetSelectionLength { get; set; }
 
         /// <summary>
         /// L'expression régulière éditée dans la boite de dialogue
@@ -263,7 +260,7 @@ namespace RegexDialog
             Enum.GetValues(typeof(RegexOptions))
                 .Cast<RegexOptions>()
                 .ToList()
-                .ForEach(delegate (RegexOptions regexOption)
+                .ForEach(regexOption =>
                 {
                     if (regexOption != RegexOptions.None && regexOption != RegexOptions.Compiled)
                     {
@@ -451,7 +448,7 @@ namespace RegexDialog
             }
         }
 
-        static TreeViewItem VisualUpwardSearch(DependencyObject source)
+        private static TreeViewItem VisualUpwardSearch(DependencyObject source)
         {
             while (source != null && !(source is TreeViewItem))
                 source = VisualTreeHelper.GetParent(source);
@@ -584,7 +581,7 @@ namespace RegexDialog
 
                 Regex regex = new Regex(RegexEditor.Text, GetRegexOptions());
 
-                int nbrOfElementToReplace =  0;
+                int nbrOfElementToReplace = 0;
 
                 if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                 {
@@ -647,7 +644,6 @@ namespace RegexDialog
                                         }
                                     }
                                 }
-
                             });
                             break;
                         case RegexTextSource.CurrentSelection:
@@ -739,7 +735,6 @@ namespace RegexDialog
                 else
                     MessageBox.Show(nbrOfElementToReplace.ToString() + " elements have been replaced");
 
-
                 ShowMatches();
             }
             catch (Exception ex)
@@ -773,7 +768,6 @@ namespace RegexDialog
                     SetPosition(matches[0].Index + lastSelectionStart, 0);
                 else
                     SetPosition(0, 0);
-
 
                 matches.ForEach(match =>
                 {
@@ -864,7 +858,6 @@ namespace RegexDialog
 
             if (filter.Equals(string.Empty))
                 filter = "*";
-
 
             List<string> result = new List<string>();
 
@@ -1076,7 +1069,6 @@ namespace RegexDialog
             {
                 if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount >= 2 && sender is FrameworkElement)
                 {
-
                     ReplaceLanguageElement rle = (ReplaceLanguageElement)((FrameworkElement)sender).DataContext;
 
                     int moveCaret = 0;
@@ -1096,12 +1088,10 @@ namespace RegexDialog
                     mustSelectEditor = true;
 
                     e.Handled = true;
-
                 }
             }
             catch
             { }
-
         }
 
         private void ReplaceLanguageElement_StackPanel_MouseUp(object sender, MouseButtonEventArgs e)
@@ -1301,7 +1291,6 @@ namespace RegexDialog
         {
             try
             {
-
                 if (e.Key == Key.Enter && ReplaceHistoryListBox.SelectedValue != null)
                 {
                     ReplaceEditor.Text = ReplaceHistoryListBox.SelectedValue.ToString();
@@ -1373,10 +1362,7 @@ namespace RegexDialog
                     using (Dispatcher.DisableProcessing())
                     {
                         ((List<RegexResult>)MatchResultsTreeView.ItemsSource)
-                            .ForEach(delegate (RegexResult regRes)
-                            {
-                                regRes.RefreshExpands();
-                            });
+                            .ForEach(regRes => regRes.RefreshExpands());
                     }
                 }
                 else
@@ -1394,7 +1380,6 @@ namespace RegexDialog
             {
                 if (MatchResultsTreeView.SelectedValue is RegexFileResult regexFileResult)
                 {
-
                     if (TryOpen.Invoke(regexFileResult.FileName, false))
                     {
                         string text = GetText();
@@ -1424,7 +1409,6 @@ namespace RegexDialog
 
                         MessageBox.Show(nbrOfElementToReplace.ToString() + " elements has been replaced");
                     }
-
                 }
                 else if (MatchResultsTreeView.SelectedValue is RegexResult regexResult)
                 {
@@ -1432,8 +1416,8 @@ namespace RegexDialog
                     {
                         return;
                     }
-                    else if (!string.IsNullOrEmpty(regexResult.FileName) && !Config.Instance.OpenFilesForReplace &&
-                        MessageBox.Show("This will modify the file directly on the disk.\r\nModifications can not be cancel\r\nDo you want to continue ?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
+                    else if (!string.IsNullOrEmpty(regexResult.FileName) && !Config.Instance.OpenFilesForReplace
+                        && MessageBox.Show("This will modify the file directly on the disk.\r\nModifications can not be cancel\r\nDo you want to continue ?", "Warning", MessageBoxButton.YesNo, MessageBoxImage.Warning) == MessageBoxResult.No)
                     {
                         return;
                     }
@@ -1513,7 +1497,6 @@ namespace RegexDialog
             {
                 MessageBox.Show(exception.Message);
             }
-
         }
 
         private void InsertValueInReplaceField_MenuItem_Click(object sender, RoutedEventArgs e)
@@ -1589,13 +1572,10 @@ namespace RegexDialog
             {
                 SetToHistory();
 
-                RegexEditor.Text = "";
-                ReplaceEditor.Text = "";
+                RegexEditor.Text = string.Empty;
+                ReplaceEditor.Text = string.Empty;
 
-                regExOptionViewModelsList.ForEach(delegate (RegExOptionViewModel optionModel)
-                {
-                    optionModel.Selected = false;
-                });
+                regExOptionViewModelsList.ForEach(optionModel => optionModel.Selected = false);
             }
             catch { }
         }
@@ -1624,7 +1604,7 @@ namespace RegexDialog
 
                 bool? result = dialog.ShowDialog(this);
 
-                if (result.HasValue && result.Value && File.Exists(dialog.FileName))
+                if (result == true && File.Exists(dialog.FileName))
                 {
                     try
                     {
@@ -1742,7 +1722,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiRegexCopyForOnOneLine_Click(object sender, RoutedEventArgs e)
+        private void CmiRegexCopyForOnOneLine_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1751,7 +1731,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiRegexCopyForXml_Click(object sender, RoutedEventArgs e)
+        private void CmiRegexCopyForXml_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1760,7 +1740,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiRegexPasteFromXml_Click(object sender, RoutedEventArgs e)
+        private void CmiRegexPasteFromXml_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1769,7 +1749,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiRegexCut_Click(object sender, RoutedEventArgs e)
+        private void CmiRegexCut_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1778,7 +1758,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiRegexCopy_Click(object sender, RoutedEventArgs e)
+        private void CmiRegexCopy_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1787,7 +1767,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiRegexPaste_Click(object sender, RoutedEventArgs e)
+        private void CmiRegexPaste_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1796,7 +1776,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiReplaceCut_Click(object sender, RoutedEventArgs e)
+        private void CmiReplaceCut_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1805,7 +1785,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiReplaceCopy_Click(object sender, RoutedEventArgs e)
+        private void CmiReplaceCopy_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1814,7 +1794,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiReplacePaste_Click(object sender, RoutedEventArgs e)
+        private void CmiReplacePaste_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1823,7 +1803,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiRegexSelectAll_Click(object sender, RoutedEventArgs e)
+        private void CmiRegexSelectAll_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1832,7 +1812,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiReplaceSelectAll_Click(object sender, RoutedEventArgs e)
+        private void CmiReplaceSelectAll_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1841,7 +1821,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void cmiRegexIndent_Click(object sender, RoutedEventArgs e)
+        private void CmiRegexIndent_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1852,7 +1832,9 @@ namespace RegexDialog
                     RegexEditor.SelectedText = IndentRegexPattern(RegexEditor.SelectedText);
                 }
                 else
+                {
                     RegexEditor.Text = IndentRegexPattern(RegexEditor.Text);
+                }
 
                 regExOptionViewModelsList.Find(vm => vm.RegexOptions == RegexOptions.IgnorePatternWhitespace).Selected = true;
             }
@@ -1869,7 +1851,7 @@ namespace RegexDialog
                 Config.Instance.AutoIndentKeepQuantifiersOnSameLine);
         }
 
-        private void cmiRegexSetOnOneLine_Click(object sender, RoutedEventArgs e)
+        private void CmiRegexSetOnOneLine_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1895,7 +1877,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void miRegexOption_Click(object sender, RoutedEventArgs e)
+        private void MiRegexOption_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -1965,7 +1947,7 @@ namespace RegexDialog
         {
             try
             {
-                if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault(false))
+                if (CSharpReplaceCheckbox.IsChecked ?? false)
                 {
                     ReplaceEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("C#");
                 }
@@ -1992,7 +1974,7 @@ namespace RegexDialog
                 if (Directory.Exists(SpecifiedDirectoryTextSourcePathComboBox.Text))
                     folderBrowserDialog.SelectedPath = SpecifiedDirectoryTextSourcePathComboBox.Text;
 
-                if (folderBrowserDialog.ShowDialog(GetWindow(this)).GetValueOrDefault(false))
+                if (folderBrowserDialog.ShowDialog(GetWindow(this)) ?? false)
                 {
                     SpecifiedDirectoryTextSourcePathComboBox.Text = folderBrowserDialog.SelectedPath;
                 }

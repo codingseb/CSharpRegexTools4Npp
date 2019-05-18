@@ -112,7 +112,7 @@
                         <Style TargetType="MenuItem">
                             <Setter Property="Header" Value="{Binding Name}" />
                             <Setter Property="IsChecked" Value="{Binding Selected}" />
-                            <EventSetter Event="Click" Handler="miRegexOption_Click" />
+                            <EventSetter Event="Click" Handler="MiRegexOption_Click" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
@@ -277,18 +277,18 @@
                             </i:Interaction.Behaviors>
                             <avalonEdit:TextEditor.ContextMenu>
                                 <ContextMenu Name="cmRegexfieldContextMenu">
-                                    <MenuItem Name="cmiRegexIndent" Header="Auto Indent and set IgnorePatternWhitespace" Click="cmiRegexIndent_Click"/>
-                                    <MenuItem Name="cmiRegexSetOnOneLine" Header="Set on one line" Click="cmiRegexSetOnOneLine_Click"/>
+                                    <MenuItem Name="cmiRegexIndent" Header="Auto Indent and set IgnorePatternWhitespace" Click="CmiRegexIndent_Click"/>
+                                    <MenuItem Name="cmiRegexSetOnOneLine" Header="Set on one line" Click="CmiRegexSetOnOneLine_Click"/>
                                     <Separator />
-                                    <MenuItem Name="cmiRegexCut" Header="Cut" Click="cmiRegexCut_Click"/>
-                                    <MenuItem Name="cmiRegexCopy" Header="Copy" Click="cmiRegexCopy_Click"/>
-                                    <MenuItem Name="cmiRegexPaste" Header="Paste" Click="cmiRegexPaste_Click"/>
+                                    <MenuItem Name="cmiRegexCut" Header="Cut" Click="CmiRegexCut_Click"/>
+                                    <MenuItem Name="cmiRegexCopy" Header="Copy" Click="CmiRegexCopy_Click"/>
+                                    <MenuItem Name="cmiRegexPaste" Header="Paste" Click="CmiRegexPaste_Click"/>
                                     <Separator/>
-                                    <MenuItem Name="cmiRegexCopyForOnOneLine" Header="Copy on one line" Click="cmiRegexCopyForOnOneLine_Click"/>
-                                    <MenuItem Name="cmiRegexCopyForXml" Header="Copy for XML" Click="cmiRegexCopyForXml_Click"/>
-                                    <MenuItem Name="cmiRegexPasteFromXml" Header="Paste from XML" Click="cmiRegexPasteFromXml_Click"/>
+                                    <MenuItem Name="cmiRegexCopyForOnOneLine" Header="Copy on one line" Click="CmiRegexCopyForOnOneLine_Click"/>
+                                    <MenuItem Name="cmiRegexCopyForXml" Header="Copy for XML" Click="CmiRegexCopyForXml_Click"/>
+                                    <MenuItem Name="cmiRegexPasteFromXml" Header="Paste from XML" Click="CmiRegexPasteFromXml_Click"/>
                                     <Separator />
-                                    <MenuItem Name="cmiRegexSelectAll" Header="Select All" Click="cmiRegexSelectAll_Click"/>
+                                    <MenuItem Name="cmiRegexSelectAll" Header="Select All" Click="CmiRegexSelectAll_Click"/>
                                 </ContextMenu>
                             </avalonEdit:TextEditor.ContextMenu>
                         </avalonEdit:TextEditor>
@@ -379,11 +379,11 @@
                                         </MenuItem.Style>
                                     </MenuItem>
                                     <Separator/>
-                                    <MenuItem Name="cmiReplaceCut" Header="Cut" Click="cmiReplaceCut_Click"/>
-                                    <MenuItem Name="cmiReplaceCopy" Header="Copy" Click="cmiReplaceCopy_Click"/>
-                                    <MenuItem Name="cmiReplacePaste" Header="Paste" Click="cmiReplacePaste_Click"/>
+                                    <MenuItem Name="cmiReplaceCut" Header="Cut" Click="CmiReplaceCut_Click"/>
+                                    <MenuItem Name="cmiReplaceCopy" Header="Copy" Click="CmiReplaceCopy_Click"/>
+                                    <MenuItem Name="cmiReplacePaste" Header="Paste" Click="CmiReplacePaste_Click"/>
                                     <Separator />
-                                    <MenuItem Name="cmiReplaceSelectAll" Header="Select All" Click="cmiReplaceSelectAll_Click"/>
+                                    <MenuItem Name="cmiReplaceSelectAll" Header="Select All" Click="CmiReplaceSelectAll_Click"/>
                                 </ContextMenu>
                             </avalonEdit:TextEditor.ContextMenu>
                         </avalonEdit:TextEditor>
