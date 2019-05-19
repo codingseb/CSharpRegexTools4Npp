@@ -175,6 +175,8 @@ namespace RegexDialog
         /// </summary>
         public RegExToolDialog()
         {
+            NamespacesForExpressionEvalConverters.NamespaceToAdd.Add("RegexDialog");
+
             InitializeComponent();
 
             Init();

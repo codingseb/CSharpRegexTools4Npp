@@ -157,7 +157,7 @@
                                />
                     </StackPanel>
                 </Button>
-                <Button x:Name="SelectAllButton" Click="SelectAllButton_Click" IsEnabled="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter InverseBool=True}, ConverterParameter='Directory'}">
+                <Button x:Name="SelectAllButton" Click="SelectAllButton_Click" IsEnabled="{Binding TextSourceOn, Converter={converters:ExpressionEvalConverter Expression='binding == RegexTextSource.CurrentTab || binding == RegexTextSource.CurrentSelection'}}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource SelectPicture}" 
                                Width="16" 

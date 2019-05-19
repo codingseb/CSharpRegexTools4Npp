@@ -248,6 +248,7 @@
     <Compile Include="Converters\ChainingConverter.cs" />
     <Compile Include="Converters\CustomBoolToVisibilityConverter.cs" />
     <Compile Include="Converters\EnumBooleanConverter.cs" />
+    <Compile Include="Converters\ExpressionEvalConverter.cs" />
     <Compile Include="Model\RegexFileResult.cs" />
     <Compile Include="RegexPatternIndenter.cs" />
     <Compile Include="Utils\Config.cs" />
@@ -256,6 +257,7 @@
     <Compile Include="Model\RegexGroupResult.cs" />
     <Compile Include="Utils\ExpressionEvaluator.cs" />
     <Compile Include="Utils\IniFile.cs" />
+    <Compile Include="Utils\NamespacesForExpressionEvalConverters.cs" />
     <Compile Include="Utils\ObservableDictionary.cs" />
     <Compile Include="Utils\PathUtils.cs" />
     <Compile Include="Model\RegexLanguageElement.cs" />
