@@ -75,7 +75,7 @@ namespace RegexDialog
 
     #endregion
 
-    private void Init()
+        private void Init()
         {
         }
 
@@ -108,7 +108,7 @@ namespace RegexDialog
 
         public ObservableDictionary<string, bool> RegexOptionsSelection { get; set; } = new ObservableDictionary<string, bool>();
 
-        public RegexTextSource TextSourceOn { get; set; } = RegexTextSource.CurrentTab;
+        public RegexTextSource TextSourceOn { get; set; }
 
         public string TextSourceDirectoryPath { get; set; } = string.Empty;
         public ObservableCollection<string> TextSourceDirectoryPathHistory { get; set; } = new ObservableCollection<string>();
@@ -116,25 +116,29 @@ namespace RegexDialog
         public string TextSourceDirectorySearchFilter { get; set; } = string.Empty;
         public ObservableCollection<string> TextSourceDirectorySearchFilterHistory { get; set; } = new ObservableCollection<string>();
 
-        public bool TextSourceDirectorySearchSubDirectories { get; set; } = false;
+        public bool TextSourceDirectorySearchSubDirectories { get; set; }
 
         public bool TextSourceDirectoryShowNotMatchedFiles { get; set; } = true;
 
-        public bool PrintFileNameWhenExtract { get; set; } = false;
+        public bool PrintFileNameWhenExtract { get; set; }
 
         public bool OpenFilesForReplace { get; set; } = true;
 
-        public bool ShowEmptyMatches { get; set; } = false;
+        public bool ShowEmptyMatches { get; set; }
 
         public bool AutoIndentCharClassesOnOneLine { get; set; } = true;
         public bool AutoIndentKeepQuantifiersOnSameLine { get; set; } = true;
 
-        public bool ShowLinesNumbersRegexEditorOption { get; set; } = false;
-        public bool ShowSpaceCharsRegexEditorOption { get; set; } = false;
-        public bool ShowEndOfLinesRegexEditorOption { get; set; } = false;
+        public bool ShowLinesNumbersRegexEditorOption { get; set; }
+        public bool ShowSpaceCharsRegexEditorOption { get; set; }
+        public bool ShowEndOfLinesRegexEditorOption { get; set; }
 
-        public bool ShowLinesNumbersReplaceEditorOption { get; set; } = false;
-        public bool ShowSpaceCharsReplaceEditorOption { get; set; } = false;
-        public bool ShowEndOfLinesReplaceEditorOption { get; set; } = false;
+        public bool ShowLinesNumbersReplaceEditorOption { get; set; }
+        public bool ShowSpaceCharsReplaceEditorOption { get; set; }
+        public bool ShowEndOfLinesReplaceEditorOption { get; set; }
+
+        public bool ShowLinesNumbersCSharpTextSourceEditorOption { get; set; }
+        public bool ShowSpaceCharsCSharpTextSourceEditorOption { get; set; }
+        public bool ShowEndOfLinesCSharpTextSourceEditorOption { get; set; }
     }
 }

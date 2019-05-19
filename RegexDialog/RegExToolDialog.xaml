@@ -610,24 +610,24 @@
                             </GroupBox.Resources>
                             <DockPanel>
                                 <WrapPanel Margin="5" DockPanel.Dock="Top">
-                                <RadioButton x:Name="CurrentTabTextSourceRadioButton" 
+                                    <RadioButton x:Name="CurrentTabTextSourceRadioButton" 
                                          Margin="5,0"
                                          Content="Current _tab" 
                                          IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CurrentTab'}" />
-                                <RadioButton x:Name="CurrentSelectedTextSourceRadioButton" 
+                                    <RadioButton x:Name="CurrentSelectedTextSourceRadioButton" 
                                          Margin="5,0"
                                          Content="Current se_lection"
                                          IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CurrentSelection'}"/>
-                                <RadioButton x:Name="SpecifiedDirectoryTextSourceRadioButton" 
+                                    <RadioButton x:Name="SpecifiedDirectoryTextSourceRadioButton" 
                                          Margin="5,0"
                                          Content="Specified _directory"
                                          IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='Directory'}"/>
-                                <RadioButton x:Name="CSharpScriptTextSourceRadioButton" 
+                                    <RadioButton x:Name="CSharpScriptTextSourceRadioButton" 
                                          Margin="5,0"
                                          Content="C# _Script"
                                          IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CSharpScript'}"/>
                                 </WrapPanel>
-                                
+
                                 <StackPanel Margin="5" 
                                             DockPanel.Dock="Top"
                                             Visibility="{Binding IsChecked, ElementName=SpecifiedDirectoryTextSourceRadioButton, Converter={converters:CustomBoolToVisibilityConverter}}">
@@ -643,7 +643,7 @@
                                           ItemsSource="{Binding TextSourceDirectoryPathHistory}"
                                           IsEditable="True"/>
                                     </DockPanel>
-                                    
+
                                     <Grid Margin="0,5">
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="Auto" />
@@ -674,19 +674,50 @@
                                     </StackPanel>
                                 </StackPanel>
 
-                                <Border BorderBrush="Gray" 
-                                        BorderThickness="1"
-                                        Visibility="{Binding IsChecked, ElementName=CSharpScriptTextSourceRadioButton, Converter={converters:CustomBoolToVisibilityConverter}}">
-                                    <avalonEdit:TextEditor
-                                        Name="TextSourceEditor"
-                                        FontFamily="Consolas"
-                                        FontSize="12"
-                                        SyntaxHighlighting="C#"
-                                        ShowLineNumbers="True"
-                                        ScrollViewer.HorizontalScrollBarVisibility="Auto" />
-                                </Border>
+                                <DockPanel Visibility="{Binding IsChecked, ElementName=CSharpScriptTextSourceRadioButton, Converter={converters:CustomBoolToVisibilityConverter}}" >
+                                    <WrapPanel DockPanel.Dock="Top">
+                                        <WrapPanel.Resources>
+                                            <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button" />
+                                            <Style BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" TargetType="ToggleButton" />
+                                        </WrapPanel.Resources>
+                                        <ToggleButton x:Name="ToggleShowLinesNumberInCSharpTextSourceButton" 
+                                                      IsChecked="{Binding ShowLinesNumbersCSharpTextSourceEditorOption}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="{StaticResource ShowLinesNumbers}" Width="16" Height="16" ToolTip="Show/Hide lines numbers"/>
+                                            </StackPanel>
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="ToggleShowSpacesInCSharpTextSourceButton" 
+                                                      IsChecked="{Binding ShowSpaceCharsCSharpTextSourceEditorOption}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="{StaticResource ShowSpaces}" Width="16" Height="16" ToolTip="Show/Hide Spaces and tabulations" />
+                                            </StackPanel>
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="ToggleShowReturnsInCSharpTextSourceButton" 
+                                                      IsChecked="{Binding ShowEndOfLinesCSharpTextSourceEditorOption}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="{StaticResource ShowReturns}" Width="16" Height="16" ToolTip="Show/Hide end of lines" />
+                                            </StackPanel>
+                                        </ToggleButton>
+
+                                    </WrapPanel>
+                                    <Border BorderBrush="Gray" 
+                                            BorderThickness="1">
+                                        <avalonEdit:TextEditor
+                                            Name="TextSourceEditor"
+                                            FontFamily="Consolas"
+                                            FontSize="12"
+                                            SyntaxHighlighting="C#"
+                                            ShowLineNumbers="{Binding ShowLinesNumbersCSharpTextSourceEditorOption}"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+                                            <i:Interaction.Behaviors>
+                                                <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowSpaces" Value="{Binding ShowSpaceCharsCSharpTextSourceEditorOption}" />
+                                                <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowTabs" Value="{Binding ShowSpaceCharsCSharpTextSourceEditorOption}" />
+                                                <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowEndOfLine" Value="{Binding ShowEndOfLinesCSharpTextSourceEditorOption}" />
+                                            </i:Interaction.Behaviors>
+                                        </avalonEdit:TextEditor>
+                                    </Border>
+                                </DockPanel>
                             </DockPanel>
-                                
                         </GroupBox>
                     </DockPanel>
                 </TabItem>
