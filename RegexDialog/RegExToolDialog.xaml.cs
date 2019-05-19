@@ -197,10 +197,7 @@ namespace RegexDialog
 
             RegexEditor.SyntaxHighlighting = HighlightingLoader.Load(reader, HighlightingManager.Instance);
 
-            // Application de la coloration syntaxique pour les chaines de remplacement
-            XmlReader reader2 = XmlReader.Create(new StringReader(Res.Replace_syntax_color));
-
-            ReplaceEditor.SyntaxHighlighting = HighlightingLoader.Load(reader2, HighlightingManager.Instance);
+            RefreshReplaceEditorSyntaxHighlighting();
 
             // Abonnement au changement de position du curseur de texte pour la coloration des parentèses
             RegexEditor.TextArea.Caret.PositionChanged += Caret_PositionChanged;
@@ -1945,17 +1942,26 @@ namespace RegexDialog
 
         private void CSharpReplaceCheckbox_IsChecked_Changed(object sender, RoutedEventArgs e)
         {
+            RefreshReplaceEditorSyntaxHighlighting();
+        }
+
+        public void RefreshReplaceEditorSyntaxHighlighting()
+        {
             try
             {
-                if (CSharpReplaceCheckbox.IsChecked ?? false)
+                if (ReplaceEditor != null)
                 {
-                    ReplaceEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("C#");
-                }
-                else
-                {
-                    XmlReader reader2 = XmlReader.Create(new StringReader(Res.Replace_syntax_color));
-
-                    ReplaceEditor.SyntaxHighlighting = HighlightingLoader.Load(reader2, HighlightingManager.Instance);
+                    if (CSharpReplaceCheckbox.IsChecked ?? false)
+                    {
+                        ReplaceEditor.SyntaxHighlighting = HighlightingManager.Instance.GetDefinition("C#");
+                    }
+                    else
+                    {
+                        using (XmlReader reader2 = XmlReader.Create(new StringReader(Res.Replace_syntax_color)))
+                        {
+                            ReplaceEditor.SyntaxHighlighting = HighlightingLoader.Load(reader2, HighlightingManager.Instance);
+                        }
+                    }
                 }
             }
             catch { }

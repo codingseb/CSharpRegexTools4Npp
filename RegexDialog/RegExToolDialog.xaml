@@ -330,6 +330,8 @@
                         <CheckBox x:Name="CSharpReplaceCheckbox"
                                   Margin="5,0"
                                   IsChecked="{Binding CSharpReplaceMode}"
+                                  Checked="CSharpReplaceCheckbox_IsChecked_Changed"
+                                  Unchecked="CSharpReplaceCheckbox_IsChecked_Changed"
                                   VerticalAlignment="Center"
                                   Content="_C#"
                                   ToolTipService.ShowDuration="600000">
