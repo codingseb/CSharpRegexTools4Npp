@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -71,6 +70,16 @@ namespace RegexDialog
                     .Replace("//global", cSharpReplaceGlobalPartRegex.Match(ReplaceEditor.Text).Groups["global"].Value)
                     .Replace("//before", beforeMatch.Success ? beforeMatch.Groups["before"].Value : "return text;")
                     .Replace("//after", afterMatch.Success ? afterMatch.Groups["after"].Value : "return text;"));
+            }
+        }
+
+        public object CSharpTextSourceScript
+        {
+            get
+            {
+                return csEval.LoadCode(Res.CSharpTextSourceContainer
+                    .Replace("//code", cSharpReplaceSpecialZoneCleaningRegex.Replace(TextSourceEditor.Text, string.Empty))
+                    .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(TextSourceEditor.Text).Groups["usings"].Value));
             }
         }
 
@@ -217,7 +226,7 @@ namespace RegexDialog
 
             // Construit l'arbre des éléments de languages de replace.
             BuildReplaceLanguageElements();
-
+           
             csEval
                 .ReferenceAssemblyOf(this)
                 .ReferenceDomainAssemblies()
@@ -229,7 +238,8 @@ namespace RegexDialog
                 .ReferenceAssemblyByName("System.Xml.XPath.XDocument")
                 .ReferenceAssemblyByName("System.Windows.Forms")
                 .ReferenceAssemblyByName("Ookii.dialogs.Wpf")
-                .ReferenceAssemblyByName("Newtonsoft.Json");
+                .ReferenceAssemblyByName("Newtonsoft.Json")
+                .ReferenceAssemblyByName("EPPlus");
 
             RegexEditor.Text = Config.Instance.RegexEditorText;
 
@@ -819,7 +829,7 @@ namespace RegexDialog
 
                 void Extract(string text, string fileName = "")
                 {
-                    List<Match> matches = regex.Matches((string)script?.Before(text) ?? text)
+                    List<Match> matches = regex.Matches((string)script?.Before(text,fileName) ?? text)
                         .Cast<Match>()
                         .ToList();
 
@@ -1637,6 +1647,11 @@ namespace RegexDialog
                         CSharpReplaceCheckbox.IsChecked = content.Contains("<!--ReplaceIsCSharp-->");
                         RegexEditor.Text = root.SelectSingleNode("//FindPattern").InnerText;
                         ReplaceEditor.Text = root.SelectSingleNode("//ReplacePattern").InnerText;
+                        TextSourceEditor.Text = root.SelectNodes("//comment()")
+                            .Cast<XmlComment>()
+                            .FirstOrDefault(c => c.Value.StartsWith("#CSharpTextSource\r\n"))?
+                            .Value
+                            .Replace("#CSharpTextSource\r\n", string.Empty) ?? string.Empty;
 
                         string[] xOptions = root.SelectSingleNode("//Options").InnerText.Split(' ');
 
@@ -1688,6 +1703,7 @@ namespace RegexDialog
                             root.AppendChild(xmlDoc.CreateComment("ReplaceIsCSharp"));
                         root.AppendChild(replacePatternElement);
                         root.AppendChild(optionsElement);
+                        root.AppendChild(xmlDoc.CreateComment($"#CSharpTextSource\r\n{Config.Instance.CSharpTextSourceEditorText}"));
 
                         XmlText findPatternText = xmlDoc.CreateTextNode(RegexEditor.Text);
                         XmlText replacePatternText = xmlDoc.CreateTextNode(ReplaceEditor.Text);
@@ -1701,6 +1717,7 @@ namespace RegexDialog
                         findPatternElement.AppendChild(findPatternText);
                         replacePatternElement.AppendChild(replacePatternText);
                         optionsElement.AppendChild(optionsText);
+
 
                         xmlDoc.Save(dialog.FileName);
                     }
@@ -1763,78 +1780,6 @@ namespace RegexDialog
             try
             {
                 RegexEditor.SelectedText = Clipboard.GetText().UnescapeXml();
-            }
-            catch { }
-        }
-
-        private void CmiRegexCut_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                RegexEditor.Cut();
-            }
-            catch { }
-        }
-
-        private void CmiRegexCopy_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                RegexEditor.Copy();
-            }
-            catch { }
-        }
-
-        private void CmiRegexPaste_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                RegexEditor.Paste();
-            }
-            catch { }
-        }
-
-        private void CmiReplaceCut_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ReplaceEditor.Cut();
-            }
-            catch { }
-        }
-
-        private void CmiReplaceCopy_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ReplaceEditor.Copy();
-            }
-            catch { }
-        }
-
-        private void CmiReplacePaste_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ReplaceEditor.Paste();
-            }
-            catch { }
-        }
-
-        private void CmiRegexSelectAll_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                RegexEditor.SelectAll();
-            }
-            catch { }
-        }
-
-        private void CmiReplaceSelectAll_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                ReplaceEditor.SelectAll();
             }
             catch { }
         }
@@ -2021,6 +1966,29 @@ namespace RegexDialog
         private void TreeViewItem_MouseDown(object sender, MouseButtonEventArgs e)
         {
             e.Handled = true;
+        }
+
+        private void TestCSharpTextSourceButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                dynamic script = CSharpTextSourceScript;
+
+                string result = script.Get().ToString();
+
+                if (Config.Instance.ShowCSharpTextSourceTestInANewTab)
+                {
+                    SetTextInNew(result);
+                }
+                else
+                {
+                    SetText(result);
+                }
+            }
+            catch(Exception exception)
+            {
+                MessageBox.Show($"{exception}");
+            }
         }
     }
 }

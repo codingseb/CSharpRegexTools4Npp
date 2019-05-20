@@ -38,6 +38,7 @@
         <BitmapImage x:Key="ShowLinesNumbers" UriSource="Resources/line_numbers.png"/>
         <BitmapImage x:Key="ShowSpaces" UriSource="Resources/space.png"/>
         <BitmapImage x:Key="ShowReturns" UriSource="Resources/return.png"/>
+        <BitmapImage x:Key="Play" UriSource="Resources/control_play_blue.png"/>
 
         <Style TargetType="Image">
             <Style.Triggers>
@@ -280,15 +281,15 @@
                                     <MenuItem Name="cmiRegexIndent" Header="Auto Indent and set IgnorePatternWhitespace" Click="CmiRegexIndent_Click"/>
                                     <MenuItem Name="cmiRegexSetOnOneLine" Header="Set on one line" Click="CmiRegexSetOnOneLine_Click"/>
                                     <Separator />
-                                    <MenuItem Name="cmiRegexCut" Header="Cut" Click="CmiRegexCut_Click"/>
-                                    <MenuItem Name="cmiRegexCopy" Header="Copy" Click="CmiRegexCopy_Click"/>
-                                    <MenuItem Name="cmiRegexPaste" Header="Paste" Click="CmiRegexPaste_Click"/>
+                                    <MenuItem Header="Cut" Command="ApplicationCommands.Cut"/>
+                                    <MenuItem Header="Copy" Command="ApplicationCommands.Copy"/>
+                                    <MenuItem Header="Paste" Command="ApplicationCommands.Paste"/>
                                     <Separator/>
                                     <MenuItem Name="cmiRegexCopyForOnOneLine" Header="Copy on one line" Click="CmiRegexCopyForOnOneLine_Click"/>
                                     <MenuItem Name="cmiRegexCopyForXml" Header="Copy for XML" Click="CmiRegexCopyForXml_Click"/>
                                     <MenuItem Name="cmiRegexPasteFromXml" Header="Paste from XML" Click="CmiRegexPasteFromXml_Click"/>
                                     <Separator />
-                                    <MenuItem Name="cmiRegexSelectAll" Header="Select All" Click="CmiRegexSelectAll_Click"/>
+                                    <MenuItem Header="Select All" Command="ApplicationCommands.SelectAll"/>
                                 </ContextMenu>
                             </avalonEdit:TextEditor.ContextMenu>
                         </avalonEdit:TextEditor>
@@ -346,8 +347,8 @@
                                     <TextBlock>- <Bold>fileIndex</Bold> : (If in directory search) the index of the file</TextBlock>
                                     <TextBlock Margin="0,5,0,0">You can add specific usings between <Bold>#usings</Bold> and <Bold>#usings</Bold></TextBlock>
                                     <TextBlock>You can declare shared variables, properties or methods putting code between <Bold>#global</Bold> and <Bold>#endglobal</Bold></TextBlock>
-                                    <TextBlock>Between <Bold>#before</Bold> and <Bold>#endbefore</Bold> you get the <Bold>text</Bold> and the<Bold>fileName</Bold> before it is used as input of the regex by returning a string you can redefine it.</TextBlock>
-                                    <TextBlock>Between <Bold>#after</Bold> and <Bold>#endafter</Bold> you get the <Bold>text</Bold> and the<Bold>fileName</Bold> after it is processed by the regex by returning a string you can modify it a last time.</TextBlock>
+                                    <TextBlock>Between <Bold>#before</Bold> and <Bold>#endbefore</Bold> you get the <Bold>text</Bold> and the <Bold>fileName</Bold> before it is used as input of the regex by returning a string you can redefine it.</TextBlock>
+                                    <TextBlock>Between <Bold>#after</Bold> and <Bold>#endafter</Bold> you get the <Bold>text</Bold> and the <Bold>fileName</Bold> after it is processed by the regex by returning a string you can modify it a last time.</TextBlock>
                                 </StackPanel>
                             </CheckBox.ToolTip>
                         </CheckBox>
@@ -368,26 +369,26 @@
                             </i:Interaction.Behaviors>
                             <avalonEdit:TextEditor.ContextMenu>
                                 <ContextMenu Name="cmReplacefieldContextMenu">
-                                    <MenuItem Name="cmiReplaceGroupByNumber" Header="Groups by number" >
+                                    <MenuItem Name="cmiReplaceGroupByNumber" Header="Groups by number" Visibility="{Binding CSharpReplaceMode, Converter={converters:CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}">
                                         <MenuItem.Style>
                                             <Style TargetType="{x:Type MenuItem}">
                                                 <EventSetter Event="Click" Handler="InsertInReplaceFromContextMenu_Click" />
                                             </Style>
                                         </MenuItem.Style>
                                     </MenuItem>
-                                    <MenuItem Name="cmiReplaceGroupByName" Header="Groups by name" >
+                                    <MenuItem Name="cmiReplaceGroupByName" Header="Groups by name" Visibility="{Binding CSharpReplaceMode, Converter={converters:CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}">
                                         <MenuItem.Style>
                                             <Style TargetType="{x:Type MenuItem}">
                                                 <EventSetter Event="Click" Handler="InsertInReplaceFromContextMenu_Click" />
                                             </Style>
                                         </MenuItem.Style>
                                     </MenuItem>
-                                    <Separator/>
-                                    <MenuItem Name="cmiReplaceCut" Header="Cut" Click="CmiReplaceCut_Click"/>
-                                    <MenuItem Name="cmiReplaceCopy" Header="Copy" Click="CmiReplaceCopy_Click"/>
-                                    <MenuItem Name="cmiReplacePaste" Header="Paste" Click="CmiReplacePaste_Click"/>
+                                    <Separator Visibility="{Binding CSharpReplaceMode, Converter={converters:CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}"/>
+                                    <MenuItem Header="Cut" Command="ApplicationCommands.Cut"/>
+                                    <MenuItem Header="Copy" Command="ApplicationCommands.Copy"/>
+                                    <MenuItem Header="Paste" Command="ApplicationCommands.Paste"/>
                                     <Separator />
-                                    <MenuItem Name="cmiReplaceSelectAll" Header="Select All" Click="CmiReplaceSelectAll_Click"/>
+                                    <MenuItem Header="Select All" Command="ApplicationCommands.SelectAll"/>
                                 </ContextMenu>
                             </avalonEdit:TextEditor.ContextMenu>
                         </avalonEdit:TextEditor>
@@ -700,7 +701,14 @@
                                                 <Image Source="{StaticResource ShowReturns}" Width="16" Height="16" ToolTip="Show/Hide end of lines" />
                                             </StackPanel>
                                         </ToggleButton>
-
+                                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                                        <Button x:Name="TestCSharpTextSourceButton"
+                                                Click="TestCSharpTextSourceButton_Click">
+                                            <Image Source="{StaticResource Play}" Width="16" Height="16" ToolTip="Test and show result" />
+                                        </Button>
+                                        <CheckBox Content="In a new tab"
+                                                  VerticalAlignment="Center"
+                                                  IsChecked="{Binding ShowCSharpTextSourceTestInANewTab}"/>
                                     </WrapPanel>
                                     <Border BorderBrush="Gray" 
                                             BorderThickness="1">
@@ -711,7 +719,17 @@
                                             SyntaxHighlighting="C#"
                                             ShowLineNumbers="{Binding ShowLinesNumbersCSharpTextSourceEditorOption}"
                                             ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+                                            <avalonEdit:TextEditor.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Cut" Command="ApplicationCommands.Cut"/>
+                                                    <MenuItem Header="Copy" Command="ApplicationCommands.Copy"/>
+                                                    <MenuItem Header="Paste" Command="ApplicationCommands.Paste"/>
+                                                    <Separator />
+                                                    <MenuItem Header="Select All" Command="ApplicationCommands.SelectAll"/>
+                                                </ContextMenu>
+                                            </avalonEdit:TextEditor.ContextMenu>
                                             <i:Interaction.Behaviors>
+                                                <behaviors:SimplePropertyBindingBehavior PropertyName="Text" Value="{Binding CSharpTextSourceEditorText}" PropertyChangedTriggerEventName="TextChanged" />
                                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowSpaces" Value="{Binding ShowSpaceCharsCSharpTextSourceEditorOption}" />
                                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowTabs" Value="{Binding ShowSpaceCharsCSharpTextSourceEditorOption}" />
                                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowEndOfLine" Value="{Binding ShowEndOfLinesCSharpTextSourceEditorOption}" />

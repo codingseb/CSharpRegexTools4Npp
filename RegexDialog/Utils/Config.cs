@@ -81,6 +81,7 @@ namespace RegexDialog
 
         public string RegexEditorText { get; set; }
         public string ReplaceEditorText { get; set; }
+        public string CSharpTextSourceEditorText { get; set; }
 
         public ObservableCollection<string> RegexHistory { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> ReplaceHistory { get; set; } = new ObservableCollection<string>();
@@ -140,5 +141,7 @@ namespace RegexDialog
         public bool ShowLinesNumbersCSharpTextSourceEditorOption { get; set; }
         public bool ShowSpaceCharsCSharpTextSourceEditorOption { get; set; }
         public bool ShowEndOfLinesCSharpTextSourceEditorOption { get; set; }
+
+        public bool ShowCSharpTextSourceTestInANewTab { get; set; } = true;
     }
 }
