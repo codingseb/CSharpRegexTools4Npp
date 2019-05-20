@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -46,10 +47,13 @@ namespace RegexDialog
 
         private bool mustSelectEditor;
 
+        private readonly IEvaluator csEval = CSScript.Evaluator;
+
         private readonly BracketColorizer currentBracketColorizer = new BracketColorizer();
         private readonly BracketColorizer matchingBracketColorizer = new BracketColorizer();
 
         private static readonly Regex cSharpReplaceSpecialZoneCleaningRegex = new Regex(@"(?<=^|\s)\#(?<name>\w+)(?=\s).*(?<=\s)\#end\k<name>(?=\s|$)\s*", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpReplaceUsingsPartRegex = new Regex(@"(?<=^|\s)\#usings(?=\s)(?<usings>.*)(?<=\s)\#endusings(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cSharpReplaceGlobalPartRegex = new Regex(@"(?<=^|\s)\#global(?=\s)(?<global>.*)(?<=\s)\#endglobal(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cSharpReplaceBeforePartRegex = new Regex(@"(?<=^|\s)\#before(?=\s)(?<before>.*)(?<=\s)\#endbefore(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cSharpReplaceAfterPartRegex = new Regex(@"(?<=^|\s)\#after(?=\s)(?<after>.*)(?<=\s)\#endafter(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
@@ -61,8 +65,9 @@ namespace RegexDialog
                 Match beforeMatch = cSharpReplaceBeforePartRegex.Match(ReplaceEditor.Text);
                 Match afterMatch = cSharpReplaceAfterPartRegex.Match(ReplaceEditor.Text);
 
-                return CSScript.Evaluator.LoadCode(Res.CSharpReplaceContainer
+                return csEval.LoadCode(Res.CSharpReplaceContainer
                     .Replace("//code", cSharpReplaceSpecialZoneCleaningRegex.Replace(ReplaceEditor.Text, string.Empty))
+                    .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(ReplaceEditor.Text).Groups["usings"].Value)
                     .Replace("//global", cSharpReplaceGlobalPartRegex.Match(ReplaceEditor.Text).Groups["global"].Value)
                     .Replace("//before", beforeMatch.Success ? beforeMatch.Groups["before"].Value : "return text;")
                     .Replace("//after", afterMatch.Success ? afterMatch.Groups["after"].Value : "return text;"));
@@ -213,9 +218,13 @@ namespace RegexDialog
             // Construit l'arbre des éléments de languages de replace.
             BuildReplaceLanguageElements();
 
-            // Rétablit le contenu des éditeur
+            csEval
+                .ReferenceAssemblyOf(this)
+                .ReferenceDomainAssemblies()
+                .ReferenceAssemblyByName("System.Xml")
+                .ReferenceAssemblyByName("Newtonsoft.Json");
+
             RegexEditor.Text = Config.Instance.RegexEditorText;
-            ReplaceEditor.Text = Config.Instance.ReplaceEditorText;
 
             Left = Config.Instance.DialogLeft ?? Left;
             Top = Config.Instance.DialogTop ?? Top;
@@ -933,11 +942,6 @@ namespace RegexDialog
             SaveWindowPosition();
 
             RegexEditor.TextArea.Caret.PositionChanged -= Caret_PositionChanged;
-        }
-
-        private void ReplaceEditor_TextChanged(object sender, EventArgs e)
-        {
-            Config.Instance.ReplaceEditorText = ReplaceEditor.Text;
         }
 
         private void MatchResultsTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)

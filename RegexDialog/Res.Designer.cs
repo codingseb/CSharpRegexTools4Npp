@@ -19,7 +19,7 @@ namespace RegexDialog {
     // à l'aide d'un outil, tel que ResGen ou Visual Studio.
     // Pour ajouter ou supprimer un membre, modifiez votre fichier .ResX, puis réexécutez ResGen
     // avec l'option /str ou régénérez votre projet VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Res {
@@ -61,30 +61,47 @@ namespace RegexDialog {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à using System.Collections.Generic;
+        ///   Recherche une chaîne localisée semblable à //using Newtonsoft.Json;
+        ///using System.Collections;
+        ///using System.Collections.Generic;
+        ///using System.Collections.ObjectModel;
+        ///using System.ComponentModel;
+        /////using System.Data;
+        ///using System.Diagnostics;
+        ///using System.Globalization;
         ///using System.IO;
         ///using System.Linq;
+        ///using System.Reflection;
         ///using System.Text;
         ///using System.Text.RegularExpressions;
         ///using System.Windows;
+        ///using System.Xml;
+        /////using RegexDialog;
         ///
         ///public class Script
         ///{
-        ///    public string Replace(Match match, int index, string fileName, int globalIndex, int fileIndex)
-        ///    {
-        ///        //code
-        ///    }
+        ///    //global
         ///
-        ///    public string Replace(Match match, Group group, int index, string fileName, int globalIndex, int fileIndex)
-        ///    {
-        ///        //code
-        ///    }
-        ///
-        ///    public string Replace(Match match, Group group, Ca [le reste de la chaîne a été tronqué]&quot;;.
+        ///    public string Replace(Match match, int index [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string CSharpReplaceContainer {
             get {
                 return ResourceManager.GetString("CSharpReplaceContainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à using System;
+        ///
+        ///public class CSharpTextSourceContainer
+        ///{
+        ///
+        ///}
+        ///.
+        /// </summary>
+        internal static string CSharpTextSourceContainer {
+            get {
+                return ResourceManager.GetString("CSharpTextSourceContainer", resourceCulture);
             }
         }
         
@@ -109,7 +126,7 @@ namespace RegexDialog {
         ///    &quot;Data&quot;: [
         ///        {
         ///            &quot;Name&quot;: &quot;Character Escapes&quot;,
-        ///            &quot;Description&quot;: &quot;Escape characters that signal to the regular expression parser that the character&quot;,
+        ///            &quot;Description&quot;: &quot;Escape characters that signal to the regular expression parser a special char&quot;,
         ///            &quot;Elements&quot;: [
         ///                {
         ///                    &quot;Name&quot;: &quot;Bell &quot;,
@@ -118,7 +135,7 @@ namespace RegexDialog {
         ///                },
         ///                {
         ///                    &quot;Name&quot;: &quot;Backspace &quot;,
-        ///                    &quot;Description&quot;: &quot;Matches a backspace [le reste de la chaîne a été tronqué]&quot;;.
+        ///                    &quot;Description&quot;: &quot;Matches a backspace \\u [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string RegexLanguageElements {
             get {

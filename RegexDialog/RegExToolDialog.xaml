@@ -340,11 +340,12 @@
                                     <TextBlock>You must use at least one <Bold>return</Bold> keyword to return a string</TextBlock>
                                     <TextBlock>You can use the following variables :</TextBlock>
                                     <TextBlock>- <Bold>match</Bold> : Contains the current Regex Match</TextBlock>
-                                    <TextBlock>- <Bold>index</Bold> : The index of the current match in the current file</TextBlock>
+                                    <TextBlock>- <Bold>matchIndex</Bold> : The index of the current match in the current file</TextBlock>
                                     <TextBlock>- <Bold>fileName</Bold> : (If in directory search) the fileName where the match was found</TextBlock>
                                     <TextBlock>- <Bold>globalIndex</Bold> : (If in directory search) the index of the match in all files</TextBlock>
                                     <TextBlock>- <Bold>fileIndex</Bold> : (If in directory search) the index of the file</TextBlock>
-                                    <TextBlock Margin="0,5,0,0">You can declare shared variables, properties or methods putting code between <Bold>#global</Bold> and <Bold>#endglobal</Bold></TextBlock>
+                                    <TextBlock Margin="0,5,0,0">You can add specific usings between <Bold>#usings</Bold> and <Bold>#usings</Bold></TextBlock>
+                                    <TextBlock>You can declare shared variables, properties or methods putting code between <Bold>#global</Bold> and <Bold>#endglobal</Bold></TextBlock>
                                     <TextBlock>Between <Bold>#before</Bold> and <Bold>#endbefore</Bold> you get the <Bold>text</Bold> before it is used as input of the regex by returning a string you can redefine it.</TextBlock>
                                     <TextBlock>Between <Bold>#after</Bold> and <Bold>#endafter</Bold> you get the <Bold>text</Bold> after it is processed by the regex by returning a string you can modify it a last time.</TextBlock>
                                 </StackPanel>
@@ -356,10 +357,11 @@
                             Name="ReplaceEditor"
                             FontFamily="Consolas"
                             FontSize="12"
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            TextChanged="ReplaceEditor_TextChanged" Margin="-1,-1,1,1"
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                            Margin="-1,-1,1,1"
                             ShowLineNumbers="{Binding ShowLinesNumbersReplaceEditorOption}">
                             <i:Interaction.Behaviors>
+                                <behaviors:SimplePropertyBindingBehavior PropertyName="Text" Value="{Binding ReplaceEditorText}" PropertyChangedTriggerEventName="TextChanged" />
                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowSpaces" Value="{Binding ShowSpaceCharsReplaceEditorOption}" />
                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowTabs" Value="{Binding ShowSpaceCharsReplaceEditorOption}" />
                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowEndOfLine" Value="{Binding ShowEndOfLinesReplaceEditorOption}" />
