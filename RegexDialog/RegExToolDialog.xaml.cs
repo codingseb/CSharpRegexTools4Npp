@@ -221,7 +221,14 @@ namespace RegexDialog
             csEval
                 .ReferenceAssemblyOf(this)
                 .ReferenceDomainAssemblies()
-                .ReferenceAssemblyByName("System.Xml")
+                .ReferenceAssemblyByName("PresentationFramework")
+                .ReferenceAssemblyByName("System.Xml.Linq")
+                .ReferenceAssemblyByName("System.Xml.ReaderWriter")
+                .ReferenceAssemblyByName("System.Xml.XDocument")
+                .ReferenceAssemblyByName("System.Xml.XPath")
+                .ReferenceAssemblyByName("System.Xml.XPath.XDocument")
+                .ReferenceAssemblyByName("System.Windows.Forms")
+                .ReferenceAssemblyByName("Ookii.dialogs.Wpf")
                 .ReferenceAssemblyByName("Newtonsoft.Json");
 
             RegexEditor.Text = Config.Instance.RegexEditorText;
