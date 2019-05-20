@@ -28,14 +28,14 @@ public class Script
         //code
     }
 
-    public string Before(string text)
+    public string Before(string text, string fileName)
     {
         //before
         return text;
         //end
     }
 
-    public string After(string text)
+    public string After(string text, string fileName, List<string> fileNames = null)
     {
         //after
         return text;

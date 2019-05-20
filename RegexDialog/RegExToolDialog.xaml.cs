@@ -616,7 +616,7 @@ namespace RegexDialog
                                 {
                                     if (TryOpen?.Invoke(fileName, false) ?? false)
                                     {
-                                        text = script.Before(GetText());
+                                        text = script.Before(GetText(), fileName);
                                         int matchesCount = regex.Matches(text).Count;
 
                                         if (matchesCount > 0)
@@ -628,7 +628,7 @@ namespace RegexDialog
                                                 index++;
                                                 nbrOfElementToReplace++;
                                                 return script.Replace(match, index, fileName, nbrOfElementToReplace, files);
-                                            })));
+                                            }), fileName, null));
 
                                             try
                                             {
@@ -641,7 +641,7 @@ namespace RegexDialog
                                     }
                                     else
                                     {
-                                        text = script.Before(File.ReadAllText(fileName));
+                                        text = script.Before(File.ReadAllText(fileName), fileName);
                                         int matchesCount = regex.Matches(text).Count;
 
                                         if (matchesCount > 0)
@@ -653,7 +653,7 @@ namespace RegexDialog
                                                 index++;
                                                 nbrOfElementToReplace++;
                                                 return script.Replace(match, index, fileName, nbrOfElementToReplace, files);
-                                            })));
+                                            }), fileName, null));
 
                                             files++;
                                         }
@@ -662,24 +662,27 @@ namespace RegexDialog
                             });
                             break;
                         case RegexTextSource.CurrentSelection:
-                            text = script.Before(GetCurrentText());
+                            string currentFileName = GetCurrentFileName?.Invoke() ?? string.Empty;
+                            text = script.Before(GetCurrentText(), currentFileName);
                             nbrOfElementToReplace = regex.Matches(text).Count;
                             lastSelectionStart = GetSelectionStartIndex?.Invoke() ?? 0;
                             lastSelectionLength = GetSelectionLength?.Invoke() ?? 0;
+                            
                             SetSelectedText(script.After(regex.Replace(text, match =>
                             {
                                 index++;
-                                return script.Replace(match, index, GetCurrentFileName?.Invoke() ?? string.Empty, index, 0);
-                            })));
+                                return script.Replace(match, index, currentFileName, index, 0);
+                            }), currentFileName, null));
                             break;
                         default:
-                            text = script.Before(GetCurrentText());
+                            currentFileName = GetCurrentFileName?.Invoke() ?? string.Empty;
+                            text = script.Before(GetCurrentText(), currentFileName);
                             nbrOfElementToReplace = regex.Matches(text).Count;
                             SetText(script.After(regex.Replace(text, match =>
                             {
                                 index++;
-                                return script.Replace(match, index, GetCurrentFileName?.Invoke() ?? string.Empty, index, 0);
-                            })));
+                                return script.Replace(match, index, currentFileName, index, 0);
+                            }), currentFileName, null));
                             break;
                     }
                 }
@@ -845,19 +848,24 @@ namespace RegexDialog
                     }
                 }
 
+                string currentFileName = null;
+                List<string> fileNames = null;
+
                 if (Config.Instance.TextSourceOn == RegexTextSource.Directory)
                 {
-                    GetFiles().ForEach(fileName => Extract(File.ReadAllText(fileName), fileName));
+                    fileNames = GetFiles();
+                    fileNames.ForEach(fileName => Extract(File.ReadAllText(fileName), fileName));
                 }
                 else
                 {
-                    Extract(GetCurrentText(), GetCurrentFileName?.Invoke() ?? string.Empty);
+                    currentFileName = GetCurrentFileName?.Invoke() ?? string.Empty;
+                    Extract(GetCurrentText(), currentFileName);
                 }
 
                 try
                 {
                     string result = sb.ToString();
-                    SetTextInNew(script?.After(result) ?? result);
+                    SetTextInNew(script?.After(result, currentFileName, fileNames) ?? result);
                 }
                 catch { }
             }
