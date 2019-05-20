@@ -226,7 +226,7 @@ namespace RegexDialog
 
             // Construit l'arbre des éléments de languages de replace.
             BuildReplaceLanguageElements();
-           
+
             csEval
                 .ReferenceAssemblyOf(this)
                 .ReferenceDomainAssemblies()
@@ -567,6 +567,14 @@ namespace RegexDialog
 
                         MatchesResultLabel.Content = $"{i} matches [Index,Length] + {countAllCaptures - i} empties matches found in {ff}/{ft} files";
                     }
+                    else if(Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
+                    {
+                        dynamic sourceScript = CSharpTextSourceScript;
+
+                        MatchResultsTreeView.ItemsSource = GetMatchesFor(sourceScript.Get().ToString(), "script");
+
+                        MatchesResultLabel.Content = $"{i} matches [Index,Length] + {countAllCaptures - i} empties matches";
+                    }
                     else
                     {
                         lastMatchesText = GetText();
@@ -681,12 +689,22 @@ namespace RegexDialog
                             nbrOfElementToReplace = regex.Matches(text).Count;
                             lastSelectionStart = GetSelectionStartIndex?.Invoke() ?? 0;
                             lastSelectionLength = GetSelectionLength?.Invoke() ?? 0;
-                            
+
                             SetSelectedText(script.After(regex.Replace(text, match =>
                             {
                                 index++;
                                 return script.Replace(match, index, currentFileName, index, 0);
                             }), currentFileName, null));
+                            break;
+                        case RegexTextSource.CSharpScript:
+                            dynamic scriptSource = CSharpTextSourceScript;
+                            text = script.Before(scriptSource.Get().ToString(), "script");
+                            nbrOfElementToReplace = regex.Matches(text).Count;
+                            SetTextInNew(script.After(regex.Replace(text, match =>
+                            {
+                                index++;
+                                return script.Replace(match, index, "script", index, 0);
+                            }), "script", null));
                             break;
                         default:
                             currentFileName = GetCurrentFileName?.Invoke() ?? string.Empty;
@@ -753,6 +771,12 @@ namespace RegexDialog
                             text = GetCurrentText();
                             nbrOfElementToReplace = regex.Matches(text).Count;
                             SetSelectedText(regex.Replace(text, ReplaceEditor.Text));
+                            break;
+                        case RegexTextSource.CSharpScript:
+                            dynamic script = CSharpTextSourceScript;
+                            text = script.Get().ToString();
+                            nbrOfElementToReplace = regex.Matches(text).Count;
+                            SetTextInNew(regex.Replace(text, ReplaceEditor.Text));
                             break;
                         default:
                             text = GetCurrentText();
@@ -870,6 +894,11 @@ namespace RegexDialog
                     fileNames = GetFiles();
                     fileNames.ForEach(fileName => Extract(File.ReadAllText(fileName), fileName));
                 }
+                else if(Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
+                {
+                    dynamic sourceScript = CSharpTextSourceScript;
+                    Extract(sourceScript.Get().ToString(), "script");
+                }
                 else
                 {
                     currentFileName = GetCurrentFileName?.Invoke() ?? string.Empty;
@@ -981,14 +1010,17 @@ namespace RegexDialog
                 {
                     RegexResult regexResult = e.NewValue as RegexResult;
 
-                    if (regexResult?.FileName.Length > 0)
+                    if (!regexResult?.FileName.Equals("script") ?? true)
                     {
-                        if ((TryOpen?.Invoke(regexResult.FileName, true) ?? false) && !(regexResult is RegexFileResult))
+                        if (regexResult?.FileName.Length > 0)
+                        {
+                            if ((TryOpen?.Invoke(regexResult.FileName, true) ?? false) && !(regexResult is RegexFileResult))
+                                SetPosition(regexResult.Index, regexResult.Length);
+                        }
+                        else if (regexResult != null && lastMatchesText.Equals(GetText()))
+                        {
                             SetPosition(regexResult.Index, regexResult.Length);
-                    }
-                    else if (regexResult != null && lastMatchesText.Equals(GetText()))
-                    {
-                        SetPosition(regexResult.Index, regexResult.Length);
+                        }
                     }
                 }
                 catch
@@ -1721,7 +1753,6 @@ namespace RegexDialog
                         findPatternElement.AppendChild(findPatternText);
                         replacePatternElement.AppendChild(replacePatternText);
                         optionsElement.AppendChild(optionsText);
-
 
                         xmlDoc.Save(dialog.FileName);
                     }

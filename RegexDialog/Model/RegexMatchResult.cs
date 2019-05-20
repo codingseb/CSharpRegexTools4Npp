@@ -12,7 +12,7 @@ namespace RegexDialog
             Children = match.Groups
                 .Cast<Group>()
                 .ToList()
-                .ConvertAll(delegate(Group group)
+                .ConvertAll(group =>
                 {
                     RegexResult result = new RegexGroupResult(regex, group, i, fileName, selectionIndex)
                     {
@@ -34,10 +34,7 @@ namespace RegexDialog
         {
             if (Config.Instance.MatchesShowLevel > 1)
             {
-                Children.ForEach(delegate(RegexResult child)
-                {
-                    child.RefreshExpands();    
-                });
+                Children.ForEach(child => child.RefreshExpands());
 
                 IsExpanded = true;
             }
