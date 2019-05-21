@@ -3031,16 +3031,12 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public void Dispose()
         {
-            try
-            {
             if (!_disposed)
             {
                 _freeNativeString();
                 if (_ptrSciTextToFind != IntPtr.Zero) Marshal.FreeHGlobal(_ptrSciTextToFind);
                 _disposed = true;
             }
-            }
-            catch { }
         }
 
         ~TextToFind()

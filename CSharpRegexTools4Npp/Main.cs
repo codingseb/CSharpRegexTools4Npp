@@ -143,7 +143,7 @@ namespace CSharpRegexTools4Npp
                                 }
                                 else if (BNpp.NotepadPP.GetAllOpenedDocuments.Any(s => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                                 {
-                                    BNpp.NotepadPP.ShowOpenedDocument(fileName);
+                                    BNpp.NotepadPP.ShowTab(fileName);
                                     result = true;
                                 }
                                 else if (!onlyIfAlreadyOpen)
