@@ -8,7 +8,7 @@ namespace RegexDialog.Behaviors
     {
         private readonly ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
         private string oldEventName = string.Empty;
-        private EventHandler<EventArgs> eventHandler;
+        private readonly EventHandler<EventArgs> eventHandler;
 
         public SimplePropertyBindingBehavior()
         {

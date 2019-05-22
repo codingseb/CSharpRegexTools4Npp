@@ -19,10 +19,10 @@ namespace RegexDialog
             "System.IO",
         };
 
-        public static void NamespacesListForWPFConverters(this List<string> list)
+        public static void NamespacesListForWPFConverters(this IList<string> list)
         {
-            list.RemoveAll(ns => NamespaceToRemove.Contains(ns));
-            list.AddRange(NamespaceToAdd);
+            ((List<string>)list).RemoveAll(ns => NamespaceToRemove.Contains(ns));
+            ((List<string>)list).AddRange(NamespaceToAdd);
         }
     }
 }
