@@ -95,6 +95,9 @@
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
+    <Reference Include="Ookii.Dialogs.WinForms, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ookii.Dialogs.WinForms.1.0.0\lib\net45\Ookii.Dialogs.WinForms.dll</HintPath>
+    </Reference>
     <Reference Include="Ookii.Dialogs.Wpf, Version=1.0.0.0, Culture=neutral, PublicKeyToken=0c15020868fd6249, processorArchitecture=MSIL">
       <HintPath>..\packages\Ookii.Dialogs.1.0\lib\net35\Ookii.Dialogs.Wpf.dll</HintPath>
     </Reference>
@@ -118,6 +121,7 @@
       <HintPath>..\packages\System.Console.4.3.1\lib\net46\System.Console.dll</HintPath>
     </Reference>
     <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
     <Reference Include="System.Diagnostics.FileVersionInfo, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.FileVersionInfo.4.3.0\lib\net46\System.Diagnostics.FileVersionInfo.dll</HintPath>
       <Private>True</Private>
@@ -259,6 +263,12 @@
     <Compile Include="Model\RegexFileResult.cs" />
     <Compile Include="RegexPatternIndenter.cs" />
     <Resource Include="Resources\CSharpTextSourceContainer.cs" />
+    <Compile Include="Res.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Res.resx</DependentUpon>
+    </Compile>
+    <None Include="Resources\VSProgram.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\RegexCaptureResult.cs" />
@@ -278,11 +288,6 @@
     <Compile Include="Model\RegexResult.cs" />
     <Compile Include="RegExToolDialog.xaml.cs">
       <DependentUpon>RegExToolDialog.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Res.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Res.resx</DependentUpon>
     </Compile>
     <Compile Include="Converters\ShowOnOneLineConverter.cs" />
     <Compile Include="Utils\RegexTextSource.cs" />
@@ -393,6 +398,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\control_play_blue.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\visual_studio_black.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\visual_studio_purple.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\VSSolution.sln" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\VSProject.csproj" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

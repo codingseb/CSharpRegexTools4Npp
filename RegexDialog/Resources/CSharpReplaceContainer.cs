@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 using RegexDialog;
 //usings
 
-public class Script
+public class CSharpReplaceContainer
 {
     //global
 

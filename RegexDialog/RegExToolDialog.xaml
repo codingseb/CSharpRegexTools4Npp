@@ -39,6 +39,7 @@
         <BitmapImage x:Key="ShowSpaces" UriSource="Resources/space.png"/>
         <BitmapImage x:Key="ShowReturns" UriSource="Resources/return.png"/>
         <BitmapImage x:Key="Play" UriSource="Resources/control_play_blue.png"/>
+        <BitmapImage x:Key="VS" UriSource="Resources/visual_studio_purple.png"/>
 
         <Style TargetType="Image">
             <Style.Triggers>
@@ -72,6 +73,14 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
+                <MenuItem Header="Export To Visual Studio _Solution..." Click="ExportToVisualStudio_Click">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource VS}"  />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Export C# Code in a new tab" >
+                </MenuItem>
+                <Separator />
                 <MenuItem Header="_Exit" Click="Exit_MenuItem_Click" >
                     <MenuItem.Icon>
                         <Image Source="{StaticResource ExitPicture}" />
@@ -692,7 +701,7 @@
                                         <ToggleButton x:Name="ToggleShowSpacesInCSharpTextSourceButton" 
                                                       IsChecked="{Binding ShowSpaceCharsCSharpTextSourceEditorOption}">
                                             <StackPanel Orientation="Horizontal">
-                                                <Image Source="{StaticResource ShowSpaces}" Width="16" Height="16" ToolTip="Show/Hide Spaces and tabulations" />
+                                                <Image Source="{StaticResource ShowSpaces}" Width="16" Height="16" ToolTip="Show/Hide spaces and tabulations" />
                                             </StackPanel>
                                         </ToggleButton>
                                         <ToggleButton x:Name="ToggleShowReturnsInCSharpTextSourceButton" 
@@ -704,7 +713,7 @@
                                         <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                                         <Button x:Name="TestCSharpTextSourceButton"
                                                 Click="TestCSharpTextSourceButton_Click">
-                                            <Image Source="{StaticResource Play}" Width="16" Height="16" ToolTip="Test and show result" />
+                                            <Image Source="{StaticResource Play}" Width="16" Height="16" ToolTip="Test and Show Result" />
                                         </Button>
                                         <CheckBox Content="In a new tab"
                                                   VerticalAlignment="Center"

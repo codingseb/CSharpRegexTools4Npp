@@ -2025,5 +2025,56 @@ namespace RegexDialog
                 MessageBox.Show($"{exception}");
             }
         }
+
+        private void ExportToVisualStudio_Click(object sender, RoutedEventArgs e)
+        {
+            VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog()
+            {
+                ShowNewFolderButton = true,
+            };
+
+            Ookii.Dialogs.WinForms.InputDialog inputDialog = new Ookii.Dialogs.WinForms.InputDialog()
+            {
+                Content = "give a name for your project/solution :",
+                Input = "MySolution"
+            };
+
+            if (folderBrowserDialog.ShowDialog(this) == true && inputDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                string projectName = inputDialog.Input.Replace(" ", string.Empty);
+
+                if(string.IsNullOrWhiteSpace(projectName))
+                {
+                    MessageBox.Show("The project name can not be empty or only whitespaces", "Exportation Aborted", MessageBoxButton.OK, MessageBoxImage.Information);
+                    return;
+                }
+
+                string solutionDirectory = Path.Combine(folderBrowserDialog.SelectedPath, projectName);
+                string solutionFile = Path.Combine(solutionDirectory, $"{projectName}.sln");
+                string projectDirectory = Path.Combine(solutionDirectory, projectName);
+                string projectFile = Path.Combine(projectDirectory, $"{projectName}.csproj");
+                string entryFile = Path.Combine(projectDirectory, "Program.cs");
+                string projectGuid = Guid.NewGuid().ToString();
+
+                Directory.CreateDirectory(projectDirectory);
+
+                // Write solution file
+                File.WriteAllText(solutionFile,
+                    Res.VSSolution
+                        .Replace("$guid1$", projectGuid)
+                        .Replace("$guid2$", Guid.NewGuid().ToString())
+                        .Replace("$guid2$", Guid.NewGuid().ToString())
+                        .Replace("$projectname$", projectName));
+
+                // Write project file
+                File.WriteAllText(projectFile,
+                    Res.VSProject);
+
+                // Write Entry file
+                File.WriteAllText(entryFile,
+                    Res.VSProgram
+                        .Replace("projectname", projectName));
+            }
+        }
     }
 }

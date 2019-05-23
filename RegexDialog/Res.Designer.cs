@@ -61,28 +61,27 @@ namespace RegexDialog {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à //using Newtonsoft.Json;
-        ///using System.Collections;
+        ///   Recherche une chaîne localisée semblable à using System.Collections;
         ///using System.Collections.Generic;
         ///using System.Collections.ObjectModel;
         ///using System.ComponentModel;
-        /////using System.Data;
-        ///using System.Diagnostics;
         ///using System.Globalization;
-        ///using System.IO;
         ///using System.Linq;
-        ///using System.Reflection;
         ///using System.Text;
         ///using System.Text.RegularExpressions;
-        ///using System.Windows;
-        ///using System.Xml;
-        /////using RegexDialog;
+        ///using RegexDialog;
+        /////usings
         ///
         ///public class Script
         ///{
         ///    //global
         ///
-        ///    public string Replace(Match match, int index [le reste de la chaîne a été tronqué]&quot;;.
+        ///    public string Replace(Match match, int matchIndex, string fileName, int globalIndex, int fileIndex)
+        ///    {
+        ///        //code
+        ///    }
+        ///
+        ///    public string Replace(Match match, Group group, int matchInd [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string CSharpReplaceContainer {
             get {
@@ -91,11 +90,23 @@ namespace RegexDialog {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à using System;
+        ///   Recherche une chaîne localisée semblable à using System.Collections;
+        ///using System.Collections.Generic;
+        ///using System.Collections.ObjectModel;
+        ///using System.ComponentModel;
+        ///using System.Globalization;
+        ///using System.Linq;
+        ///using System.Text;
+        ///using System.Text.RegularExpressions;
+        ///using RegexDialog;
+        /////usings
         ///
         ///public class CSharpTextSourceContainer
         ///{
-        ///
+        ///    public object Get()
+        ///    {
+        ///        //code
+        ///    }
         ///}
         ///.
         /// </summary>
@@ -181,6 +192,64 @@ namespace RegexDialog {
         internal static string ReplaceLanguageElements {
             get {
                 return ResourceManager.GetString("ReplaceLanguageElements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à using System;
+        ///
+        ///namespace TestConsoleApp
+        ///{
+        ///    class Program
+        ///    {
+        ///        static void Main(string[] args)
+        ///        {
+        ///            Console.WriteLine(&quot;Hello World!&quot;);
+        ///        }
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string VSProgram {
+            get {
+                return ResourceManager.GetString("VSProgram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à &lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+        ///
+        ///  &lt;PropertyGroup&gt;
+        ///    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+        ///    &lt;TargetFramework&gt;netcoreapp3.0&lt;/TargetFramework&gt;
+        ///  &lt;/PropertyGroup&gt;
+        ///
+        ///&lt;/Project&gt;
+        ///.
+        /// </summary>
+        internal static string VSProject {
+            get {
+                return ResourceManager.GetString("VSProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Microsoft Visual Studio Solution File, Format Version 12.00
+        ///Project(&quot;{$guid2$}&quot;) = &quot;$projectname$&quot;, &quot;$projectname$\$projectname$.csproj&quot;, &quot;{$guid1$}&quot;
+        ///EndProject
+        ///Global
+        ///	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        ///		Debug|Any CPU = Debug|Any CPU
+        ///		Release|Any CPU = Release|Any CPU
+        ///	EndGlobalSection
+        ///	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+        ///		{$guid1$}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        ///		{$guid1$}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        ///		{$guid1$}.Release|Any [le reste de la chaîne a été tronqué]&quot;;.
+        /// </summary>
+        internal static string VSSolution {
+            get {
+                return ResourceManager.GetString("VSSolution", resourceCulture);
             }
         }
     }

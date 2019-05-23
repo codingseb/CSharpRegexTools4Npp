@@ -136,4 +136,13 @@
   <data name="Replace_syntax_color" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\replace_syntax_color.xshd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
   </data>
+  <data name="VSProgram" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\vsprogram.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="VSProject" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\vsproject.csproj;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
+  <data name="VSSolution" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\vssolution.sln;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+  </data>
 </root>
