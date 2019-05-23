@@ -567,7 +567,7 @@ namespace RegexDialog
 
                         MatchesResultLabel.Content = $"{i} matches [Index,Length] + {countAllCaptures - i} empties matches found in {ff}/{ft} files";
                     }
-                    else if(Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
+                    else if (Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
                     {
                         dynamic sourceScript = CSharpTextSourceScript;
 
@@ -857,7 +857,7 @@ namespace RegexDialog
 
                 void Extract(string text, string fileName = "")
                 {
-                    List<Match> matches = regex.Matches((string)script?.Before(text,fileName) ?? text)
+                    List<Match> matches = regex.Matches((string)script?.Before(text, fileName) ?? text)
                         .Cast<Match>()
                         .ToList();
 
@@ -894,7 +894,7 @@ namespace RegexDialog
                     fileNames = GetFiles();
                     fileNames.ForEach(fileName => Extract(File.ReadAllText(fileName), fileName));
                 }
-                else if(Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
+                else if (Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
                 {
                     dynamic sourceScript = CSharpTextSourceScript;
                     Extract(sourceScript.Get().ToString(), "script");
@@ -2020,7 +2020,7 @@ namespace RegexDialog
                     SetText(result);
                 }
             }
-            catch(Exception exception)
+            catch (Exception exception)
             {
                 MessageBox.Show($"{exception}");
             }
@@ -2043,7 +2043,7 @@ namespace RegexDialog
             {
                 string projectName = inputDialog.Input.Replace(" ", string.Empty);
 
-                if(string.IsNullOrWhiteSpace(projectName))
+                if (string.IsNullOrWhiteSpace(projectName))
                 {
                     MessageBox.Show("The project name can not be empty or only whitespaces", "Exportation Aborted", MessageBoxButton.OK, MessageBoxImage.Information);
                     return;
@@ -2060,9 +2060,9 @@ namespace RegexDialog
 
                 // Write solution file
                 if (!File.Exists(projectFile)
-                    || MessageBox.Show($"The solution file \"{solutionFile}\" already exists.\r\nDo you want to override it ?", 
-                        "Solution file override", 
-                        MessageBoxButton.YesNo, 
+                    || MessageBox.Show($"The solution file \"{solutionFile}\" already exists.\r\nDo you want to override it ?",
+                        "Solution file override",
+                        MessageBoxButton.YesNo,
                         MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
                     File.WriteAllText(solutionFile,
@@ -2074,7 +2074,7 @@ namespace RegexDialog
                 }
 
                 // Write project file
-                if(!File.Exists(projectFile)
+                if (!File.Exists(projectFile)
                     || MessageBox.Show($"The project file \"{projectFile}\" already exists.\r\nDo you want to override it ?",
                         "Project file override",
                         MessageBoxButton.YesNo,
