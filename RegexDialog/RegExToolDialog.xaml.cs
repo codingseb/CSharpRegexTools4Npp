@@ -2059,16 +2059,30 @@ namespace RegexDialog
                 Directory.CreateDirectory(projectDirectory);
 
                 // Write solution file
-                File.WriteAllText(solutionFile,
-                    Res.VSSolution
-                        .Replace("$guid1$", projectGuid)
-                        .Replace("$guid2$", Guid.NewGuid().ToString())
-                        .Replace("$guid2$", Guid.NewGuid().ToString())
-                        .Replace("$projectname$", projectName));
+                if (!File.Exists(projectFile)
+                    || MessageBox.Show($"The solution file \"{solutionFile}\" already exists.\r\nDo you want to override it ?", 
+                        "Solution file override", 
+                        MessageBoxButton.YesNo, 
+                        MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    File.WriteAllText(solutionFile,
+                        Res.VSSolution
+                            .Replace("$guid1$", projectGuid)
+                            .Replace("$guid2$", Guid.NewGuid().ToString())
+                            .Replace("$guid2$", Guid.NewGuid().ToString())
+                            .Replace("$projectname$", projectName));
+                }
 
                 // Write project file
-                File.WriteAllText(projectFile,
-                    Res.VSProject);
+                if(!File.Exists(projectFile)
+                    || MessageBox.Show($"The project file \"{projectFile}\" already exists.\r\nDo you want to override it ?",
+                        "Project file override",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    File.WriteAllText(projectFile,
+                        Res.VSProject);
+                }
 
                 // Write Entry file
                 File.WriteAllText(entryFile,
