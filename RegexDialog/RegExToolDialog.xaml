@@ -78,7 +78,7 @@
                         <Image Source="{StaticResource VS}"  />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Export C# Code in a new tab" >
+                <MenuItem Header="Export C# Code In A New Tab" >
                 </MenuItem>
                 <Separator />
                 <MenuItem Header="_Exit" Click="Exit_MenuItem_Click" >

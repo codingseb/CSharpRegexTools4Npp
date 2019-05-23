@@ -30,5 +30,10 @@ namespace RegexDialog
 
             return returnString;
         }
+
+        public static string RegexReplace(this string input, string pattern, string replacement, RegexOptions options = RegexOptions.None)
+        {
+            return Regex.Replace(input, pattern, replacement, options);
+        }
     }
 }

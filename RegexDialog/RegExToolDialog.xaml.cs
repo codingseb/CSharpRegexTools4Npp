@@ -57,31 +57,37 @@ namespace RegexDialog
         private static readonly Regex cSharpReplaceBeforePartRegex = new Regex(@"(?<=^|\s)\#before(?=\s)(?<before>.*)(?<=\s)\#endbefore(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cSharpReplaceAfterPartRegex = new Regex(@"(?<=^|\s)\#after(?=\s)(?<after>.*)(?<=\s)\#endafter(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
 
-        public object ReplaceScript
+        private string InjectInReplaceScript(string replaceScript)
         {
-            get
-            {
-                Match beforeMatch = cSharpReplaceBeforePartRegex.Match(ReplaceEditor.Text);
-                Match afterMatch = cSharpReplaceAfterPartRegex.Match(ReplaceEditor.Text);
+            Match beforeMatch = cSharpReplaceBeforePartRegex.Match(ReplaceEditor.Text);
+            Match afterMatch = cSharpReplaceAfterPartRegex.Match(ReplaceEditor.Text);
 
-                return csEval.LoadCode(Res.CSharpReplaceContainer
-                    .Replace("//code", cSharpReplaceSpecialZoneCleaningRegex.Replace(ReplaceEditor.Text, string.Empty))
-                    .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(ReplaceEditor.Text).Groups["usings"].Value)
-                    .Replace("//global", cSharpReplaceGlobalPartRegex.Match(ReplaceEditor.Text).Groups["global"].Value)
-                    .Replace("//before", beforeMatch.Success ? beforeMatch.Groups["before"].Value : "return text;")
-                    .Replace("//after", afterMatch.Success ? afterMatch.Groups["after"].Value : "return text;"));
-            }
+            return replaceScript
+                .Replace("//code", cSharpReplaceSpecialZoneCleaningRegex.Replace(ReplaceEditor.Text, string.Empty))
+                .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(ReplaceEditor.Text).Groups["usings"].Value)
+                .Replace("//global", cSharpReplaceGlobalPartRegex.Match(ReplaceEditor.Text).Groups["global"].Value)
+                .Replace("//before", beforeMatch.Success ? beforeMatch.Groups["before"].Value : "return text;")
+                .Replace("//after", afterMatch.Success ? afterMatch.Groups["after"].Value : "return text;");
         }
 
-        public object CSharpTextSourceScript
-        {
-            get
-            {
-                return csEval.LoadCode(Res.CSharpTextSourceContainer
-                    .Replace("//code", cSharpReplaceSpecialZoneCleaningRegex.Replace(TextSourceEditor.Text, string.Empty))
-                    .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(TextSourceEditor.Text).Groups["usings"].Value));
-            }
-        }
+        public string ReplaceScriptForMatch => InjectInReplaceScript(
+            Res.CSharpReplaceContainer
+                .RegexReplace(@"\s*//(?<type>group|capture).*//end\k<type>", string.Empty, RegexOptions.Singleline)
+                .RegexReplace("//match(?<keep>.*)//endmatch", "${keep}", RegexOptions.Singleline));
+
+        public string ReplaceScriptForGroup => InjectInReplaceScript(
+            Res.CSharpReplaceContainer
+                .RegexReplace(@"\s*//(?<type>match|capture).*//end\k<type>", string.Empty, RegexOptions.Singleline)
+                .RegexReplace("//group(?<keep>.*)//endgroup", "${keep}", RegexOptions.Singleline));
+
+        public string ReplaceScriptForCapture => InjectInReplaceScript(
+            Res.CSharpReplaceContainer
+                .RegexReplace(@"\s*//(?<type>match|group).*//end\k<type>", string.Empty, RegexOptions.Singleline)
+                .RegexReplace("//capture(?<keep>.*)//endcapture", "${keep}", RegexOptions.Singleline));
+
+        public string CSharpTextSourceScript => Res.CSharpTextSourceContainer
+            .Replace("//code", cSharpReplaceSpecialZoneCleaningRegex.Replace(TextSourceEditor.Text, string.Empty))
+            .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(TextSourceEditor.Text).Groups["usings"].Value);
 
         public delegate bool TryOpenDelegate(string fileName, bool onlyIfAlreadyOpen);
         public delegate void SetPositionDelegate(int index, int length);
@@ -622,7 +628,7 @@ namespace RegexDialog
 
                 if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                 {
-                    dynamic script = ReplaceScript;
+                    dynamic script = csEval.LoadCode(ReplaceScriptForMatch);
 
                     int index = -1;
 
@@ -697,7 +703,7 @@ namespace RegexDialog
                             }), currentFileName, null));
                             break;
                         case RegexTextSource.CSharpScript:
-                            dynamic scriptSource = CSharpTextSourceScript;
+                            dynamic scriptSource = csEval.LoadCode(CSharpTextSourceScript);
                             text = script.Before(scriptSource.Get().ToString(), "script");
                             nbrOfElementToReplace = regex.Matches(text).Count;
                             SetTextInNew(script.After(regex.Replace(text, match =>
@@ -773,7 +779,7 @@ namespace RegexDialog
                             SetSelectedText(regex.Replace(text, ReplaceEditor.Text));
                             break;
                         case RegexTextSource.CSharpScript:
-                            dynamic script = CSharpTextSourceScript;
+                            dynamic script = csEval.LoadCode(CSharpTextSourceScript);
                             text = script.Get().ToString();
                             nbrOfElementToReplace = regex.Matches(text).Count;
                             SetTextInNew(regex.Replace(text, ReplaceEditor.Text));
@@ -852,7 +858,7 @@ namespace RegexDialog
 
                 if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                 {
-                    script = ReplaceScript;
+                    script = csEval.LoadCode(ReplaceScriptForMatch);
                 }
 
                 void Extract(string text, string fileName = "")
@@ -1453,7 +1459,7 @@ namespace RegexDialog
 
                         if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                         {
-                            dynamic script = ReplaceScript;
+                            dynamic script = csEval.LoadCode(ReplaceScriptForMatch);
 
                             int index = -1;
 
@@ -1497,14 +1503,12 @@ namespace RegexDialog
 
                         if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                         {
-                            dynamic script = ReplaceScript;
-
                             if (regexResult is RegexMatchResult regexMatchResult)
-                                newText = beforeMatch + script.Replace((Match)regexMatchResult.RegexElement, regexMatchResult.RegexElementNb, regexResult.FileName, regexMatchResult.RegexElementNb, 0) + afterMatch;
+                                newText = beforeMatch + ((dynamic)csEval.LoadCode(ReplaceScriptForMatch)).Replace((Match)regexMatchResult.RegexElement, regexMatchResult.RegexElementNb, regexResult.FileName, regexMatchResult.RegexElementNb, 0) + afterMatch;
                             else if (regexResult is RegexGroupResult regexGroupResult)
-                                newText = beforeMatch + script.Replace((Match)regexGroupResult.Parent.RegexElement, (Group)regexGroupResult.RegexElement, regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
+                                newText = beforeMatch + ((dynamic)csEval.LoadCode(ReplaceScriptForGroup)).Replace((Match)regexGroupResult.Parent.RegexElement, (Group)regexGroupResult.RegexElement, regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
                             else if (regexResult is RegexCaptureResult regexCaptureResult)
-                                newText = beforeMatch + script.Replace((Match)regexCaptureResult.Parent.Parent.RegexElement, (Group)regexCaptureResult.Parent.RegexElement, (Capture)regexCaptureResult.RegexElement, regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
+                                newText = beforeMatch + ((dynamic)csEval.LoadCode(ReplaceScriptForCapture)).Replace((Match)regexCaptureResult.Parent.Parent.RegexElement, (Group)regexCaptureResult.Parent.RegexElement, (Capture)regexCaptureResult.RegexElement, regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
                         }
                         else
                         {
@@ -2007,7 +2011,7 @@ namespace RegexDialog
         {
             try
             {
-                dynamic script = CSharpTextSourceScript;
+                dynamic script = csEval.LoadCode(CSharpTextSourceScript);
 
                 string result = script.Get().ToString();
 
