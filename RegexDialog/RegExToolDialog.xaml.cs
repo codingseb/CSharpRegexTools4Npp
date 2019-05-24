@@ -5,8 +5,11 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using Ookii.Dialogs.Wpf;
 using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -85,7 +88,7 @@ namespace RegexDialog
                 .RegexReplace(@"\s*//(?<type>match|group).*//end\k<type>", string.Empty, RegexOptions.Singleline)
                 .RegexReplace("//capture(?<keep>.*)//endcapture", "${keep}", RegexOptions.Singleline));
 
-        public string CSharpTextSourceScript => Res.CSharpTextSourceContainer
+        public string CSharpTextSourceScript => Res.TextSourceContainer
             .Replace("//code", cSharpReplaceSpecialZoneCleaningRegex.Replace(TextSourceEditor.Text, string.Empty))
             .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(TextSourceEditor.Text).Groups["usings"].Value);
 
@@ -575,7 +578,7 @@ namespace RegexDialog
                     }
                     else if (Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
                     {
-                        dynamic sourceScript = CSharpTextSourceScript;
+                        dynamic sourceScript = csEval.LoadCode(CSharpTextSourceScript);
 
                         MatchResultsTreeView.ItemsSource = GetMatchesFor(sourceScript.Get().ToString(), "script");
 
@@ -902,7 +905,7 @@ namespace RegexDialog
                 }
                 else if (Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
                 {
-                    dynamic sourceScript = CSharpTextSourceScript;
+                    dynamic sourceScript = csEval.LoadCode(CSharpTextSourceScript);
                     Extract(sourceScript.Get().ToString(), "script");
                 }
                 else
@@ -1616,6 +1619,15 @@ namespace RegexDialog
             catch { }
         }
 
+        private void CmiReplaceCopyForCSharpString_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Clipboard.SetText((ReplaceEditor.SelectionLength > 0 ? ReplaceEditor.SelectedText : ReplaceEditor.Text).ToLiteral());
+            }
+            catch { }
+        }
+
         private void PutInRegexHistory_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -1801,6 +1813,15 @@ namespace RegexDialog
             try
             {
                 Clipboard.SetText(RegexPatternIndenter.SetOnOneLine(RegexEditor.SelectionLength > 0 ? RegexEditor.SelectedText : RegexEditor.Text));
+            }
+            catch { }
+        }
+
+        private void CmiRegexCopyForCSharpString_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Clipboard.SetText((RegexEditor.SelectionLength > 0 ? RegexEditor.SelectedText : RegexEditor.Text).ToLiteral());
             }
             catch { }
         }
@@ -2035,12 +2056,13 @@ namespace RegexDialog
             VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog()
             {
                 ShowNewFolderButton = true,
+                SelectedPath = @"C:\Projets"
             };
 
             Ookii.Dialogs.WinForms.InputDialog inputDialog = new Ookii.Dialogs.WinForms.InputDialog()
             {
                 Content = "give a name for your project/solution :",
-                Input = "MySolution"
+                Input = "TestRegexSol"
             };
 
             if (folderBrowserDialog.ShowDialog(this) == true && inputDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
@@ -2058,7 +2080,14 @@ namespace RegexDialog
                 string projectDirectory = Path.Combine(solutionDirectory, projectName);
                 string projectFile = Path.Combine(projectDirectory, $"{projectName}.csproj");
                 string entryFile = Path.Combine(projectDirectory, "Program.cs");
+                string replaceFile = Path.Combine(projectDirectory, "CSharpReplaceContainer.cs");
+                string textSourceFile = Path.Combine(projectDirectory, "TextSourceContainer.cs");
                 string projectGuid = Guid.NewGuid().ToString();
+
+                string programCode = Res.VSProgram
+                    .Replace("projectname", projectName)
+                    .Replace("$pattern$", Config.Instance.RegexEditorText.ToLiteral())
+                    .Replace("$replacement$", Config.Instance.ReplaceEditorText.ToLiteral());
 
                 Directory.CreateDirectory(projectDirectory);
 
@@ -2084,14 +2113,30 @@ namespace RegexDialog
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    File.WriteAllText(projectFile,
-                        Res.VSProject);
+                    File.WriteAllText(projectFile, Res.VSProject);
+                }
+
+                if (Config.Instance.CSharpReplaceMode)
+                {
+                    File.WriteAllText(replaceFile, ReplaceScriptForMatch);
+                }
+
+                if (Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
+                {
+                    File.WriteAllText(textSourceFile, CSharpTextSourceScript);
                 }
 
                 // Write Entry file
-                File.WriteAllText(entryFile,
-                    Res.VSProgram
-                        .Replace("projectname", projectName));
+                if (!File.Exists(entryFile)
+                    || MessageBox.Show($"The entry file \"{entryFile}\" already exists.\r\nDo you want to override it ?",
+                        "Entry file override",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    File.WriteAllText(entryFile, programCode);
+                }
+
+                Process.Start($"\"{solutionFile}\"");
             }
         }
     }

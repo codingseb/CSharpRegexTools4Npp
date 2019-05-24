@@ -262,7 +262,7 @@
     <Compile Include="Converters\ExpressionEvalConverter.cs" />
     <Compile Include="Model\RegexFileResult.cs" />
     <Compile Include="RegexPatternIndenter.cs" />
-    <Resource Include="Resources\CSharpTextSourceContainer.cs" />
+    <Resource Include="Resources\TextSourceContainer.cs" />
     <Compile Include="Res.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -317,6 +317,7 @@
     <EmbeddedResource Include="Res.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Res.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

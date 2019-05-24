@@ -72,47 +72,23 @@ namespace RegexDialog {
         ///using RegexDialog;
         /////usings
         ///
-        ///public class Script
+        ///public class CSharpReplaceContainer
         ///{
         ///    //global
         ///
+        ///    //match
         ///    public string Replace(Match match, int matchIndex, string fileName, int globalIndex, int fileIndex)
         ///    {
         ///        //code
         ///    }
+        ///    //endmatch
         ///
-        ///    public string Replace(Match match, Group group, int matchInd [le reste de la chaîne a été tronqué]&quot;;.
+        ///    //group
+        ///    pu [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string CSharpReplaceContainer {
             get {
                 return ResourceManager.GetString("CSharpReplaceContainer", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Recherche une chaîne localisée semblable à using System.Collections;
-        ///using System.Collections.Generic;
-        ///using System.Collections.ObjectModel;
-        ///using System.ComponentModel;
-        ///using System.Globalization;
-        ///using System.Linq;
-        ///using System.Text;
-        ///using System.Text.RegularExpressions;
-        ///using RegexDialog;
-        /////usings
-        ///
-        ///public class CSharpTextSourceContainer
-        ///{
-        ///    public object Get()
-        ///    {
-        ///        //code
-        ///    }
-        ///}
-        ///.
-        /// </summary>
-        internal static string CSharpTextSourceContainer {
-            get {
-                return ResourceManager.GetString("CSharpTextSourceContainer", resourceCulture);
             }
         }
         
@@ -196,19 +172,51 @@ namespace RegexDialog {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à using System;
+        ///   Recherche une chaîne localisée semblable à using System.Collections;
+        ///using System.Collections.Generic;
+        ///using System.Collections.ObjectModel;
+        ///using System.ComponentModel;
+        ///using System.Globalization;
+        ///using System.Linq;
+        ///using System.Text;
+        ///using System.Text.RegularExpressions;
+        ///using RegexDialog;
+        /////usings
         ///
-        ///namespace TestConsoleApp
+        ///public class TextSourceContainer
         ///{
-        ///    class Program
+        ///    public object Get()
         ///    {
-        ///        static void Main(string[] args)
-        ///        {
-        ///            Console.WriteLine(&quot;Hello World!&quot;);
-        ///        }
+        ///        //code
         ///    }
         ///}
         ///.
+        /// </summary>
+        internal static string TextSourceContainer {
+            get {
+                return ResourceManager.GetString("TextSourceContainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à using System;
+        ///using System.Text;
+        ///using System.Text.RegularExpressions;
+        ///
+        ///namespace projectname
+        ///{
+        ///    class Program
+        ///    {
+        ///        private static string pattern = @&quot;$pattern$&quot;;
+        ///        private static string replacement = &quot;$replacement$&quot;;
+        ///        private static Regex regex = new Regex(pattern);
+        ///
+        ///        private static string input = (new TextSourceContainer()).Get();
+        ///
+        ///        static void Main(string[] args)
+        ///        {
+        ///            // To make a replace
+        ///            string replace = regex.Replace(in [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string VSProgram {
             get {

@@ -295,6 +295,7 @@
                                     <MenuItem Header="Paste" Command="ApplicationCommands.Paste"/>
                                     <Separator/>
                                     <MenuItem Name="cmiRegexCopyForOnOneLine" Header="Copy on one line" Click="CmiRegexCopyForOnOneLine_Click"/>
+                                    <MenuItem Name="CmiRegexCopyForCSharpString" Header="Copy for C# string" Click="CmiRegexCopyForCSharpString_Click" />
                                     <MenuItem Name="cmiRegexCopyForXml" Header="Copy for XML" Click="CmiRegexCopyForXml_Click"/>
                                     <MenuItem Name="cmiRegexPasteFromXml" Header="Paste from XML" Click="CmiRegexPasteFromXml_Click"/>
                                     <Separator />
@@ -396,6 +397,8 @@
                                     <MenuItem Header="Cut" Command="ApplicationCommands.Cut"/>
                                     <MenuItem Header="Copy" Command="ApplicationCommands.Copy"/>
                                     <MenuItem Header="Paste" Command="ApplicationCommands.Paste"/>
+                                    <Separator />
+                                    <MenuItem Name="CmiReplaceCopyForCSharpString" Header="Copy for C# string" Click="CmiReplaceCopyForCSharpString_Click" />
                                     <Separator />
                                     <MenuItem Header="Select All" Command="ApplicationCommands.SelectAll"/>
                                 </ContextMenu>

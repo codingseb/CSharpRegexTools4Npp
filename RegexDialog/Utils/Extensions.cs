@@ -1,4 +1,7 @@
 ﻿using System;
+using System.CodeDom;
+using System.CodeDom.Compiler;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Security;
@@ -34,6 +37,19 @@ namespace RegexDialog
         public static string RegexReplace(this string input, string pattern, string replacement, RegexOptions options = RegexOptions.None)
         {
             return Regex.Replace(input, pattern, replacement, options);
+        }
+
+        public static string ToLiteral(this string input)
+        {
+            using (var writer = new StringWriter())
+            {
+                using (var provider = CodeDomProvider.CreateProvider("CSharp"))
+                {
+                    provider.GenerateCodeFromExpression(new CodePrimitiveExpression(input), writer, new CodeGeneratorOptions { IndentString = "\t" });
+                    var literal = writer.ToString();
+                    return literal.Replace(string.Format("\" +{0}\t\"", Environment.NewLine), "").Trim('"');
+                }
+            }
         }
     }
 }
