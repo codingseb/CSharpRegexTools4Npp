@@ -59,6 +59,7 @@ namespace RegexDialog
         private static readonly Regex cSharpReplaceGlobalPartRegex = new Regex(@"(?<=^|\s)\#global(?=\s)(?<global>.*)(?<=\s)\#endglobal(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cSharpReplaceBeforePartRegex = new Regex(@"(?<=^|\s)\#before(?=\s)(?<before>.*)(?<=\s)\#endbefore(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cSharpReplaceAfterPartRegex = new Regex(@"(?<=^|\s)\#after(?=\s)(?<after>.*)(?<=\s)\#endafter(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpScriptsStartOfLinesForAddingTabs = new Regex(@"(?<start>^)(?<notend>[^\r\n])", RegexOptions.Multiline | RegexOptions.Compiled);
 
         private string InjectInReplaceScript(string replaceScript)
         {
@@ -66,8 +67,12 @@ namespace RegexDialog
             Match afterMatch = cSharpReplaceAfterPartRegex.Match(ReplaceEditor.Text);
 
             return replaceScript
-                .Replace("//code", cSharpReplaceSpecialZoneCleaningRegex.Replace(ReplaceEditor.Text, string.Empty))
-                .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(ReplaceEditor.Text).Groups["usings"].Value)
+                .Replace("//code",
+                    cSharpScriptsStartOfLinesForAddingTabs.Replace(
+                        cSharpReplaceSpecialZoneCleaningRegex.Replace(ReplaceEditor.Text, string.Empty)
+                        , match => match.Groups["start"].Value + "\t\t" + match.Groups["notend"].Value)
+                    .TrimStart())
+                .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(ReplaceEditor.Text).Groups["usings"].Value.Trim())
                 .Replace("//global", cSharpReplaceGlobalPartRegex.Match(ReplaceEditor.Text).Groups["global"].Value)
                 .Replace("//before", beforeMatch.Success ? beforeMatch.Groups["before"].Value : "return text;")
                 .Replace("//after", afterMatch.Success ? afterMatch.Groups["after"].Value : "return text;");
@@ -89,7 +94,11 @@ namespace RegexDialog
                 .RegexReplace("//capture(?<keep>.*)//endcapture", "${keep}", RegexOptions.Singleline));
 
         public string CSharpTextSourceScript => Res.TextSourceContainer
-            .Replace("//code", cSharpReplaceSpecialZoneCleaningRegex.Replace(TextSourceEditor.Text, string.Empty))
+            .Replace("//code",
+                cSharpScriptsStartOfLinesForAddingTabs.Replace(
+                    cSharpReplaceSpecialZoneCleaningRegex.Replace(TextSourceEditor.Text, string.Empty)
+                    , match => match.Groups["start"].Value + "\t\t" + match.Groups["notend"].Value)
+                    .TrimStart())
             .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(TextSourceEditor.Text).Groups["usings"].Value);
 
         public delegate bool TryOpenDelegate(string fileName, bool onlyIfAlreadyOpen);
@@ -1654,6 +1663,7 @@ namespace RegexDialog
 
                 RegexEditor.Text = string.Empty;
                 ReplaceEditor.Text = string.Empty;
+                TextSourceEditor.Text = string.Empty;
 
                 regExOptionViewModelsList.ForEach(optionModel => optionModel.Selected = false);
             }
@@ -2083,11 +2093,18 @@ namespace RegexDialog
                 string replaceFile = Path.Combine(projectDirectory, "CSharpReplaceContainer.cs");
                 string textSourceFile = Path.Combine(projectDirectory, "TextSourceContainer.cs");
                 string projectGuid = Guid.NewGuid().ToString();
+                string options = regExOptionViewModelsList.Count(option => option.Selected) == 0
+                    ? "RegexOptions.None"
+                    : string.Join(" | ",
+                        regExOptionViewModelsList
+                            .FindAll(option => option.Selected)
+                            .Select(option => "RegexOptions." + option.RegexOptions.ToString()));
 
                 string programCode = Res.VSProgram
                     .Replace("projectname", projectName)
                     .Replace("$pattern$", Config.Instance.RegexEditorText.ToLiteral())
-                    .Replace("$replacement$", Config.Instance.ReplaceEditorText.ToLiteral());
+                    .Replace("$replacement$", Config.Instance.ReplaceEditorText.ToLiteral())
+                    .Replace("_options_", options);
 
                 Directory.CreateDirectory(projectDirectory);
 
