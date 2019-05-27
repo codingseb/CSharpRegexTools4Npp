@@ -2,11 +2,8 @@
 using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using System.Security;
 using System.Text.RegularExpressions;
-using System.Windows.Media;
 
 namespace RegexDialog
 {

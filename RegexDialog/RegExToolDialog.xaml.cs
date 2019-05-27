@@ -5,8 +5,6 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using Ookii.Dialogs.Wpf;
 using System;
-using System.CodeDom;
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -76,8 +74,8 @@ namespace RegexDialog
                         cSharpReplaceSpecialZoneCleaningRegex.Replace(ReplaceEditor.Text, string.Empty)
                         , match => match.Groups["start"].Value + "\t\t" + match.Groups["notend"].Value)
                     .TrimStart())
-                .RegexReplace("//before[^/]+//end", beforeMatch.Success ? beforeMatch.Groups["before"].Value : "return text;", RegexOptions.Singleline)
-                .RegexReplace("//after[^/]+//end", afterMatch.Success ? afterMatch.Groups["after"].Value : "return text;", RegexOptions.Singleline);
+                .Replace("//before", beforeMatch.Success ? beforeMatch.Groups["before"].Value : "return text;")
+                .Replace("//after", afterMatch.Success ? afterMatch.Groups["after"].Value : "return text;");
         }
 
         public string ReplaceScriptForMatch => InjectInReplaceScript(
