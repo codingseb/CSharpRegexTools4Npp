@@ -39,6 +39,11 @@ namespace RegexDialog
             return Regex.Replace(input, pattern, replacement, options);
         }
 
+        public static string RegexReplace(this string input, string pattern, MatchEvaluator evaluator, RegexOptions options = RegexOptions.None)
+        {
+            return Regex.Replace(input, pattern, evaluator, options);
+        }
+
         public static string ToLiteral(this string input)
         {
             using (var writer = new StringWriter())

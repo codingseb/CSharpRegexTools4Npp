@@ -67,15 +67,17 @@ namespace RegexDialog
             Match afterMatch = cSharpReplaceAfterPartRegex.Match(ReplaceEditor.Text);
 
             return replaceScript
+                .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(ReplaceEditor.Text).Groups["usings"].Value.Trim())
+                .Replace("//global", cSharpReplaceGlobalPartRegex.Match(ReplaceEditor.Text).Groups["global"].Value)
+                .RegexReplace(@"([ \t]*\r\n){3,}", "\r\n\r\n")
+                .RegexReplace(@"\{([ \t]*\r\n){2,}", "{\r\n")
                 .Replace("//code",
                     cSharpScriptsStartOfLinesForAddingTabs.Replace(
                         cSharpReplaceSpecialZoneCleaningRegex.Replace(ReplaceEditor.Text, string.Empty)
                         , match => match.Groups["start"].Value + "\t\t" + match.Groups["notend"].Value)
                     .TrimStart())
-                .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(ReplaceEditor.Text).Groups["usings"].Value.Trim())
-                .Replace("//global", cSharpReplaceGlobalPartRegex.Match(ReplaceEditor.Text).Groups["global"].Value)
-                .Replace("//before", beforeMatch.Success ? beforeMatch.Groups["before"].Value : "return text;")
-                .Replace("//after", afterMatch.Success ? afterMatch.Groups["after"].Value : "return text;");
+                .RegexReplace("//before[^/]+//end", beforeMatch.Success ? beforeMatch.Groups["before"].Value : "return text;", RegexOptions.Singleline)
+                .RegexReplace("//after[^/]+//end", afterMatch.Success ? afterMatch.Groups["after"].Value : "return text;", RegexOptions.Singleline);
         }
 
         public string ReplaceScriptForMatch => InjectInReplaceScript(

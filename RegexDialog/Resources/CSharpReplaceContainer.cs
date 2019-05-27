@@ -37,14 +37,10 @@ public class CSharpReplaceContainer
     public string Before(string text, string fileName)
     {
         //before
-        return text;
-        //end
     }
 
     public string After(string text, string fileName, List<string> fileNames = null)
     {
         //after
-        return text;
-        //end
     }
 }
