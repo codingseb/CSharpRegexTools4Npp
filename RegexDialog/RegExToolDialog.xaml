@@ -422,6 +422,11 @@
                         VirtualizingPanel.IsVirtualizing="True"
                         SelectedItemChanged="MatchResultsTreeView_SelectedItemChanged"
                         PreviewMouseRightButtonDown="OnPreviewMouseRightButtonDown">
+                        <TreeView.CommandBindings>
+                            <CommandBinding Command="ApplicationCommands.Copy" 
+                                            Executed="TreeViewCopy_CommandBinding_Executed"
+                                            CanExecute="TreeViewCopy_CommandBinding_CanExecuted" />
+                        </TreeView.CommandBindings>
                         <TreeView.ItemContainerStyle>
                             <Style TargetType="TreeViewItem">
                                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, IsAsync=True}" />
@@ -442,6 +447,8 @@
                                 <Separator/>
                                 <MenuItem Header="Insert value in Replace field" Click="InsertValueInReplaceField_MenuItem_Click"/>
                                 <Separator/>
+                                <MenuItem Header="Copy value" Command="ApplicationCommands.Copy" />
+                                <Separator/>
                                 <MenuItem Header="Show Matches Level" Click="ShowMatchesMenu_Click"/>
                                 <MenuItem Header="Show Groups Level" Click="ShowGroupsMenu_Click"/>
                                 <MenuItem Header="Show Captures Level" Click="ShowCapturesMenu_Click"/>
@@ -452,6 +459,8 @@
                                 <MenuItem Header="Insert group by number in Replace field" Click="InsertGroupByNumberInReplaceField_MenuItem_Click"/>
                                 <MenuItem Header="Insert group by name in Replace field" Click="InsertGroupByNameInReplaceField_MenuItem_Click"/>
                                 <MenuItem Header="Insert value in Replace field" Click="InsertValueInReplaceField_MenuItem_Click"/>
+                                <Separator/>
+                                <MenuItem Header="Copy value" Command="ApplicationCommands.Copy" />
                                 <Separator/>
                                 <MenuItem Header="Show Matches Level" Click="ShowMatchesMenu_Click"/>
                                 <MenuItem Header="Show Groups Level" Click="ShowGroupsMenu_Click"/>

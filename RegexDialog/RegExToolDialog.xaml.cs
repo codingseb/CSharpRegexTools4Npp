@@ -1628,6 +1628,32 @@ namespace RegexDialog
             catch { }
         }
 
+        private void TreeViewCopy_CommandBinding_Executed(object sender, ExecutedRoutedEventArgs e)
+        {
+            CopyCaptureValue();
+        }
+
+        private void TreeViewCopy_CommandBinding_CanExecuted(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = MatchResultsTreeView.SelectedValue != null;
+        }
+
+        private void CopyCaptureValue()
+        {
+            try
+            {
+                if (MatchResultsTreeView.SelectedValue is RegexFileResult regexfileResult)
+                {
+                    Clipboard.SetText(regexfileResult.FileName);
+                }
+                else if (MatchResultsTreeView.SelectedValue is RegexResult regexResult)
+                {
+                    Clipboard.SetText(regexResult.Value);
+                }
+            }
+            catch { }
+        }
+
         private void CmiReplaceCopyForCSharpString_Click(object sender, RoutedEventArgs e)
         {
             try
