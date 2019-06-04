@@ -1,5 +1,5 @@
 # CSharpRegexTools4Npp
-Some tools for using C# Regex in Notepad++ (As Notepad++ Plugin)
+Some tools to using C# Regex in Notepad++ (As Notepad++ Plugin)
 
 ## Features
 * Syntax Highlight of the C# Regex
