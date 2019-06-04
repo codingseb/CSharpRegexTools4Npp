@@ -1740,6 +1740,16 @@ namespace RegexDialog
                             .FirstOrDefault(c => c.Value.StartsWith("#CSharpTextSource\r\n"))?
                             .Value
                             .Replace("#CSharpTextSource\r\n", string.Empty) ?? string.Empty;
+                        if(Enum.TryParse(root.SelectNodes("//comment()")
+                            .Cast<XmlComment>()
+                            .FirstOrDefault(c => c.Value.StartsWith("#TextSource"))
+                            .Value
+                            .Replace("#TextSource ", string.Empty)
+                            , out RegexTextSource regexTextSource))
+                        {
+                            Config.Instance.TextSourceOn = regexTextSource;
+                        }
+
 
                         string[] xOptions = root.SelectSingleNode("//Options").InnerText.Split(' ');
 
@@ -1791,6 +1801,7 @@ namespace RegexDialog
                             root.AppendChild(xmlDoc.CreateComment("ReplaceIsCSharp"));
                         root.AppendChild(replacePatternElement);
                         root.AppendChild(optionsElement);
+                        root.AppendChild(xmlDoc.CreateComment($"#TextSource {Config.Instance.TextSourceOn}"));
                         root.AppendChild(xmlDoc.CreateComment($"#CSharpTextSource\r\n{Config.Instance.CSharpTextSourceEditorText}"));
 
                         XmlText findPatternText = xmlDoc.CreateTextNode(RegexEditor.Text);
