@@ -2154,7 +2154,7 @@ namespace RegexDialog
                     File.WriteAllText(replaceFile, ReplaceScriptForMatch);
                     programCode = programCode
                         .Replace("\r\n        private readonly static string replacement = \"$replacement$\";", string.Empty)
-                        .Replace("//code", string.Empty);
+                        .Replace("//code", Res.CSharpReplaceCallingCode);
                 }
                 // Modify entry code for standard replacement.
                 else

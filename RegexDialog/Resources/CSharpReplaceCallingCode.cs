@@ -9,7 +9,7 @@
             string replace = regex.Replace(input, match =>
             {
                 index++;
-                container.Replace(match, index, fileName, index, 0);
+                return container.Replace(match, index, fileName, index, 0);
             });
 
             replace = container.After(replace, fileName);
