@@ -61,6 +61,22 @@ namespace RegexDialog {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à             // To make a replace
+        ///            string replace = regex.Replace(input, replacement);
+        ///            Console.WriteLine(replace);
+        ///
+        ///            //To get all matches
+        ///            MatchCollection matches = regex.Matches(input);
+        ///            Console.WriteLine(string.Join(&quot;\r\n&quot;, matches.Cast&lt;Match&gt;().Select(match =&gt; match.Value)));
+        ///.
+        /// </summary>
+        internal static string CSharpReplaceCallingCode {
+            get {
+                return ResourceManager.GetString("CSharpReplaceCallingCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à using System.Collections;
         ///using System.Collections.Generic;
         ///using System.Collections.ObjectModel;
@@ -172,9 +188,26 @@ namespace RegexDialog {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à             // To make a replace
+        ///            string replace = regex.Replace(input, replacement);
+        ///            Console.WriteLine(replace);
+        ///
+        ///            //To get all matches
+        ///            MatchCollection matches = regex.Matches(input);
+        ///            Console.WriteLine(string.Join(&quot;\r\n&quot;, matches.Cast&lt;Match&gt;().Select(match =&gt; match.Value)));
+        ///.
+        /// </summary>
+        internal static string StandardReplaceCode {
+            get {
+                return ResourceManager.GetString("StandardReplaceCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à   &lt;ItemGroup&gt;
         ///    &lt;Resource Include=&quot;TextSource.txt&quot; /&gt;
-        ///  &lt;/ItemGroup&gt;.
+        ///  &lt;/ItemGroup&gt;
+        ///.
         /// </summary>
         internal static string TextSourceAsResourceInCsProj {
             get {
@@ -215,7 +248,7 @@ namespace RegexDialog {
         ///using System.Text;
         ///using System.Text.RegularExpressions;
         ///
-        ///namespace projectname
+        ///namespace _projectname_
         ///{
         ///    class Program
         ///    {
@@ -226,7 +259,7 @@ namespace RegexDialog {
         ///
         ///        private static string input = (new TextSourceContainer()).Get().ToString();
         ///
-        ///        static void Main(string[]  [le reste de la chaîne a été tronqué]&quot;;.
+        ///        static void Main(string[ [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string VSProgram {
             get {
@@ -242,6 +275,7 @@ namespace RegexDialog {
         ///    &lt;TargetFramework&gt;netcoreapp3.0&lt;/TargetFramework&gt;
         ///  &lt;/PropertyGroup&gt;
         ///
+        ///&lt;!-- Resources --&gt;
         ///&lt;/Project&gt;
         ///.
         /// </summary>

@@ -269,6 +269,8 @@
       <DependentUpon>Res.resx</DependentUpon>
     </Compile>
     <None Include="Resources\VSProgram.cs" />
+    <Resource Include="Resources\StandardReplaceCode.cs" />
+    <Resource Include="Resources\CSharpReplaceCallingCode.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\RegexCaptureResult.cs" />

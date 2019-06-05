@@ -1743,14 +1743,13 @@ namespace RegexDialog
                             .Replace("#CSharpTextSource\r\n", string.Empty) ?? string.Empty;
                         if(Enum.TryParse(root.SelectNodes("//comment()")
                             .Cast<XmlComment>()
-                            .FirstOrDefault(c => c.Value.StartsWith("#TextSource"))
+                            .FirstOrDefault(c => c.Value.StartsWith("#TextSource"))?
                             .Value
                             .Replace("#TextSource ", string.Empty)
                             , out RegexTextSource regexTextSource))
                         {
                             Config.Instance.TextSourceOn = regexTextSource;
                         }
-
 
                         string[] xOptions = root.SelectSingleNode("//Options").InnerText.Split(' ');
 
@@ -2133,6 +2132,7 @@ namespace RegexDialog
                 string textSourceFile = Path.Combine(projectDirectory, "TextSource.txt");
                 string projectGuid = Guid.NewGuid().ToString();
                 string resourcesForCsProj = string.Empty;
+
                 string options = regExOptionViewModelsList.Count(option => option.Selected) == 0
                     ? "RegexOptions.None"
                     : string.Join(" | ",
@@ -2140,17 +2140,28 @@ namespace RegexDialog
                             .FindAll(option => option.Selected)
                             .Select(option => "RegexOptions." + option.RegexOptions.ToString()));
 
+                // The base stuff for the entry code
                 string programCode = Res.VSProgram
-                    .Replace("projectname", projectName)
+                    .Replace("_projectname_", projectName)
                     .Replace("$pattern$", Config.Instance.RegexEditorText.ToLiteral())
-                    .Replace("$replacement$", Config.Instance.ReplaceEditorText.ToLiteral())
                     .Replace("_options_", options);
 
                 Directory.CreateDirectory(projectDirectory);
 
+                // Modify entry code for CSharp replace (with a lambda of type Func<Match, string>)
                 if (Config.Instance.CSharpReplaceMode)
                 {
                     File.WriteAllText(replaceFile, ReplaceScriptForMatch);
+                    programCode = programCode
+                        .Replace("\r\n        private readonly static string replacement = \"$replacement$\";", string.Empty)
+                        .Replace("//code", string.Empty);
+                }
+                // Modify entry code for standard replacement.
+                else
+                {
+                    programCode = programCode
+                        .Replace("$replacement$", Config.Instance.ReplaceEditorText.ToLiteral())
+                        .Replace("//code", Res.StandardReplaceCode);
                 }
 
                 // Write text source as specific cs file if in CSharpScript
