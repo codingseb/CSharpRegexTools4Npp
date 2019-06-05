@@ -133,6 +133,9 @@
   <data name="Replace_syntax_color" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\replace_syntax_color.xshd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
   </data>
+  <data name="TextSourceAsResourceInCsProj" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\textsourceasresourceincsproj.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="TextSourceContainer" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\textsourcecontainer.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>

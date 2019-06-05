@@ -1,0 +1,3 @@
+  <ItemGroup>
+    <Resource Include="TextSource.txt" />
+  </ItemGroup>

@@ -412,6 +412,9 @@
   <ItemGroup>
     <Resource Include="Resources\VSProject.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\TextSourceAsResourceInCsProj.txt" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>

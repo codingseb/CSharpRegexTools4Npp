@@ -172,6 +172,17 @@ namespace RegexDialog {
         }
         
         /// <summary>
+        ///   Recherche une chaîne localisée semblable à   &lt;ItemGroup&gt;
+        ///    &lt;Resource Include=&quot;TextSource.txt&quot; /&gt;
+        ///  &lt;/ItemGroup&gt;.
+        /// </summary>
+        internal static string TextSourceAsResourceInCsProj {
+            get {
+                return ResourceManager.GetString("TextSourceAsResourceInCsProj", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Recherche une chaîne localisée semblable à using System.Collections;
         ///using System.Collections.Generic;
         ///using System.Collections.ObjectModel;
@@ -200,6 +211,7 @@ namespace RegexDialog {
         
         /// <summary>
         ///   Recherche une chaîne localisée semblable à using System;
+        ///using System.Linq;
         ///using System.Text;
         ///using System.Text.RegularExpressions;
         ///
@@ -207,16 +219,14 @@ namespace RegexDialog {
         ///{
         ///    class Program
         ///    {
-        ///        private static string pattern = @&quot;$pattern$&quot;;
+        ///        private static string pattern = &quot;$pattern$&quot;;
         ///        private static string replacement = &quot;$replacement$&quot;;
-        ///        private static Regex regex = new Regex(pattern);
+        ///        private static RegexOptions options = _options_;
+        ///        private static Regex regex = new Regex(pattern, options);
         ///
-        ///        private static string input = (new TextSourceContainer()).Get();
+        ///        private static string input = (new TextSourceContainer()).Get().ToString();
         ///
-        ///        static void Main(string[] args)
-        ///        {
-        ///            // To make a replace
-        ///            string replace = regex.Replace(in [le reste de la chaîne a été tronqué]&quot;;.
+        ///        static void Main(string[]  [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string VSProgram {
             get {

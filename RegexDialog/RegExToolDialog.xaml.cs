@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -2128,8 +2129,10 @@ namespace RegexDialog
                 string projectFile = Path.Combine(projectDirectory, $"{projectName}.csproj");
                 string entryFile = Path.Combine(projectDirectory, "Program.cs");
                 string replaceFile = Path.Combine(projectDirectory, "CSharpReplaceContainer.cs");
-                string textSourceFile = Path.Combine(projectDirectory, "TextSourceContainer.cs");
+                string csharpTextSourceFile = Path.Combine(projectDirectory, "TextSourceContainer.cs");
+                string textSourceFile = Path.Combine(projectDirectory, "TextSource.txt");
                 string projectGuid = Guid.NewGuid().ToString();
+                string resourcesForCsProj = string.Empty;
                 string options = regExOptionViewModelsList.Count(option => option.Selected) == 0
                     ? "RegexOptions.None"
                     : string.Join(" | ",
@@ -2144,6 +2147,33 @@ namespace RegexDialog
                     .Replace("_options_", options);
 
                 Directory.CreateDirectory(projectDirectory);
+
+                if (Config.Instance.CSharpReplaceMode)
+                {
+                    File.WriteAllText(replaceFile, ReplaceScriptForMatch);
+                }
+
+                // Write text source as specific cs file if in CSharpScript
+                if (Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
+                {
+                    File.WriteAllText(csharpTextSourceFile, CSharpTextSourceScript);
+                }
+                // Write text source as text file in resources
+                else
+                {
+                    File.WriteAllText(textSourceFile, GetCurrentText());
+                    resourcesForCsProj += Res.TextSourceAsResourceInCsProj;
+                }
+
+                // Write Entry file
+                if (!File.Exists(entryFile)
+                    || MessageBox.Show($"The entry file \"{entryFile}\" already exists.\r\nDo you want to override it ?",
+                        "Entry file override",
+                        MessageBoxButton.YesNo,
+                        MessageBoxImage.Question) == MessageBoxResult.Yes)
+                {
+                    File.WriteAllText(entryFile, programCode);
+                }
 
                 // Write solution file
                 if (!File.Exists(projectFile)
@@ -2167,27 +2197,8 @@ namespace RegexDialog
                         MessageBoxButton.YesNo,
                         MessageBoxImage.Question) == MessageBoxResult.Yes)
                 {
-                    File.WriteAllText(projectFile, Res.VSProject);
-                }
-
-                if (Config.Instance.CSharpReplaceMode)
-                {
-                    File.WriteAllText(replaceFile, ReplaceScriptForMatch);
-                }
-
-                if (Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
-                {
-                    File.WriteAllText(textSourceFile, CSharpTextSourceScript);
-                }
-
-                // Write Entry file
-                if (!File.Exists(entryFile)
-                    || MessageBox.Show($"The entry file \"{entryFile}\" already exists.\r\nDo you want to override it ?",
-                        "Entry file override",
-                        MessageBoxButton.YesNo,
-                        MessageBoxImage.Question) == MessageBoxResult.Yes)
-                {
-                    File.WriteAllText(entryFile, programCode);
+                    File.WriteAllText(projectFile, Res.VSProject
+                        .Replace("<!-- Resources -->", resourcesForCsProj));
                 }
 
                 Process.Start($"\"{solutionFile}\"");
