@@ -41,6 +41,20 @@
         <BitmapImage x:Key="Play" UriSource="Resources/control_play_blue.png"/>
         <BitmapImage x:Key="VS" UriSource="Resources/visual_studio_purple.png"/>
 
+        <Style TargetType="{x:Type local:SearchableTextControl}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type local:SearchableTextControl}">
+                        <Border Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}">
+                            <TextBlock TextWrapping="Wrap" x:Name="PART_TEXT"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <Style TargetType="Image">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding IsEnabled, RelativeSource={RelativeSource AncestorType=Control}}" Value="True">
@@ -537,14 +551,53 @@
                         </Grid.RowDefinitions>
                         <DockPanel>
                             <Grid DockPanel.Dock="Top">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
                                 <TextBlock Text="Find..."
                                            VerticalAlignment="Center"
                                            Margin="2,0"
                                            Foreground="Gray" />
                                 <TextBox x:Name="FindLanguageElementTextBox"
-                                         Background="Transparent"
                                          TextChanged="FindLanguageElementTextBox_TextChanged"
-                                         IsKeyboardFocusedChanged="FindLanguageElementTextBox_IsKeyboardFocusedChanged"/>
+                                         PreviewKeyDown="FindLanguageElementTextBox_PreviewKeyDown">
+                                    <TextBox.Background>
+                                        <MultiBinding Converter="{converters:ExpressionEvalMultiBindingConverter Expression='bindings[0] || bindings[1].Length > 0 ? Brushes.White : Brushes.Transparent'}">
+                                            <Binding ElementName="FindLanguageElementTextBox" Path="IsFocused" />
+                                            <Binding ElementName="FindLanguageElementTextBox" Path="Text" />
+                                        </MultiBinding>
+                                    </TextBox.Background>
+                                </TextBox>
+                                <Button x:Name="ClearFindLanguageElementTextBoxButton"
+                                        Click="ClearFindLangueageElementTextBoxButton_Click"
+                                        BorderBrush="Transparent"
+                                        Background="Transparent"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Visibility="{Binding Text, ElementName=FindLanguageElementTextBox, Converter={converters:ExpressionEvalConverter Expression='binding.Length > 0 ? Visibility.Visible : Visibility.Collapsed'}}">
+                                    <Path x:Name="ButtonPath"
+                                        Margin="3"
+                                        Stroke="Black"
+                                        StrokeThickness="1.5"
+                                        StrokeStartLineCap="Square"
+                                        StrokeEndLineCap="Square"
+                                        Stretch="Uniform"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                        <Path.Data>
+                                            <PathGeometry>
+                                                <PathGeometry.Figures>
+                                                    <PathFigure StartPoint="0,0">
+                                                        <LineSegment Point="6,6"/>
+                                                    </PathFigure>
+                                                    <PathFigure StartPoint="0,6">
+                                                        <LineSegment Point="6,0"/>
+                                                    </PathFigure>
+                                                </PathGeometry.Figures>
+                                            </PathGeometry>
+                                        </Path.Data>
+                                    </Path>
+                                </Button>
                             </Grid>
                             <TreeView Name="RegexLanguagesElementsTreeView" 
                                   SelectedItemChanged="RegexLanguagesElementsTreeView_SelectedItemChanged">
@@ -564,7 +617,13 @@
                                     <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElement}">
                                         <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}" MouseDown="RegexLanguageElement_StackPanel_MouseDown" MouseUp="RegexLanguageElement_StackPanel_MouseUp">
                                             <Image Source="{StaticResource RegexLanguageElementPicture}" Width="16" Height="16" Margin="3,0"/>
-                                            <TextBlock Text="{Binding Name}"/>
+                                            <local:SearchableTextControl
+                                                SearchText="{Binding Text, ElementName=FindLanguageElementTextBox}"
+                                                IsHighlight="True"
+                                                IsMatchCase="False"
+                                                IsMatchAccents="False"
+                                                Focusable="False"
+                                                Text="{Binding Name}"/>
                                             <TextBlock Text="{Binding Value}" Foreground="Blue"/>
                                         </StackPanel>
                                     </HierarchicalDataTemplate>
@@ -575,13 +634,18 @@
                                 Grid.Row="1"
                                 VerticalAlignment="Stretch" 
                                 HorizontalAlignment="Stretch"/>
-                            <TextBox Name="tbxRegexLanguageElementDescription" 
-                                     IsReadOnly="True"
-                                     TextWrapping="Wrap"
-                                     Grid.Row="2"
-                                     Background="WhiteSmoke"
-                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        <local:SearchableTextControl x:Name="tbxRegexLanguageElementDescription" 
+                                                     Grid.Row="2"
+                                                     BorderBrush="Gray"
+                                                     BorderThickness="1"
+                                                     Background="WhiteSmoke"
+                                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                     SearchText="{Binding Text, ElementName=FindLanguageElementTextBox}"
+                                                     IsHighlight="True"
+                                                     IsMatchCase="False"
+                                                     IsSelectable="True"
+                                                     IsMatchAccents="False"/>
                     </Grid>
                 </TabItem>
                 <TabItem Name="ReplaceTabItem" Header="_Replace Elements" >

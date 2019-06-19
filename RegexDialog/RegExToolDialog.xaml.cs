@@ -59,7 +59,7 @@ namespace RegexDialog
         private static readonly Regex cSharpReplaceAfterPartRegex = new Regex(@"(?<=^|\s)\#after(?=\s)(?<after>.*)(?<=\s)\#endafter(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cSharpScriptsStartOfLinesForAddingTabs = new Regex(@"(?<start>^)(?<notend>[^\r\n])", RegexOptions.Multiline | RegexOptions.Compiled);
 
-        List<RegexLanguageElementGroup> languageElementGroups; 
+        private List<RegexLanguageElementGroup> languageElementGroups;
 
         private string InjectInReplaceScript(string replaceScript)
         {
@@ -1742,7 +1742,7 @@ namespace RegexDialog
                             .FirstOrDefault(c => c.Value.StartsWith("#CSharpTextSource\r\n"))?
                             .Value
                             .Replace("#CSharpTextSource\r\n", string.Empty) ?? string.Empty;
-                        if(Enum.TryParse(root.SelectNodes("//comment()")
+                        if (Enum.TryParse(root.SelectNodes("//comment()")
                             .Cast<XmlComment>()
                             .FirstOrDefault(c => c.Value.StartsWith("#TextSource"))?
                             .Value
@@ -2219,9 +2219,7 @@ namespace RegexDialog
 
         private void FindLanguageElementTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-            ChangeFindLanguageElementTextBoxBackgroundIfNeeded();
-
-            if(string.IsNullOrEmpty(FindLanguageElementTextBox.Text))
+            if (string.IsNullOrEmpty(FindLanguageElementTextBox.Text))
             {
                 languageElementGroups.ForEach(languageElementGroup =>
                 {
@@ -2235,21 +2233,32 @@ namespace RegexDialog
                 languageElementGroups.ForEach(languageElementGroup =>
                 {
                     languageElementGroup.Elements.ForEach(regexLanguageElement => regexLanguageElement.Visible =
-                        regexLanguageElement.Name.IndexOf(FindLanguageElementTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0
-                        || regexLanguageElement.Description.IndexOf(FindLanguageElementTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+                        regexLanguageElement.Name.RemoveAccents().IndexOf(FindLanguageElementTextBox.Text.RemoveAccents(), StringComparison.OrdinalIgnoreCase) >= 0
+                        || regexLanguageElement.Description.RemoveAccents().IndexOf(FindLanguageElementTextBox.Text.RemoveAccents(), StringComparison.OrdinalIgnoreCase) >= 0);
                     languageElementGroup.Visible = languageElementGroup.Elements.Any(regexLanguageElement => regexLanguageElement.Visible);
                     languageElementGroup.IsExpanded = languageElementGroup.Visible;
                 });
             }
         }
 
-        private void FindLanguageElementTextBox_IsKeyboardFocusedChanged(object sender, DependencyPropertyChangedEventArgs e) => ChangeFindLanguageElementTextBoxBackgroundIfNeeded();
-
-        private void ChangeFindLanguageElementTextBoxBackgroundIfNeeded()
+        private void ClearFindLangueageElementTextBoxButton_Click(object sender, RoutedEventArgs e)
         {
-            FindLanguageElementTextBox.Background = string.IsNullOrEmpty(FindLanguageElementTextBox.Text) && FindLanguageElementTextBox.IsFocused
-                ? Brushes.Transparent
-                : Brushes.White;
+            FindLanguageElementTextBox.Text = string.Empty;
+        }
+
+        private void FindLanguageElementTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Down)
+            {
+                int index = languageElementGroups.FindIndex(languageElementGroups => languageElementGroups.Visible);
+                if (index >= 0 && RegexLanguagesElementsTreeView.ItemContainerGenerator.ContainerFromIndex(index) is TreeViewItem treeViewItem)
+                {
+                    RegexLanguagesElementsTreeView.Focus();
+                    treeViewItem.IsSelected = true;
+
+                    e.Handled = true;
+                }
+            }
         }
     }
 }

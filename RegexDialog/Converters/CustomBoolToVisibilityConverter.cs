@@ -43,7 +43,7 @@ namespace RegexDialog.Converters
             if (DesignerProperties.GetIsInDesignMode(new DependencyObject()) && InDesigner != null) return InDesigner;
             else if (value == null) return OnNullValue;
             else if (value == DependencyProperty.UnsetValue) return OnUnsetValue;
-            
+
 
             return (value is bool && (bool)value ? TrueValue : FalseValue);
         }

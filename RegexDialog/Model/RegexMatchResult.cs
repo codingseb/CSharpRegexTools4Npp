@@ -5,7 +5,7 @@ namespace RegexDialog
 {
     internal class RegexMatchResult : RegexResult
     {
-        public RegexMatchResult(Regex regex, Match match, int matchNb, string fileName = "", int selectionIndex = 0) : base(regex, match, matchNb, fileName, selectionIndex) 
+        public RegexMatchResult(Regex regex, Match match, int matchNb, string fileName = "", int selectionIndex = 0) : base(regex, match, matchNb, fileName, selectionIndex)
         {
             int i = 0;
 
@@ -23,8 +23,8 @@ namespace RegexDialog
 
                     return result;
                 });
-            
-            if(Children.Count > 0)
+
+            if (Children.Count > 0)
                 Children.RemoveAt(0);
 
             IsExpanded = Config.Instance.MatchesShowLevel > 1;

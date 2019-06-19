@@ -1,8 +1,10 @@
 ﻿using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Globalization;
 using System.IO;
 using System.Security;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace RegexDialog
@@ -52,6 +54,28 @@ namespace RegexDialog
                     return literal.Replace(string.Format("\" +{0}\t\"", Environment.NewLine), "").Trim('"');
                 }
             }
+        }
+
+        /// <summary>
+        /// Replace all chars with accents by corresponding char without accent
+        /// </summary>
+        /// <param name="s">The string to clean from accents</param>
+        /// <returns>the string without accents</returns>
+        public static string RemoveAccents(this string s)
+        {
+            var normalizedString = s.Normalize(NormalizationForm.FormD);
+            var stringBuilder = new StringBuilder();
+
+            foreach (var c in normalizedString)
+            {
+                var unicodeCategory = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (unicodeCategory != UnicodeCategory.NonSpacingMark)
+                {
+                    stringBuilder.Append(c);
+                }
+            }
+
+            return stringBuilder.ToString().Normalize(NormalizationForm.FormC);
         }
     }
 }

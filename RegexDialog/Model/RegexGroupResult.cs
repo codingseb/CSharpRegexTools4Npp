@@ -12,7 +12,7 @@ namespace RegexDialog
             Children = group.Captures
                 .Cast<Capture>()
                 .ToList()
-                .ConvertAll(delegate(Capture c)
+                .ConvertAll(delegate (Capture c)
                 {
                     RegexResult result = new RegexCaptureResult(regex, c, i, fileName, selectionIndex)
                     {

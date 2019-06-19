@@ -15,7 +15,7 @@ namespace RegexDialog
 
         private static readonly string fileName = Path.Combine(PathUtils.AppDataRoamingPath, "Config.json");
 
-        private static Config instance = null;
+        private static Config instance;
 
         public static Config Instance
         {

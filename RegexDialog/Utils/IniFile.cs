@@ -62,12 +62,12 @@ namespace RegexDialog
         /// <summary>
         /// spécifie si le fichier est en lecture seul ou pas
         /// </summary>
-        protected bool readOnly = false;
+        protected bool readOnly;
 
         /// <summary>
         /// Spécifie si le fichier est chargé correctement.
         /// </summary>
-        protected bool loaded = false;
+        protected bool loaded;
 
         /// <summary>
         /// Spécifie si la section et la clé doivent être créé lors de la lecture d'une valeur
@@ -2430,7 +2430,7 @@ namespace RegexDialog
             private string key;
             private string oldComment;
             private string newComment;
-            private bool isCommentBeforeKeyOrSection = false;
+            private bool isCommentBeforeKeyOrSection;
 
             /// <summary>
             /// Constructeur
@@ -2502,7 +2502,7 @@ namespace RegexDialog
             private string key;
             private string oldComment;
             private string newComment;
-            private bool isCommentBeforeKeyOrSection = false;
+            private bool isCommentBeforeKeyOrSection;
 
 
             /// <summary>

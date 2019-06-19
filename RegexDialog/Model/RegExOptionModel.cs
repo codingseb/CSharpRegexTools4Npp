@@ -1,22 +1,20 @@
 ﻿using System;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace RegexDialog
 {
-    internal class RegExOptionViewModel : INotifyPropertyChanged
+    internal class RegExOptionViewModel : NotifyPropertyChangedBaseClass
     {
         /// <summary>
         /// Sélectionné
         /// </summary>
         public bool Selected
         {
-            get 
-            { 
-                return Config.Instance.RegexOptionsSelection.ContainsKey(Name) && Config.Instance.RegexOptionsSelection[Name]; 
+            get
+            {
+                return Config.Instance.RegexOptionsSelection.ContainsKey(Name) && Config.Instance.RegexOptionsSelection[Name];
             }
-            set 
+            set
             {
                 Config.Instance.RegexOptionsSelection[Name] = value;
                 Config.Instance.Save();
@@ -24,7 +22,7 @@ namespace RegexDialog
             }
         }
 
-        private RegexOptions regexOptions = RegexOptions.None;
+        private RegexOptions regexOptions;
 
         /// <summary>
         /// L'option d'expression régulière représentée
@@ -32,7 +30,7 @@ namespace RegexDialog
         public RegexOptions RegexOptions
         {
             get { return regexOptions; }
-            set 
+            set
             {
                 regexOptions = value;
                 NotifyPropertyChanged();
@@ -44,26 +42,10 @@ namespace RegexDialog
         /// </summary>
         public string Name
         {
-            get 
+            get
             {
                 return Enum.GetName(typeof(RegexOptions), regexOptions);
             }
         }
-
-        #region INotifyPropertyChanged Membres
-
-        /// <summary>
-        /// Génère l'évènement PropertyChanged pour la propriété spécifiée
-        /// </summary>
-        /// <param name="propertyName"></param>
-        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            if (PropertyChanged != null)
-                PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
     }
 }

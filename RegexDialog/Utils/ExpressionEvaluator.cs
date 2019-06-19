@@ -34,7 +34,7 @@ namespace RegexDialog
         protected static readonly Regex varOrFunctionRegEx = new Regex($@"^((?<sign>[+-])|(?<prefixOperator>[+][+]|--)|(?<varKeyword>var\s+)|(?<inObject>(?<nullConditional>[?])?\.)?)(?<name>[{ diactiticsKeywordsRegexPattern }](?>[{ diactiticsKeywordsRegexPattern }0-9]*))(?>\s*)((?<assignationOperator>(?<assignmentPrefix>[+\-*/%&|^]|<<|>>)?=(?![=>]))|(?<postfixOperator>([+][+]|--)(?![{ diactiticsKeywordsRegexPattern}0-9]))|((?<isgeneric>[<](?>([{ diactiticsKeywordsRegexPattern }](?>[{ diactiticsKeywordsRegexPattern }0-9]*)|(?>\s+)|[,\.])+|(?<gentag>[<])|(?<-gentag>[>]))*(?(gentag)(?!))[>])?(?<isfunction>[(])?))", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         protected const string numberRegexOrigPattern = @"^(?<sign>[+-])?([0-9][0-9_{1}]*[0-9]|\d)(?<hasdecimal>{0}?([0-9][0-9_]*[0-9]|\d)(e[+-]?([0-9][0-9_]*[0-9]|\d))?)?(?<type>ul|[fdulm])?";
-        protected string numberRegexPattern = null;
+        protected string numberRegexPattern;
 
         protected static readonly Regex otherBasesNumberRegex = new Regex("^(?<sign>[+-])?(?<value>0(?<type>x)([0-9a-f][0-9a-f_]*[0-9a-f]|[0-9a-f])|0(?<type>b)([01][01_]*[01]|[01]))", RegexOptions.IgnoreCase | RegexOptions.Compiled);
         protected static readonly Regex stringBeginningRegex = new Regex("^(?<interpolated>[$])?(?<escaped>[@])?[\"]", RegexOptions.Compiled);
@@ -3581,8 +3581,8 @@ namespace RegexDialog
 
     public partial class VariableEvaluationEventArg : EventArgs
     {
-        private readonly Func<string, Type[]> evaluateGenericTypes = null;
-        private readonly string genericTypes = null;
+        private readonly Func<string, Type[]> evaluateGenericTypes;
+        private readonly string genericTypes;
 
         /// <summary>
         /// Constructor of the VariableEvaluationEventArg
@@ -3669,9 +3669,9 @@ namespace RegexDialog
 
     public partial class FunctionEvaluationEventArg : EventArgs
     {
-        private readonly Func<string, object> evaluateFunc = null;
-        private readonly Func<string, Type[]> evaluateGenericTypes = null;
-        private readonly string genericTypes = null;
+        private readonly Func<string, object> evaluateFunc;
+        private readonly Func<string, Type[]> evaluateGenericTypes;
+        private readonly string genericTypes;
 
         public FunctionEvaluationEventArg(string name, Func<string, object> evaluateFunc, List<string> args = null, ExpressionEvaluator evaluator = null, object onInstance = null, string genericTypes = null, Func<string, Type[]> evaluateGenericTypes = null)
         {
@@ -3724,7 +3724,7 @@ namespace RegexDialog
         /// </summary>
         public string Name { get; }
 
-        private object returnValue = null;
+        private object returnValue;
 
         /// <summary>
         /// To set the return value of the function

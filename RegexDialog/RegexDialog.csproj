@@ -44,8 +44,8 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CSScriptLibrary, Version=3.29.0.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
-      <HintPath>..\packages\CS-Script.lib.3.29.0\lib\CSScriptLibrary.dll</HintPath>
+    <Reference Include="CSScriptLibrary, Version=3.28.7.0, Culture=neutral, PublicKeyToken=70fcc3d18c749033, processorArchitecture=MSIL">
+      <HintPath>..\packages\CS-Script.lib.3.28.7\lib\CSScriptLibrary.dll</HintPath>
     </Reference>
     <Reference Include="CSSRoslynProvider, Version=3.28.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CS-Script.RoslynProvider.3.28.7\lib\net46\CSSRoslynProvider.dll</HintPath>
@@ -90,7 +90,7 @@
       <HintPath>..\packages\Microsoft.SDK.Expression.Blend.1.0.0\lib\net45\Microsoft.SDK.Expression.Blend.dll</HintPath>
     </Reference>
     <Reference Include="Mono.CSharp, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <HintPath>..\packages\CS-Script.bin.3.29.0\lib\net46\Mono.CSharp.dll</HintPath>
+      <HintPath>..\packages\CS-Script.bin.3.28.7\lib\net46\Mono.CSharp.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -260,6 +260,7 @@
     <Compile Include="Converters\CustomBoolToVisibilityConverter.cs" />
     <Compile Include="Converters\EnumBooleanConverter.cs" />
     <Compile Include="Converters\ExpressionEvalConverter.cs" />
+    <Compile Include="Converters\ExpressionEvalMultiBindingConverter.cs" />
     <Compile Include="Model\RegexFileResult.cs" />
     <Compile Include="RegexPatternIndenter.cs" />
     <Resource Include="Resources\TextSourceContainer.cs" />
@@ -271,6 +272,7 @@
     <None Include="Resources\VSProgram.cs" />
     <Resource Include="Resources\StandardReplaceCode.cs" />
     <Resource Include="Resources\CSharpReplaceCallingCode.cs" />
+    <Compile Include="SearchableTextControl.cs" />
     <Compile Include="Utils\Config.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Model\RegexCaptureResult.cs" />

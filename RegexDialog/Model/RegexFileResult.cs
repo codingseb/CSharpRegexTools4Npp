@@ -5,7 +5,7 @@ namespace RegexDialog
     internal class RegexFileResult : RegexResult
     {
         public RegexFileResult(Regex regex, Capture regexElement, int regexElementNb, string fileName) : base(regex, regexElement, regexElementNb, fileName, 0)
-        {}
+        { }
 
         public override string Name => $"File {RegexElementNb}: {Children.Count} matches found in \"{FileName}\"";
 
