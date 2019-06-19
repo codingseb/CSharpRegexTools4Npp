@@ -1,408 +1,406 @@
-{
-    "Data": [
-        {
-            "Name": "Character Escapes",
-            "Description": "Escape characters that signal to the regular expression parser a special char",
-            "Elements": [
-                {
-                    "Name": "Bell ",
-                    "Description": "Matches a bell (alarm) \\u0007.",
-                    "Value": "\\a"
-                },
-                {
-                    "Name": "Backspace ",
-                    "Description": "Matches a backspace \\u0008 if in a [] character class",
-                    "Value": "\\b"
-                },
-                {
-                    "Name": "Tab ",
-                    "Description": "Matches a tab \\u0009.",
-                    "Value": "\\t"
-                },
-                {
-                    "Name": "Carriage return ",
-                    "Description": "Matches a carriage return \\u000D. Note that a new line is made up of \\r\\n (CRLF)",
-                    "Value": "\\r"
-                },
-                {
-                    "Name": "Vertical tab ",
-                    "Description": "Matches a tab \\u0009.",
-                    "Value": "\\v"
-                },
-                {
-                    "Name": "Form feed ",
-                    "Description": "Matches a form feed \\u000C.",
-                    "Value": "\\f"
-                },
-                {
-                    "Name": "New line ",
-                    "Description": "Matches a new line \\u000A. Note that a new line is made up of \\r\\n (CRLF) on Windows systems.",
-                    "Value": "\\n"
-                },
-                {
-                    "Name": "Escape ",
-                    "Description": "Matches an escape \\u001B.",
-                    "Value": "\\e"
-                },
-                {
-                    "Name": "ASCII character as Octal ",
-                    "Description": "Matches an ASCII character as octal (up to three digits); numbers with no leading zero are backreferences if they have only one digit or if they correspond to a capturing group number. (For more information, see Backreferences.) For example, the character \\040 represents a space.",
-                    "Value": "\\040"
-                },
-                {
-                    "Name": "ASCII character as Hex ",
-                    "Description": "Matches an ASCII character using hexadecimal representation (exactly two digits).",
-                    "Value": "\\xff"
-                },
-                {
-                    "Name": "Control character ",
-                    "Description": "Matches an ASCII control character; for example, \\cC is control-C.",
-                    "Value": "\\cC"
-                },
-                {
-                    "Name": "Unicode character ",
-                    "Description": "Matches a Unicode character using hexadecimal representation (exactly four digits)",
-                    "Value": "\\u0020"
-                }
-            ]
-        },
-        {
-            "Name": "Character Classes",
-            "Description": "The set of regular expression characters that define the substring to match.",
-            "Elements": [ 
-                {
-                    "Name": "Any character ",
-                    "Description": "Matches any character except \\n. If modified by the Singleline option, a period character matches any character.",
-                    "Value": "."
-                },
-                {
-                    "Name": "Any character in set ",
-                    "Description": "Matches any single character included in the specified set of characters.",
-                    "Value": "[aeiou]"
-                },
-                {
-                    "Name": "Any character not in set ",
-                    "Description": "Matches any single character not in the specified set of characters.",
-                    "Value": "[^aeiou]"
-                },
-                {
-                    "Name": "Character ranges ",
-                    "Description": "Use of a hyphen (–) allows specification of contiguous character ranges.",
-                    "Value": "[0-9a-fA-F]"
-                },
-                {
-                    "Name": "Unicode group ",
-                    "Description": "Matches text not included in groups and block ranges specified in {name}.",
-                    "Value": "\\p{name}"
-                },
-                {
-                    "Name": "Not in Unicode group ",
-                    "Description": "Matches text not included in groups and block ranges specified in {name}.",
-                    "Value": "\\P{name}"
-                },
-                {
-                    "Name": "Any word character ",
-                    "Description": "Matches any word character. Equivalent to the Unicode character categories [\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}\\p{Pc}]. If ECMAScript-compliant behavior is specified with the ECMAScript option, \\w is equivalent to [a-zA-Z_0-9].",
-                    "Value": "\\w"
-                },
-                {
-                    "Name": "Non-word character ",
-                    "Description": "Matches any nonword character. Equivalent to the Unicode categories [^\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}\\p{Pc}]. If ECMAScript-compliant behavior is specified with the ECMAScript option, \\W is equivalent to [^a-zA-Z_0-9].",
-                    "Value": "\\W"
-                },
-                {
-                    "Name": "White-space character ",
-                    "Description": "Matches any white-space character. Equivalent to the Unicode character categories [\\f\\n\\r\\t\\v\\x85\\p{Z}]. If ECMAScript-compliant behavior is specified with the ECMAScript option, \\s is equivalent to [ \\f\\n\\r\\t\\v]. ",
-                    "Value": "\\s"
-                },
-                {
-                    "Name": "Non-white-space character ",
-                    "Description": "Matches any non-white-space character. Equivalent to the Unicode character categories [^\\f\\n\\r\\t\\v\\x85\\p{Z}]. If ECMAScript-compliant behavior is specified with the ECMAScript option, \\S is equivalent to [^ \\f\\n\\r\\t\\v]. ",
-                    "Value": "\\S"
-                },
-                {
-                    "Name": "Digit  ",
-                    "Description": "Matches any decimal digit. Equivalent to \\p{Nd} for Unicode and [0-9] for non-Unicode, ECMAScript behavior.",
-                    "Value": "\\d"
-                },
-                {
-                    "Name": "Non-digit ",
-                    "Description": "Matches any nondigit. Equivalent to \\P{Nd} for Unicode and [^0-9] for non-Unicode, ECMAScript behavior.",
-                    "Value": "\\D"
-                }
-            ]
-        },
-        {
-            "Name": "Atomic Zero-Width Assertions",
-            "Description": "Assertions that cause a match to succeed or fail depending on the regular expression parser's current position in the input string.",
-            "Elements": [ 
-                {
-                    "Name": "Match start of string ",
-                    "Description": "Specifies that the match must occur at the beginning of the string or the beginning of the line. For more information, see the Multiline option.",
-                    "Value": "^"
-                },
-                {
-                    "Name": "Match end of string ",
-                    "Description": "Specifies that the match must occur at the end of the string, before \\n at the end of the string, or at the end of the line.",
-                    "Value": "$"
-                },
-                {
-                    "Name": "Match start of string (ignore Multiline) ",
-                    "Description": "Specifies that the match must occur at the beginning of the string (ignores the Multiline option).",
-                    "Value": "\\A"
-                },
-                {
-                    "Name": "Match before end of string (ignore Multiline) ",
-                    "Description": "Specifies that the match must occur at the end of the string or before \\n at the end of the string (ignores the Multiline option).",
-                    "Value": "\\Z"
-                },
-                {
-                    "Name": "Match end of string (ignore multiline) ",
-                    "Description": "Specifies that the match must occur at the end of the string (ignores the Multiline option).",
-                    "Value": "\\z"
-                },
-                {
-                    "Name": "Match where previous match ended ",
-                    "Description": "Specifies that the match must occur at the point where the previous match ended. When used with Match.NextMatch(), this ensures that matches are all contiguous.",
-                    "Value": "\\G"
-                },
-                {
-                    "Name": "Boundary ",
-                    "Description": "Specifies that the match must occur on a boundary between \\w (alphanumeric) and \\W (nonalphanumeric) characters. The match must occur on word boundaries — that is, at the first or last characters in words separated by any nonalphanumeric characters.",
-                    "Value": "\\b"
-                },
-                {
-                    "Name": "Non-boundary ",
-                    "Description": "Specifies that the match must not occur on a \\b boundary.",
-                    "Value": "\\B"
-                }
-            ]
-        },
-        {
-            "Name": "Quantifiers",
-            "Description": "Optional quantifiers that modify a regular expression.",
-            "Elements": [
-                {
-                    "Name": "Zero or more matches ",
-                    "Description": "Specifies zero or more matches; for example, \\w* or (abc)*. Equivalent to {0,}.",
-                    "Value": "*"
-                },
-                {
-                    "Name": "One or more matches ",
-                    "Description": "Specifies one or more matches; for example, \\w+ or (abc)+. Equivalent to {1,}.",
-                    "Value": "+"
-                },
-                {
-                    "Name": "Zero or one matches ",
-                    "Description": "Specifies zero or one matches; for example, \\w? or (abc)?. Equivalent to {0,1}. ",
-                    "Value": "?"
-                },
-                {
-                    "Name": "Exactly n matches ",
-                    "Description": "Specifies exactly n matches; for example, (pizza){2}.",
-                    "Value": "{n}"
-                },
-                {
-                    "Name": "At least n matches ",
-                    "Description": "Specifies at least n matches; for example, (abc){2,}.",
-                    "Value": "{n,}"
-                },
-                {
-                    "Name": "At least n and no more than m matches ",
-                    "Description": "Specifies at least n matches; for example, (abc){2,}.",
-                    "Value": "{n,m}"
-                },
-                {
-                    "Name": "First match with few repeats as possible ",
-                    "Description": "Specifies the first match that consumes as few repeats as possible (equivalent to lazy *).",
-                    "Value": "*?"
-                },
-                {
-                    "Name": "As few repeats but at least one ",
-                    "Description": "Specifies as few repeats as possible, but at least one (equivalent to lazy +).",
-                    "Value": "+?"
-                },
-                {
-                    "Name": "Zero repeats if possible ",
-                    "Description": "Specifies zero repeats if possible, or one (lazy ?).",
-                    "Value": "??"
-                },
-                {
-                    "Name": "Lazy {n} ",
-                    "Description": "Equivalent to {n} (lazy {n}).",
-                    "Value": "{n}?"
-                },
-                {
-                    "Name": "Lazy {n} ",
-                    "Description": "Specifies as few repeats as possible, but at least n (lazy {n,}).",
-                    "Value": "{n,}?"
-                },
-                {
-                    "Name": "Lazy [n,m} ",
-                    "Description": "Specifies as few repeats as possible between n and m (lazy {n,m}).",
-                    "Value": "{n,m}?"
-                }
-            ]
-        },
-        {
-            "Name": "Grouping Constructs",
-            "Description": "Grouping constructs that cause a regular expression to capture groups of subexpressions.",
-            "Elements": [ 
-                {
-                    "Name": "Group ",
-                    "Description": "Captures the matched substring. Captures using () are numbered automatically based on the order of the opening parenthesis, starting from one. The first capture, capture element number zero, is the text matched by the whole regular expression pattern.",
-                    "Value": "()"
-                },
-                {
-                    "Name": "Named group ",
-                    "Description": "Captures the matched substring into a group name or number name. The string used for name must not contain any punctuation and it cannot begin with a number. You can use single quotes instead of angle brackets; for example, (?'name'). ",
-                    "Value": "(?<name>)"
-                },
-                {
-                    "Name": "Balancing group ",
-                    "Description": "Balancing group definition. Deletes the definition of the previously defined group name2 and stores in group name1 the interval between the previously defined name2 group and the current group. If no group name2 is defined, the match backtracks. Because deleting the last definition of name2 reveals the previous definition of name2, this construct allows the stack of captures for group name2 to be used as a counter for keeping track of nested constructs such as parentheses. In this construct, name1 is optional. You can use single quotes instead of angle brackets; for example, (?'name1-name2').",
-                    "Value": "(?<name1-name2>)"
-                },
-                {
-                    "Name": "Non-capturing group ",
-                    "Description": "Non-capturing group.",
-                    "Value": "(?:)"
-                },
-                {
-                    "Name": "Positive lookahead ",
-                    "Description": "Zero-width positive lookahead assertion. Continues match only if the subexpression matches at this position on the right. For example, \\w+(?=\\d) matches a word followed by a digit, without matching the digit. This construct does not backtrack. ",
-                    "Value": "(?=)"
-                },
-                {
-                    "Name": "Negative lookahead ",
-                    "Description": "Zero-width negative lookahead assertion. Continues match only if the subexpression does not matches at this position on the right. For example, \\b(?!un)\\w+\\b matches a word that do not begin with un.",
-                    "Value": "(?!)"
-                },
-                {
-                    "Name": "Positive lookbehind ",
-                    "Description": "Zero-width positive lookbehind assertion. Continues match only if the subexpression matches at this position on the left. For example, (?<=19)99 matches instances of 99 that follow 19. This construct does not backtrack.",
-                    "Value": "(?<=)"
-                },
-                {
-                    "Name": "Negative lookbehind ",
-                    "Description": "Zero-width negative lookbehind assertion. Continues match only if the subexpression does not match at the position on the left.",
-                    "Value": "(?<!)"
-                },
-                {
-                    "Name": "Nonbacktracking subexpression ",
-                    "Description": "Nonbacktracking subexpression (also known as a \"greedy\" subexpression). The subexpression is fully matched once, and then does not participate piecemeal in backtracking. (That is, the subexpression matches only strings that would be matched by the subexpression alone.)",
-                    "Value": "(?>)"
-                }
-            ]
-        },
-        {
-            "Name": "Backreference Constructs",
-            "Description": "Regular expression backreference modifiers.",
-            "Elements": [ 
-                {
-                    "Name": "Backreference ",
-                    "Description": "Backreference. For example, (\\w)\\1 finds doubled word characters.",
-                    "Value": "\\number"
-                },
-                {
-                    "Name": "Named backreference ",
-                    "Description": "Named backreference. For example, (?<char>\\w)\\k<char> finds doubled word characters. The expression (?<43>\\w)\\43 does the same. You can use single quotes instead of angle brackets; for example, \\k'char'. ",
-                    "Value": "\\k<name>"
-                }
-            ]
-        },
-        {
-            "Name": "Alternation Constructs",
-            "Description": "Modifies a regular expression to allow either/or matching.",
-            "Elements": [ 
-                {
-                    "Name": "Or ",
-                    "Description": "Matches any one of the terms separated by the | (vertical bar) character; for example, cat|dog|tiger. The leftmost successful match wins.",
-                    "Value": "|"
-                },
-                {
-                    "Name": "Conditional ",
-                    "Description": "Matches the \"yes\" part if the expression matches at this point; otherwise, matches the \"no\" part. The \"no\" part can be omitted. The expression can be any valid subexpression, but it is turned into a zero-width assertion, so this syntax is equivalent to (?(?=expression)yes|no). Note that if the expression is the name of a named group or a capturing group number, the alternation construct is interpreted as a capture test (described in the next row of this table). To avoid confusion in these cases, you can spell out the inside (?=expression) explicitly.",
-                    "Value": "(?(expression)yes|no)"
-                },
-                {
-                    "Name": "Capture test ",
-                    "Description": "Matches the \"yes\" part if the named capture string has a match; otherwise, matches the \"no\" part. The \"no\" part can be omitted. If the given name does not correspond to the name or number of a capturing group used in this expression, the alternation construct is interpreted as an expression test (described in the preceding row of this table).",
-                    "Value": "(?(name)yes|no)"
-                }
-            ]
-        },
-        {
-            "Name": "Miscellaneous Constructs",
-            "Description": "Miscellaneous constructs that modify regular expression matching behavior.",
-            "Elements": [ 
-                {
-                    "Name": "Comment ",
-                    "Description": "Inline comment inserted within a regular expression. The comment terminates at the first closing parenthesis character.",
-                    "Value": "(?#yourcomment)"
-                },
-                {
-                    "Name": "Single line comment ",
-                    "Description": "X-mode comment. The comment begins at an unescaped # and continues to the end of the line. (Note that the x option or the RegexOptions.IgnorePatternWhitespace enumerated option must be activated for this kind of comment to be recognized.) ",
-                    "Value": "#"
-                }
-            ]
-        },
-        {
-            "Name": "Options",
-            "Description": "Options to change regular expression behaviour.",
-            "Elements": [ 
-                {
-                    "Name": "IgnoreCase On ",
-                    "Description": "Enables case-insensitive matching.",
-                    "Value": "(?i:)"
-                },
-                {
-                    "Name": "IgnoreCase Off ",
-                    "Description": "Disables case-insensitive matching.",
-                    "Value": "(?-i:)"
-                },
-                {
-                    "Name": "Multiline On ",
-                    "Description": "Enables multiline mode. Changes the meaning of ^ and $ so that they match at the beginning and end, respectively, of any line, not just the beginning and end of the whole string.",
-                    "Value": "(?m:)"
-                },
-                {
-                    "Name": "Multiline Off ",
-                    "Description": "Disables multiline mode.",
-                    "Value": "(?-m:)"
-                },
-                {
-                    "Name": "ExplicitCapture On ",
-                    "Description": "Specifies that the only valid captures are explicitly named or numbered groups of the form (?<name>…). This allows parentheses to act as noncapturing groups without the syntactic clumsiness of (?:…). ",
-                    "Value": "(?n:)"
-                },
-                {
-                    "Name": "ExplicitCapture Off ",
-                    "Description": "Disables explicit capturing of groups.",
-                    "Value": "(?-n:)"
-                },
-                {
-                    "Name": "Singleline On ",
-                    "Description": "Enables single-line mode. Changes the meaning of the period character (.) so that it matches every character (instead of every character except \\n).",
-                    "Value": "(?s:)"
-                },
-                {
-                    "Name": "Singleline Off ",
-                    "Description": "Disables single-line mode.",
-                    "Value": "(?-s:)"
-                },
-                {
-                    "Name": "IgnorePatternWhitespace On ",
-                    "Description": "Enables that unescaped white space is excluded from the pattern and enables comments following a number sign (#). (For a list of escaped white-space characters, see Character Escapes.) Note that white space is never eliminated from within a character class.",
-                    "Value": "(?x:)"
-                },
-                {
-                    "Name": "IgnorePatternWhitespace Off ",
-                    "Description": "Disables that unescaped white space is excluded from the pattern and disables comments following a number sign (#).",
-                    "Value": "(?-x:)"
-                }
-            ]
-        }
+[
+  {
+    "Name": "Character Escapes",
+    "Description": "Escape characters that signal to the regular expression parser a special char",
+    "Elements": [
+      {
+        "Name": "Bell ",
+        "Description": "Matches a bell (alarm) \\u0007.",
+        "Value": "\\a"
+      },
+      {
+        "Name": "Backspace ",
+        "Description": "Matches a backspace \\u0008 if in a [] character class",
+        "Value": "\\b"
+      },
+      {
+        "Name": "Tab ",
+        "Description": "Matches a tab \\u0009.",
+        "Value": "\\t"
+      },
+      {
+        "Name": "Carriage return ",
+        "Description": "Matches a carriage return \\u000D. Note that a new line is made up of \\r\\n (CRLF)",
+        "Value": "\\r"
+      },
+      {
+        "Name": "Vertical tab ",
+        "Description": "Matches a tab \\u0009.",
+        "Value": "\\v"
+      },
+      {
+        "Name": "Form feed ",
+        "Description": "Matches a form feed \\u000C.",
+        "Value": "\\f"
+      },
+      {
+        "Name": "New line ",
+        "Description": "Matches a new line \\u000A. Note that a new line is made up of \\r\\n (CRLF) on Windows systems.",
+        "Value": "\\n"
+      },
+      {
+        "Name": "Escape ",
+        "Description": "Matches an escape \\u001B.",
+        "Value": "\\e"
+      },
+      {
+        "Name": "ASCII character as Octal ",
+        "Description": "Matches an ASCII character as octal (up to three digits); numbers with no leading zero are backreferences if they have only one digit or if they correspond to a capturing group number. (For more information, see Backreferences.) For example, the character \\040 represents a space.",
+        "Value": "\\040"
+      },
+      {
+        "Name": "ASCII character as Hex ",
+        "Description": "Matches an ASCII character using hexadecimal representation (exactly two digits).",
+        "Value": "\\xff"
+      },
+      {
+        "Name": "Control character ",
+        "Description": "Matches an ASCII control character; for example, \\cC is control-C.",
+        "Value": "\\cC"
+      },
+      {
+        "Name": "Unicode character ",
+        "Description": "Matches a Unicode character using hexadecimal representation (exactly four digits)",
+        "Value": "\\u0020"
+      }
     ]
-}
+  },
+  {
+    "Name": "Character Classes",
+    "Description": "The set of regular expression characters that define the substring to match.",
+    "Elements": [
+      {
+        "Name": "Any character ",
+        "Description": "Matches any character except \\n. If modified by the Singleline option, a period character matches any character.",
+        "Value": "."
+      },
+      {
+        "Name": "Any character in set ",
+        "Description": "Matches any single character included in the specified set of characters.",
+        "Value": "[aeiou]"
+      },
+      {
+        "Name": "Any character not in set ",
+        "Description": "Matches any single character not in the specified set of characters.",
+        "Value": "[^aeiou]"
+      },
+      {
+        "Name": "Character ranges ",
+        "Description": "Use of a hyphen (–) allows specification of contiguous character ranges.",
+        "Value": "[0-9a-fA-F]"
+      },
+      {
+        "Name": "Unicode group ",
+        "Description": "Matches text not included in groups and block ranges specified in {name}.",
+        "Value": "\\p{name}"
+      },
+      {
+        "Name": "Not in Unicode group ",
+        "Description": "Matches text not included in groups and block ranges specified in {name}.",
+        "Value": "\\P{name}"
+      },
+      {
+        "Name": "Any word character ",
+        "Description": "Matches any word character. Equivalent to the Unicode character categories [\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}\\p{Pc}]. If ECMAScript-compliant behavior is specified with the ECMAScript option, \\w is equivalent to [a-zA-Z_0-9].",
+        "Value": "\\w"
+      },
+      {
+        "Name": "Non-word character ",
+        "Description": "Matches any nonword character. Equivalent to the Unicode categories [^\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}\\p{Pc}]. If ECMAScript-compliant behavior is specified with the ECMAScript option, \\W is equivalent to [^a-zA-Z_0-9].",
+        "Value": "\\W"
+      },
+      {
+        "Name": "White-space character ",
+        "Description": "Matches any white-space character. Equivalent to the Unicode character categories [\\f\\n\\r\\t\\v\\x85\\p{Z}]. If ECMAScript-compliant behavior is specified with the ECMAScript option, \\s is equivalent to [ \\f\\n\\r\\t\\v]. ",
+        "Value": "\\s"
+      },
+      {
+        "Name": "Non-white-space character ",
+        "Description": "Matches any non-white-space character. Equivalent to the Unicode character categories [^\\f\\n\\r\\t\\v\\x85\\p{Z}]. If ECMAScript-compliant behavior is specified with the ECMAScript option, \\S is equivalent to [^ \\f\\n\\r\\t\\v]. ",
+        "Value": "\\S"
+      },
+      {
+        "Name": "Digit ",
+        "Description": "Matches any decimal digit. Equivalent to \\p{Nd} for Unicode and [0-9] for non-Unicode, ECMAScript behavior.",
+        "Value": "\\d"
+      },
+      {
+        "Name": "Non-digit ",
+        "Description": "Matches any nondigit. Equivalent to \\P{Nd} for Unicode and [^0-9] for non-Unicode, ECMAScript behavior.",
+        "Value": "\\D"
+      }
+    ]
+  },
+  {
+    "Name": "Atomic Zero-Width Assertions",
+    "Description": "Assertions that cause a match to succeed or fail depending on the regular expression parser's current position in the input string.",
+    "Elements": [
+      {
+        "Name": "Match start of string ",
+        "Description": "Specifies that the match must occur at the beginning of the string or the beginning of the line. For more information, see the Multiline option.",
+        "Value": "^"
+      },
+      {
+        "Name": "Match end of string ",
+        "Description": "Specifies that the match must occur at the end of the string, before \\n at the end of the string, or at the end of the line.",
+        "Value": "$"
+      },
+      {
+        "Name": "Match start of string (ignore Multiline) ",
+        "Description": "Specifies that the match must occur at the beginning of the string (ignores the Multiline option).",
+        "Value": "\\A"
+      },
+      {
+        "Name": "Match before end of string (ignore Multiline) ",
+        "Description": "Specifies that the match must occur at the end of the string or before \\n at the end of the string (ignores the Multiline option).",
+        "Value": "\\Z"
+      },
+      {
+        "Name": "Match end of string (ignore multiline) ",
+        "Description": "Specifies that the match must occur at the end of the string (ignores the Multiline option).",
+        "Value": "\\z"
+      },
+      {
+        "Name": "Match where previous match ended ",
+        "Description": "Specifies that the match must occur at the point where the previous match ended. When used with Match.NextMatch(), this ensures that matches are all contiguous.",
+        "Value": "\\G"
+      },
+      {
+        "Name": "Boundary ",
+        "Description": "Specifies that the match must occur on a boundary between \\w (alphanumeric) and \\W (nonalphanumeric) characters. The match must occur on word boundaries — that is, at the first or last characters in words separated by any nonalphanumeric characters.",
+        "Value": "\\b"
+      },
+      {
+        "Name": "Non-boundary ",
+        "Description": "Specifies that the match must not occur on a \\b boundary.",
+        "Value": "\\B"
+      }
+    ]
+  },
+  {
+    "Name": "Quantifiers",
+    "Description": "Optional quantifiers that modify a regular expression.",
+    "Elements": [
+      {
+        "Name": "Zero or more matches ",
+        "Description": "Specifies zero or more matches; for example, \\w* or (abc)*. Equivalent to {0,}.",
+        "Value": "*"
+      },
+      {
+        "Name": "One or more matches ",
+        "Description": "Specifies one or more matches; for example, \\w+ or (abc)+. Equivalent to {1,}.",
+        "Value": "+"
+      },
+      {
+        "Name": "Zero or one matches ",
+        "Description": "Specifies zero or one matches; for example, \\w? or (abc)?. Equivalent to {0,1}. ",
+        "Value": "?"
+      },
+      {
+        "Name": "Exactly n matches ",
+        "Description": "Specifies exactly n matches; for example, (abc){2}.",
+        "Value": "{n}"
+      },
+      {
+        "Name": "At least n matches ",
+        "Description": "Specifies at least n matches; for example, (abc){2,}.",
+        "Value": "{n,}"
+      },
+      {
+        "Name": "At least n and no more than m matches ",
+        "Description": "Specifies at least n matches; for example, (abc){2,}.",
+        "Value": "{n,m}"
+      },
+      {
+        "Name": "First match with few repeats as possible ",
+        "Description": "Specifies the first match that consumes as few repeats as possible (equivalent to lazy *) (Not greedy *).",
+        "Value": "*?"
+      },
+      {
+        "Name": "As few repeats but at least one ",
+        "Description": "Specifies as few repeats as possible, but at least one (equivalent to lazy +) (Not greedy +).",
+        "Value": "+?"
+      },
+      {
+        "Name": "Zero repeats if possible ",
+        "Description": "Specifies zero repeats if possible, or one (lazy ?) (Not greedy).",
+        "Value": "??"
+      },
+      {
+        "Name": "Lazy {n} ",
+        "Description": "Equivalent to {n} (lazy {n}) (Not greedy).",
+        "Value": "{n}?"
+      },
+      {
+        "Name": "Lazy {n,} ",
+        "Description": "Specifies as few repeats as possible, but at least n (lazy {n,}) (Not greedy).",
+        "Value": "{n,}?"
+      },
+      {
+        "Name": "Lazy [n,m} ",
+        "Description": "Specifies as few repeats as possible between n and m (lazy {n,m}) (Not greedy).",
+        "Value": "{n,m}?"
+      }
+    ]
+  },
+  {
+    "Name": "Grouping Constructs",
+    "Description": "Grouping constructs that cause a regular expression to capture groups of subexpressions.",
+    "Elements": [
+      {
+        "Name": "Group ",
+        "Description": "Captures the matched substring. Captures using () are numbered automatically based on the order of the opening parenthesis, starting from one. The first capture, capture element number zero, is the text matched by the whole regular expression pattern.",
+        "Value": "()"
+      },
+      {
+        "Name": "Named group ",
+        "Description": "Captures the matched substring into a group name or number name. The string used for name must not contain any punctuation and it cannot begin with a number. You can use single quotes instead of angle brackets; for example, (?'name'). ",
+        "Value": "(?<name>)"
+      },
+      {
+        "Name": "Balancing group ",
+        "Description": "Balancing group definition. Deletes the definition of the previously defined group name2 and stores in group name1 the interval between the previously defined name2 group and the current group. If no group name2 is defined, the match backtracks. Because deleting the last definition of name2 reveals the previous definition of name2, this construct allows the stack of captures for group name2 to be used as a counter for keeping track of nested constructs such as parentheses. In this construct, name1 is optional. You can use single quotes instead of angle brackets; for example, (?'name1-name2').",
+        "Value": "(?<name1-name2>)"
+      },
+      {
+        "Name": "Non-capturing group ",
+        "Description": "Non-capturing group.",
+        "Value": "(?:)"
+      },
+      {
+        "Name": "Positive lookahead ",
+        "Description": "Zero-width positive lookahead assertion. Continues match only if the subexpression matches at this position on the right. For example, \\w+(?=\\d) matches a word followed by a digit, without matching the digit. This construct does not backtrack. ",
+        "Value": "(?=)"
+      },
+      {
+        "Name": "Negative lookahead ",
+        "Description": "Zero-width negative lookahead assertion. Continues match only if the subexpression does not matches at this position on the right. For example, \\b(?!un)\\w+\\b matches a word that do not begin with un.",
+        "Value": "(?!)"
+      },
+      {
+        "Name": "Positive lookbehind ",
+        "Description": "Zero-width positive lookbehind assertion. Continues match only if the subexpression matches at this position on the left. For example, (?<=19)99 matches instances of 99 that follow 19. This construct does not backtrack.",
+        "Value": "(?<=)"
+      },
+      {
+        "Name": "Negative lookbehind ",
+        "Description": "Zero-width negative lookbehind assertion. Continues match only if the subexpression does not match at the position on the left.",
+        "Value": "(?<!)"
+      },
+      {
+        "Name": "Nonbacktracking subexpression ",
+        "Description": "Nonbacktracking subexpression (also known as a \"greedy\" subexpression). The subexpression is fully matched once, and then does not participate piecemeal in backtracking. (That is, the subexpression matches only strings that would be matched by the subexpression alone.)",
+        "Value": "(?>)"
+      }
+    ]
+  },
+  {
+    "Name": "Backreference Constructs",
+    "Description": "Regular expression backreference modifiers.",
+    "Elements": [
+      {
+        "Name": "Backreference ",
+        "Description": "Backreference. For example, (\\w)\\1 finds doubled word characters.",
+        "Value": "\\number"
+      },
+      {
+        "Name": "Named backreference ",
+        "Description": "Named backreference. For example, (?<char>\\w)\\k<char> finds doubled word characters. The expression (?<43>\\w)\\43 does the same. You can use single quotes instead of angle brackets; for example, \\k'char'. ",
+        "Value": "\\k<name>"
+      }
+    ]
+  },
+  {
+    "Name": "Alternation Constructs",
+    "Description": "Modifies a regular expression to allow either/or matching.",
+    "Elements": [
+      {
+        "Name": "Or ",
+        "Description": "Matches any one of the terms separated by the | (vertical bar) character; for example, cat|dog|tiger. The leftmost successful match wins.",
+        "Value": "|"
+      },
+      {
+        "Name": "Conditional ",
+        "Description": "Matches the \"yes\" part if the expression matches at this point; otherwise, matches the \"no\" part. The \"no\" part can be omitted. The expression can be any valid subexpression, but it is turned into a zero-width assertion, so this syntax is equivalent to (?(?=expression)yes|no). Note that if the expression is the name of a named group or a capturing group number, the alternation construct is interpreted as a capture test (described in the next row of this table). To avoid confusion in these cases, you can spell out the inside (?=expression) explicitly.",
+        "Value": "(?(expression)yes|no)"
+      },
+      {
+        "Name": "Capture test ",
+        "Description": "Matches the \"yes\" part if the named capture string has a match; otherwise, matches the \"no\" part. The \"no\" part can be omitted. If the given name does not correspond to the name or number of a capturing group used in this expression, the alternation construct is interpreted as an expression test (described in the preceding row of this table).",
+        "Value": "(?(name)yes|no)"
+      }
+    ]
+  },
+  {
+    "Name": "Miscellaneous Constructs",
+    "Description": "Miscellaneous constructs that modify regular expression matching behavior.",
+    "Elements": [
+      {
+        "Name": "Comment ",
+        "Description": "Inline comment inserted within a regular expression. The comment terminates at the first closing parenthesis character.",
+        "Value": "(?#yourcomment)"
+      },
+      {
+        "Name": "Single line comment ",
+        "Description": "X-mode comment. The comment begins at an unescaped # and continues to the end of the line. (Note that the x option or the RegexOptions.IgnorePatternWhitespace enumerated option must be activated for this kind of comment to be recognized.) ",
+        "Value": "#"
+      }
+    ]
+  },
+  {
+    "Name": "Options",
+    "Description": "Options to change regular expression behaviour.",
+    "Elements": [
+      {
+        "Name": "IgnoreCase On ",
+        "Description": "Enables case-insensitive matching.",
+        "Value": "(?i:)"
+      },
+      {
+        "Name": "IgnoreCase Off ",
+        "Description": "Disables case-insensitive matching.",
+        "Value": "(?-i:)"
+      },
+      {
+        "Name": "Multiline On ",
+        "Description": "Enables multiline mode. Changes the meaning of ^ and $ so that they match at the beginning and end, respectively, of any line, not just the beginning and end of the whole string.",
+        "Value": "(?m:)"
+      },
+      {
+        "Name": "Multiline Off ",
+        "Description": "Disables multiline mode.",
+        "Value": "(?-m:)"
+      },
+      {
+        "Name": "ExplicitCapture On ",
+        "Description": "Specifies that the only valid captures are explicitly named or numbered groups of the form (?<name>…). This allows parentheses to act as noncapturing groups without the syntactic clumsiness of (?:…). ",
+        "Value": "(?n:)"
+      },
+      {
+        "Name": "ExplicitCapture Off ",
+        "Description": "Disables explicit capturing of groups.",
+        "Value": "(?-n:)"
+      },
+      {
+        "Name": "Singleline On ",
+        "Description": "Enables single-line mode. Changes the meaning of the period character (.) so that it matches every character (instead of every character except \\n).",
+        "Value": "(?s:)"
+      },
+      {
+        "Name": "Singleline Off ",
+        "Description": "Disables single-line mode.",
+        "Value": "(?-s:)"
+      },
+      {
+        "Name": "IgnorePatternWhitespace On ",
+        "Description": "Enables that unescaped white space is excluded from the pattern and enables comments following a number sign (#). (For a list of escaped white-space characters, see Character Escapes.) Note that white space is never eliminated from within a character class.",
+        "Value": "(?x:)"
+      },
+      {
+        "Name": "IgnorePatternWhitespace Off ",
+        "Description": "Disables that unescaped white space is excluded from the pattern and disables comments following a number sign (#).",
+        "Value": "(?-x:)"
+      }
+    ]
+  }
+]

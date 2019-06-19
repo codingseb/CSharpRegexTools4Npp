@@ -535,25 +535,42 @@
                             <RowDefinition Height="5" />
                             <RowDefinition Height="0.1*" MinHeight="20"/>
                         </Grid.RowDefinitions>
-                        <TreeView Name="RegexLanguagesElementsTreeView" 
+                        <DockPanel>
+                            <Grid DockPanel.Dock="Top">
+                                <TextBlock Text="Find..."
+                                           VerticalAlignment="Center"
+                                           Margin="2,0"
+                                           Foreground="Gray" />
+                                <TextBox x:Name="FindLanguageElementTextBox"
+                                         Background="Transparent"
+                                         TextChanged="FindLanguageElementTextBox_TextChanged"
+                                         IsKeyboardFocusedChanged="FindLanguageElementTextBox_IsKeyboardFocusedChanged"/>
+                            </Grid>
+                            <TreeView Name="RegexLanguagesElementsTreeView" 
                                   SelectedItemChanged="RegexLanguagesElementsTreeView_SelectedItemChanged">
-                            <TreeView.Resources>
-                                <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElementGroup}" ItemsSource="{Binding Elements}">
-                                    <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}">
-                                        <Image Source="{StaticResource RegexLanguageElementsGroupPicture}" Width="16" Height="16" Margin="3,0"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Value}" Foreground="Blue"/>
-                                    </StackPanel>
-                                </HierarchicalDataTemplate>
-                                <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElement}">
-                                    <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}" MouseDown="RegexLanguageElement_StackPanel_MouseDown" MouseUp="RegexLanguageElement_StackPanel_MouseUp">
-                                        <Image Source="{StaticResource RegexLanguageElementPicture}" Width="16" Height="16" Margin="3,0"/>
-                                        <TextBlock Text="{Binding Name}"/>
-                                        <TextBlock Text="{Binding Value}" Foreground="Blue"/>
-                                    </StackPanel>
-                                </HierarchicalDataTemplate>
-                            </TreeView.Resources>
-                        </TreeView>
+                                <TreeView.Resources>
+                                    <Style TargetType="{x:Type TreeViewItem}">
+                                        <Setter Property="IsExpanded" Value="{Binding IsExpanded}" />
+                                        <Setter Property="Visibility" Value="{Binding Visible, Converter={converters:CustomBoolToVisibilityConverter}}" />
+                                    </Style>
+                                    <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElementGroup}" 
+                                                              ItemsSource="{Binding Elements}">
+                                        <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}">
+                                            <Image Source="{StaticResource RegexLanguageElementsGroupPicture}" Width="16" Height="16" Margin="3,0"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                            <TextBlock Text="{Binding Value}" Foreground="Blue"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                    <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElement}">
+                                        <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}" MouseDown="RegexLanguageElement_StackPanel_MouseDown" MouseUp="RegexLanguageElement_StackPanel_MouseUp">
+                                            <Image Source="{StaticResource RegexLanguageElementPicture}" Width="16" Height="16" Margin="3,0"/>
+                                            <TextBlock Text="{Binding Name}"/>
+                                            <TextBlock Text="{Binding Value}" Foreground="Blue"/>
+                                        </StackPanel>
+                                    </HierarchicalDataTemplate>
+                                </TreeView.Resources>
+                            </TreeView>
+                        </DockPanel>
                         <GridSplitter 
                                 Grid.Row="1"
                                 VerticalAlignment="Stretch" 

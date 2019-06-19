@@ -9,7 +9,7 @@ using System.Windows;
 
 namespace RegexDialog
 {
-    internal class Config : INotifyPropertyChanged
+    internal class Config : NotifyPropertyChangedBaseClass
     {
         #region Json singleton
 
@@ -63,17 +63,6 @@ namespace RegexDialog
         { }
 
         #endregion
-
-        #region On PropertyChanged 
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public virtual void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }        
-
-    #endregion
 
         private void Init()
         {

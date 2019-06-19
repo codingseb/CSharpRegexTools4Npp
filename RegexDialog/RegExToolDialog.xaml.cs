@@ -10,7 +10,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -59,6 +58,8 @@ namespace RegexDialog
         private static readonly Regex cSharpReplaceBeforePartRegex = new Regex(@"(?<=^|\s)\#before(?=\s)(?<before>.*)(?<=\s)\#endbefore(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cSharpReplaceAfterPartRegex = new Regex(@"(?<=^|\s)\#after(?=\s)(?<after>.*)(?<=\s)\#endafter(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex cSharpScriptsStartOfLinesForAddingTabs = new Regex(@"(?<start>^)(?<notend>[^\r\n])", RegexOptions.Multiline | RegexOptions.Compiled);
+
+        List<RegexLanguageElementGroup> languageElementGroups; 
 
         private string InjectInReplaceScript(string replaceScript)
         {
@@ -327,8 +328,8 @@ namespace RegexDialog
 
         private void BuildRegexLanguageElements()
         {
-            RegexLanguageElements root = JsonConvert.DeserializeObject<RegexLanguageElements>(Res.RegexLanguageElements);
-            RegexLanguagesElementsTreeView.ItemsSource = root.Data;
+            languageElementGroups = JsonConvert.DeserializeObject<List<RegexLanguageElementGroup>>(Res.RegexLanguageElements);
+            RegexLanguagesElementsTreeView.ItemsSource = languageElementGroups;
         }
 
         private void BuildReplaceLanguageElements()
@@ -2214,6 +2215,41 @@ namespace RegexDialog
 
                 Process.Start($"\"{solutionFile}\"");
             }
+        }
+
+        private void FindLanguageElementTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            ChangeFindLanguageElementTextBoxBackgroundIfNeeded();
+
+            if(string.IsNullOrEmpty(FindLanguageElementTextBox.Text))
+            {
+                languageElementGroups.ForEach(languageElementGroup =>
+                {
+                    languageElementGroup.Visible = true;
+                    languageElementGroup.IsExpanded = false;
+                    languageElementGroup.Elements.ForEach(regexLanguageElement => regexLanguageElement.Visible = true);
+                });
+            }
+            else
+            {
+                languageElementGroups.ForEach(languageElementGroup =>
+                {
+                    languageElementGroup.Elements.ForEach(regexLanguageElement => regexLanguageElement.Visible =
+                        regexLanguageElement.Name.IndexOf(FindLanguageElementTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0
+                        || regexLanguageElement.Description.IndexOf(FindLanguageElementTextBox.Text, StringComparison.OrdinalIgnoreCase) >= 0);
+                    languageElementGroup.Visible = languageElementGroup.Elements.Any(regexLanguageElement => regexLanguageElement.Visible);
+                    languageElementGroup.IsExpanded = languageElementGroup.Visible;
+                });
+            }
+        }
+
+        private void FindLanguageElementTextBox_IsKeyboardFocusedChanged(object sender, DependencyPropertyChangedEventArgs e) => ChangeFindLanguageElementTextBoxBackgroundIfNeeded();
+
+        private void ChangeFindLanguageElementTextBoxBackgroundIfNeeded()
+        {
+            FindLanguageElementTextBox.Background = string.IsNullOrEmpty(FindLanguageElementTextBox.Text) && FindLanguageElementTextBox.IsFocused
+                ? Brushes.Transparent
+                : Brushes.White;
         }
     }
 }
