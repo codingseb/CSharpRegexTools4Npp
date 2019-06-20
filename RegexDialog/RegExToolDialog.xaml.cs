@@ -1111,23 +1111,11 @@ namespace RegexDialog
         {
             try
             {
-                if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount >= 2 && sender is FrameworkElement)
+                if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount >= 2
+                    && sender is FrameworkElement fe
+                    && fe.DataContext is RegexLanguageElement regexLanguageElement)
                 {
-                    RegexLanguageElement rle = (RegexLanguageElement)((FrameworkElement)sender).DataContext;
-
-                    int moveCaret = 0;
-
-                    if (RegexEditor.SelectionLength > 0)
-                    {
-                        RegexEditor.Document.Remove(RegexEditor.SelectionStart, RegexEditor.SelectionLength);
-                        moveCaret = rle.Value.Length;
-                    }
-
-                    RegexEditor.Document.Insert(RegexEditor.TextArea.Caret.Offset, rle.Value);
-
-                    RegexEditor.TextArea.Caret.Offset += moveCaret;
-                    RegexEditor.SelectionStart = RegexEditor.TextArea.Caret.Offset;
-                    RegexEditor.SelectionLength = 0;
+                    PrintRegexLanguageElement(regexLanguageElement);
 
                     mustSelectEditor = true;
 
@@ -1136,6 +1124,35 @@ namespace RegexDialog
             }
             catch
             { }
+        }
+
+        private void RegexLanguagesElementsTreeView_KeyDown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter 
+                && RegexLanguagesElementsTreeView.SelectedValue is RegexLanguageElement regexLanguageElement)
+            {
+                PrintRegexLanguageElement(regexLanguageElement);
+                RegexEditor.Focus();
+                e.Handled = true;
+            }
+        }
+
+        private void PrintRegexLanguageElement(RegexLanguageElement regexLanguageElement)
+        {
+            int moveCaret = 0;
+
+            if (RegexEditor.SelectionLength > 0)
+            {
+                RegexEditor.Document.Remove(RegexEditor.SelectionStart, RegexEditor.SelectionLength);
+                moveCaret = regexLanguageElement.Value.Length;
+            }
+
+            RegexEditor.Document.Insert(RegexEditor.TextArea.Caret.Offset, regexLanguageElement.Value);
+
+            RegexEditor.TextArea.Caret.Offset += moveCaret;
+            RegexEditor.SelectionStart = RegexEditor.TextArea.Caret.Offset;
+            RegexEditor.SelectionLength = 0;
+
         }
 
         private void RegexLanguageElement_StackPanel_MouseUp(object sender, MouseButtonEventArgs e)
@@ -2244,6 +2261,7 @@ namespace RegexDialog
         private void ClearFindLangueageElementTextBoxButton_Click(object sender, RoutedEventArgs e)
         {
             FindLanguageElementTextBox.Text = string.Empty;
+            FindLanguageElementTextBox.Focus();
         }
 
         private void FindLanguageElementTextBox_PreviewKeyDown(object sender, KeyEventArgs e)
