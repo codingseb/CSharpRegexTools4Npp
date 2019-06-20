@@ -92,6 +92,7 @@ namespace RegexDialog
                     ResetSelectionTextRange();
                     Point mouseDownPoint = e.GetPosition(this);
                     StartSelectPosition = displayTextBlock.GetPositionFromPoint(mouseDownPoint, true);
+                    EndSelectPosition = StartSelectPosition;
                     isSelecting = true;
                 }
             }

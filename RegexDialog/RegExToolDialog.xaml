@@ -41,19 +41,28 @@
         <BitmapImage x:Key="Play" UriSource="Resources/control_play_blue.png"/>
         <BitmapImage x:Key="VS" UriSource="Resources/visual_studio_purple.png"/>
 
+        <ContextMenu x:Key="JustCopyContextMenu">
+            <MenuItem Header="Copy" Command="ApplicationCommands.Copy" />
+        </ContextMenu>
+
         <Style TargetType="{x:Type local:SearchableTextControl}">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type local:SearchableTextControl}">
                         <Border Background="{TemplateBinding Background}"
-                            BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            Padding="{TemplateBinding Padding}">
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
                             <TextBlock TextWrapping="Wrap" x:Name="PART_TEXT"/>
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelectable" Value="True">
+                    <Setter Property="ContextMenu"  Value="{StaticResource JustCopyContextMenu}"/>
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style TargetType="Image">
