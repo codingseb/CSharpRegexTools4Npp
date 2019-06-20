@@ -17,6 +17,8 @@
 * Modified By Coding Seb for the purpose of this project
 \***********************************************************************************/
 
+using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -43,25 +45,55 @@ namespace RegexDialog
                 new FrameworkPropertyMetadata(typeof(SearchableTextControl)));
         }
 
+        public SearchableTextControl()
+        {
+            CommandBindings.Add(new CommandBinding(ApplicationCommands.Copy, (sender, e) => Clipboard.SetText(SelectedText), (sender, e) => e.CanExecute = IsSelectable && SelectedText.Length > 0));
+        }
+
         protected override void OnMouseLeftButtonDown(MouseButtonEventArgs e)
         {
+            base.OnMouseLeftButtonDown(e);
+
             if (displayTextBlock != null && IsSelectable)
             {
-                base.OnMouseLeftButtonDown(e);
-                displayTextBlock.Focusable = false;
-                displayTextBlock.IsHitTestVisible = false;
-                ResetSelectionTextRange();
-                Point mouseDownPoint = e.GetPosition(this);
-                StartSelectPosition = displayTextBlock.GetPositionFromPoint(mouseDownPoint, true);
-                isSelecting = true;
+                if (e.ClickCount == 3)
+                {
+                    StartSelectPosition = displayTextBlock.ContentStart;
+                    EndSelectPosition = displayTextBlock.ContentEnd;
+
+                    SelectFromStartToEnd();
+                }
+                if (e.ClickCount == 2)
+                {
+                    int index = StartSelectPosition.DocumentStart.GetOffsetToPosition(StartSelectPosition);
+                    Match wordMatch = Regex.Matches(displayTextBlock.Text, @"\w+", RegexOptions.Singleline)
+                        .Cast<Match>()
+                        .First(match => match.Index <= index - 1 && match.Index + match.Length >= index - 1);
+
+                    StartSelectPosition = displayTextBlock.ContentStart.GetPositionAtOffset(wordMatch.Index + 1);
+                    EndSelectPosition = displayTextBlock.ContentStart.GetPositionAtOffset(wordMatch.Index + wordMatch.Length + 1);
+
+                    SelectFromStartToEnd();
+                }
+                else
+                {
+                    CaptureMouse();
+                    Focus();
+                    displayTextBlock.Focusable = false;
+                    displayTextBlock.IsHitTestVisible = false;
+                    ResetSelectionTextRange();
+                    Point mouseDownPoint = e.GetPosition(this);
+                    StartSelectPosition = displayTextBlock.GetPositionFromPoint(mouseDownPoint, true);
+                    isSelecting = true;
+                }
             }
         }
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
+            base.OnMouseMove(e);
             if (isSelecting && displayTextBlock != null && IsSelectable)
             {
-                base.OnMouseMove(e);
                 SelectTextFromMouseAction(e);
             }
         }
@@ -69,10 +101,11 @@ namespace RegexDialog
         protected override void OnMouseLeftButtonUp(MouseButtonEventArgs e)
         {
             base.OnMouseLeftButtonUp(e);
+            ReleaseMouseCapture();
             if (displayTextBlock != null && IsSelectable && isSelecting)
             {
-                base.OnMouseUp(e);
                 SelectTextFromMouseAction(e);
+
                 isSelecting = false;
             }
         }
@@ -81,6 +114,11 @@ namespace RegexDialog
         {
             Point mouseUpPoint = e.GetPosition(this);
             EndSelectPosition = displayTextBlock.GetPositionFromPoint(mouseUpPoint, true);
+            SelectFromStartToEnd();
+        }
+
+        private void SelectFromStartToEnd()
+        {
             ResetSelectionTextRange();
             TextRange textRange = new TextRange(StartSelectPosition, EndSelectPosition);
             textRange.ApplyPropertyValue(TextElement.ForegroundProperty, SystemColors.HighlightTextBrush);

@@ -47,7 +47,8 @@
                     <ControlTemplate TargetType="{x:Type local:SearchableTextControl}">
                         <Border Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}"
-                            BorderThickness="{TemplateBinding BorderThickness}">
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            Padding="{TemplateBinding Padding}">
                             <TextBlock TextWrapping="Wrap" x:Name="PART_TEXT"/>
                         </Border>
                     </ControlTemplate>
@@ -635,7 +636,9 @@
                                 VerticalAlignment="Stretch" 
                                 HorizontalAlignment="Stretch"/>
                         <local:SearchableTextControl x:Name="tbxRegexLanguageElementDescription" 
+                                                     Padding="2,0"
                                                      Grid.Row="2"
+                                                     Focusable="True"
                                                      BorderBrush="Gray"
                                                      BorderThickness="1"
                                                      Background="WhiteSmoke"
