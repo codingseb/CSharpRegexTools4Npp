@@ -17,6 +17,7 @@
 * Modified By Coding Seb for the purpose of this project
 \***********************************************************************************/
 
+using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -68,11 +69,18 @@ namespace RegexDialog
                     int index = StartSelectPosition.DocumentStart.GetOffsetToPosition(StartSelectPosition);
                     Match wordMatch = Regex.Matches(displayTextBlock.Text, @"\w+", RegexOptions.Singleline)
                         .Cast<Match>()
-                        .First(match => match.Index <= index - 1 && match.Index + match.Length >= index - 1);
+                        .FirstOrDefault(match => match.Index <= index - 1 && match.Index + match.Length >= index - 1);
 
-                    StartSelectPosition = displayTextBlock.ContentStart.GetPositionAtOffset(wordMatch.Index + 1);
-                    EndSelectPosition = displayTextBlock.ContentStart.GetPositionAtOffset(wordMatch.Index + wordMatch.Length + 1);
-
+                    if (wordMatch == null)
+                    {
+                        StartSelectPosition = displayTextBlock.ContentStart;
+                        EndSelectPosition = displayTextBlock.ContentEnd;
+                    }
+                    else
+                    {
+                        StartSelectPosition = displayTextBlock.ContentStart.GetPositionAtOffset(Math.Min(wordMatch.Index + 1, displayTextBlock.Text.Length));
+                        EndSelectPosition = displayTextBlock.ContentStart.GetPositionAtOffset(Math.Min(wordMatch.Index + wordMatch.Length + 1, displayTextBlock.Text.Length));
+                    }
                     SelectFromStartToEnd();
                 }
                 else
