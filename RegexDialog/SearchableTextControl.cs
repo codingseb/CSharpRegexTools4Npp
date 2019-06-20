@@ -30,7 +30,7 @@ namespace RegexDialog
         private TextBlock displayTextBlock;
         private TextPointer StartSelectPosition;
         private TextPointer EndSelectPosition;
-        private bool isSelecting = false;
+        private bool isSelecting;
 
         public string SelectedText = "";
 
@@ -59,7 +59,7 @@ namespace RegexDialog
 
         protected override void OnMouseMove(MouseEventArgs e)
         {
-            if(isSelecting && displayTextBlock != null && IsSelectable)
+            if (isSelecting && displayTextBlock != null && IsSelectable)
             {
                 base.OnMouseMove(e);
                 SelectTextFromMouseAction(e);
