@@ -9,7 +9,7 @@ using System.Windows.Input;
 using System.Windows.Interop;
 
 namespace CSharpRegexTools4Npp
-{   
+{
     public class Main
     {
         internal const string PluginName = "C# Regex Tools 4 Npp";

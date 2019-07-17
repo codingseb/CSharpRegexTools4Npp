@@ -1128,7 +1128,7 @@ namespace RegexDialog
 
         private void RegexLanguagesElementsTreeView_KeyDown(object sender, KeyEventArgs e)
         {
-            if(e.Key == Key.Enter 
+            if (e.Key == Key.Enter
                 && RegexLanguagesElementsTreeView.SelectedValue is RegexLanguageElement regexLanguageElement)
             {
                 PrintRegexLanguageElement(regexLanguageElement);
@@ -1859,12 +1859,7 @@ namespace RegexDialog
         {
             try
             {
-                if (e.Key == Key.Escape)
-                {
-                    Close();
-                    e.Handled = true;
-                }
-                else if (e.Key == Key.F5)
+                if (e.Key == Key.F5)
                 {
                     ShowMatches();
                     e.Handled = true;

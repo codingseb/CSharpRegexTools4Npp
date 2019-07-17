@@ -18,6 +18,7 @@
         LocationChanged="Root_LocationChanged"
         PreviewKeyDown="Root_PreviewKeyDown"
         DataContext="{x:Static local:Config.Instance}"
+        local:WindowHelper.CloseOnKey="Esc"
         x:Name="Root">
     <Window.Resources>
         <BitmapImage x:Key="NewPicture" UriSource="Resources/page_white.png" />
@@ -564,14 +565,16 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <Label Content="Find..."
+                                <Label Content="_Find..."
                                        VerticalAlignment="Center"
                                        Margin="2,0"
                                        Padding="0"
+                                       Target="{Binding ElementName=FindLanguageElementTextBox}"
                                        Foreground="Gray" />
                                 <TextBox x:Name="FindLanguageElementTextBox"
                                          TextChanged="FindLanguageElementTextBox_TextChanged"
-                                         PreviewKeyDown="FindLanguageElementTextBox_PreviewKeyDown">
+                                         PreviewKeyDown="FindLanguageElementTextBox_PreviewKeyDown"
+                                         local:TextBoxHelper.ClearOnKey="Esc">
                                     <TextBox.Background>
                                         <MultiBinding Converter="{converters:ExpressionEvalMultiBindingConverter Expression='bindings[0] || bindings[1].Length > 0 ? Brushes.White : Brushes.Transparent'}">
                                             <Binding ElementName="FindLanguageElementTextBox" Path="IsFocused" />

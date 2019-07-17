@@ -9,7 +9,7 @@ namespace CSharpRegexTools4Npp
 {
     public class UnmanagedExports
     {
-        [DllExport(CallingConvention=CallingConvention.Cdecl)]
+        [DllExport(CallingConvention = CallingConvention.Cdecl)]
         static bool isUnicode()
         {
             return true;
@@ -20,9 +20,9 @@ namespace CSharpRegexTools4Npp
         {
             try
             {
-            PluginBase.nppData = notepadPlusData;
-            Main.CommandMenuInit();
-        }
+                PluginBase.nppData = notepadPlusData;
+                Main.CommandMenuInit();
+            }
             catch (Exception exception)
             {
                 MessageBox.Show($"{exception.Message}\r\n{exception.StackTrace}{(exception.InnerException == null ? string.Empty : $"\r\nInner Exception :\r\n{exception.InnerException.Message}\r\n{exception.InnerException.StackTrace}")}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -56,19 +56,19 @@ namespace CSharpRegexTools4Npp
         {
             try
             {
-            ScNotification notification = (ScNotification)Marshal.PtrToStructure(notifyCode, typeof(ScNotification));
-            if (notification.Header.Code == (uint)NppMsg.NPPN_TBMODIFICATION)
-            {
-                PluginBase._funcItems.RefreshItems();
-                Main.SetToolBarIcon();
-            }
-            else if (notification.Header.Code == (uint)NppMsg.NPPN_SHUTDOWN)
-            {
-                Marshal.FreeHGlobal(_ptrPluginName);
-            }
-            else
-            {
-                Main.OnNotification(notification);
+                ScNotification notification = (ScNotification)Marshal.PtrToStructure(notifyCode, typeof(ScNotification));
+                if (notification.Header.Code == (uint)NppMsg.NPPN_TBMODIFICATION)
+                {
+                    PluginBase._funcItems.RefreshItems();
+                    Main.SetToolBarIcon();
+                }
+                else if (notification.Header.Code == (uint)NppMsg.NPPN_SHUTDOWN)
+                {
+                    Marshal.FreeHGlobal(_ptrPluginName);
+                }
+                else
+                {
+                    Main.OnNotification(notification);
                 }
             }
             catch (Exception exception)

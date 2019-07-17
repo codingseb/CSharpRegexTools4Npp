@@ -34,9 +34,9 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         }
 
         IntPtr Send(NppMsg command, int wParam, int lParam)
-		{
+        {
             return Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)command, wParam, lParam);
-		}
+        }
 
         IntPtr Send(NppMsg command, IntPtr wParam, IntPtr lParam)
         {
@@ -256,16 +256,16 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         }
 
         public NotepadPPGateway SetCurrentLanguage(int language)
-		{
+        {
             Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_SETCURRENTLANGTYPE, Unused, language);
             return this;
-		}
+        }
 
         public LangType GetCurrentLanguage()
-		{
+        {
             Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_GETCURRENTLANGTYPE, Unused, out int language);
             return (LangType)language;
-		}
+        }
 
         public void SetPluginMenuChecked(int id, bool check)
         {
