@@ -1,24 +1,46 @@
+using System.Collections;
 using System.Collections.Generic;
-using System.IO;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Windows;
+using RegexDialog;
+//usings
 
-public class Script
+public class CSharpReplaceContainer
 {
-    public string Replace(Match match, int index, string fileName, int globalIndex, int fileIndex)
+    //global
+
+    //match
+    public string Replace(Match match, int matchIndex, string fileName, int globalIndex, int fileIndex)
     {
         //code
     }
+    //endmatch
 
-    public string Replace(Match match, Group group, int index, string fileName, int globalIndex, int fileIndex)
+    //group
+    public string Replace(Match match, Group group, int matchIndex, string fileName, int globalIndex, int fileIndex)
     {
         //code
     }
+    //endgroup
 
-    public string Replace(Match match, Group group, Capture capture, int index, string fileName, int globalIndex, int fileIndex)
+    //capture
+    public string Replace(Match match, Group group, Capture capture, int matchIndex, string fileName, int globalIndex, int fileIndex)
     {
         //code
+    }
+    //endcapture
+
+    public string Before(string text, string fileName)
+    {
+        //before
+    }
+
+    public string After(string text, string fileName, List<string> fileNames = null)
+    {
+        //after
     }
 }

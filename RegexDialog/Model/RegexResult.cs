@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace RegexDialog
 {
-    internal class RegexResult : INotifyPropertyChanged
+    internal class RegexResult : NotifyPropertyChangedBaseClass
     {
         public RegexResult(Regex regex, Capture regexElement, int regexElementNb, string fileName = "", int selectionIndex = 0)
         {
@@ -108,20 +108,5 @@ namespace RegexDialog
                 return RegexElement?.Length ?? 0;
             }
         }
-
-        #region INotifyPropertyChanged Membres
-
-        /// <summary>
-        /// Génère l'évènement PropertyChanged pour la propriété spécifiée
-        /// </summary>
-        /// <param name="propertyName"></param>
-        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        #endregion
     }
 }

@@ -20,7 +20,7 @@ namespace RegexDialog
             {
                 if (StartOffset >= line.Offset && EndOffset <= line.Offset + line.Length)
                 {
-                    ChangeLinePart(StartOffset, EndOffset, delegate(VisualLineElement element)
+                    ChangeLinePart(StartOffset, EndOffset, delegate (VisualLineElement element)
                     {
                         element.TextRunProperties.SetBackgroundBrush(Brushes.LightGray);
                     });

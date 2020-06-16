@@ -2,7 +2,6 @@
 using System.Globalization;
 using System.Windows;
 using System.Windows.Data;
-using System.Windows.Markup;
 
 namespace RegexDialog.Converters
 {
@@ -15,7 +14,7 @@ namespace RegexDialog.Converters
             if (!(parameter is string parameterString))
                 return DependencyProperty.UnsetValue;
 
-            if (Enum.IsDefined(value.GetType(), value) == false)
+            if (!Enum.IsDefined(value.GetType(), value))
                 return DependencyProperty.UnsetValue;
 
             object parameterValue = Enum.Parse(value.GetType(), parameterString);
@@ -25,8 +24,7 @@ namespace RegexDialog.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            string parameterString = parameter as string;
-            if (parameterString == null)
+            if (!(parameter is string parameterString))
                 return DependencyProperty.UnsetValue;
 
             return Enum.Parse(targetType, parameterString);

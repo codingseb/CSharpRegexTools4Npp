@@ -21,7 +21,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// <summary>
         /// environment specific window handle/pointer
         /// </summary>
-        public IntPtr hwndFrom; 
+        public IntPtr hwndFrom;
 
         /// <summary>
         /// CtrlID of the window issuing the notification
@@ -31,7 +31,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// <summary>
         /// The SCN_* notification Code
         /// </summary>
-        public uint Code;       
+        public uint Code;
     }
 
     [StructLayout(LayoutKind.Sequential)]
@@ -73,7 +73,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// Character of the notification - eg keydown
         /// SCN_CHARADDED, SCN_KEY, SCN_AUTOCCOMPLETE, SCN_AUTOCSELECTION, SCN_USERLISTSELECTION
         /// </summary>
-        public char Character { get { return (char) character; } }
+        public char Character { get { return (char)character; } }
     }
 
     [Flags]
@@ -3031,12 +3031,16 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public void Dispose()
         {
-            if (!_disposed)
+            try
             {
-                _freeNativeString();
-                if (_ptrSciTextToFind != IntPtr.Zero) Marshal.FreeHGlobal(_ptrSciTextToFind);
-                _disposed = true;
+                if (!_disposed)
+                {
+                    _freeNativeString();
+                    if (_ptrSciTextToFind != IntPtr.Zero) Marshal.FreeHGlobal(_ptrSciTextToFind);
+                    _disposed = true;
+                }
             }
+            catch { }
         }
 
         ~TextToFind()

@@ -27,7 +27,11 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         L_COFFEESCRIPT, L_JSON, L_JAVASCRIPT, L_FORTRAN_77,
         // Don't use L_JS, use L_JAVASCRIPT instead
         // The end of enumated language type, so it should be always at the end
-        L_EXTERNAL
+        L_EXTERNAL,
+        L_SRECORD, L_INTELHEX, L_TEKTRONIXEXTENDEDHEX, L_SWIFT, L_ASN1, L_AVISYNTH,
+        L_BLITZBASIC, L_PUREBASIC, L_FREEBASIC, L_CSOUND, L_ERLANG, L_ESCRIPT,
+        L_FORTH, L_LATEX, L_MMIXAL, L_NIMROD, L_NNCRONTAB, L_OSCRIPT, L_REBOL,
+        L_REGISTRY, L_RUST, L_SPICE, L_TXT2TAGS, L_VPROLOG,
     }
 
     [Flags]

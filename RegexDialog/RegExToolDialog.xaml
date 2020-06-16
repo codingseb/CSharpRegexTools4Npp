@@ -18,6 +18,7 @@
         LocationChanged="Root_LocationChanged"
         PreviewKeyDown="Root_PreviewKeyDown"
         DataContext="{x:Static local:Config.Instance}"
+        local:WindowHelper.CloseOnKey="Esc"
         x:Name="Root">
     <Window.Resources>
         <BitmapImage x:Key="NewPicture" UriSource="Resources/page_white.png" />
@@ -38,6 +39,32 @@
         <BitmapImage x:Key="ShowLinesNumbers" UriSource="Resources/line_numbers.png"/>
         <BitmapImage x:Key="ShowSpaces" UriSource="Resources/space.png"/>
         <BitmapImage x:Key="ShowReturns" UriSource="Resources/return.png"/>
+        <BitmapImage x:Key="Play" UriSource="Resources/control_play_blue.png"/>
+        <BitmapImage x:Key="VS" UriSource="Resources/visual_studio_purple.png"/>
+
+        <ContextMenu x:Key="JustCopyContextMenu">
+            <MenuItem Header="Copy" Command="ApplicationCommands.Copy" />
+        </ContextMenu>
+
+        <Style TargetType="{x:Type local:SearchableTextControl}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type local:SearchableTextControl}">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="{TemplateBinding Padding}">
+                            <TextBlock TextWrapping="Wrap" x:Name="PART_TEXT"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelectable" Value="True">
+                    <Setter Property="ContextMenu"  Value="{StaticResource JustCopyContextMenu}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
 
         <Style TargetType="Image">
             <Style.Triggers>
@@ -71,6 +98,12 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
+                <MenuItem Header="Export To Visual Studio _Solution..." Click="ExportToVisualStudio_Click">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource VS}"  />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
                 <MenuItem Header="_Exit" Click="Exit_MenuItem_Click" >
                     <MenuItem.Icon>
                         <Image Source="{StaticResource ExitPicture}" />
@@ -112,7 +145,7 @@
                         <Style TargetType="MenuItem">
                             <Setter Property="Header" Value="{Binding Name}" />
                             <Setter Property="IsChecked" Value="{Binding Selected}" />
-                            <EventSetter Event="Click" Handler="miRegexOption_Click" />
+                            <EventSetter Event="Click" Handler="MiRegexOption_Click" />
                         </Style>
                     </MenuItem.ItemContainerStyle>
                 </MenuItem>
@@ -157,7 +190,7 @@
                                />
                     </StackPanel>
                 </Button>
-                <Button x:Name="SelectAllButton" Click="SelectAllButton_Click" IsEnabled="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter InverseBool=True}, ConverterParameter='Directory'}">
+                <Button x:Name="SelectAllButton" Click="SelectAllButton_Click" IsEnabled="{Binding TextSourceOn, Converter={converters:ExpressionEvalConverter Expression='binding == RegexTextSource.CurrentTab || binding == RegexTextSource.CurrentSelection'}}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource SelectPicture}" 
                                Width="16" 
@@ -225,9 +258,9 @@
             </Grid.ColumnDefinitions>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition x:Name="RegexEditorRow" Height="*"/>
+                    <RowDefinition x:Name="RegexEditorRow" Height="*" />
                     <RowDefinition Height="5" />
-                    <RowDefinition Height="*" MinHeight="10" />
+                    <RowDefinition x:Name="ReplaceEditorRow" Height="*"  />
                 </Grid.RowDefinitions>
                 <Grid Grid.Row="0">
                     <Grid.RowDefinitions>
@@ -269,7 +302,6 @@
                             FontSize="12"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto"
                             TextChanged="RegexEditor_TextChanged"
-                            SizeChanged="RegexEditor_SizeChanged"
                             ShowLineNumbers="{Binding ShowLinesNumbersRegexEditorOption}">
                             <i:Interaction.Behaviors>
                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowSpaces" Value="{Binding ShowSpaceCharsRegexEditorOption}" />
@@ -278,18 +310,19 @@
                             </i:Interaction.Behaviors>
                             <avalonEdit:TextEditor.ContextMenu>
                                 <ContextMenu Name="cmRegexfieldContextMenu">
-                                    <MenuItem Name="cmiRegexIndent" Header="Auto Indent and set IgnorePatternWhitespace" Click="cmiRegexIndent_Click"/>
-                                    <MenuItem Name="cmiRegexSetOnOneLine" Header="Set on one line" Click="cmiRegexSetOnOneLine_Click"/>
+                                    <MenuItem Name="cmiRegexIndent" Header="Auto Indent and set IgnorePatternWhitespace" Click="CmiRegexIndent_Click"/>
+                                    <MenuItem Name="cmiRegexSetOnOneLine" Header="Set on one line" Click="CmiRegexSetOnOneLine_Click"/>
                                     <Separator />
-                                    <MenuItem Name="cmiRegexCut" Header="Cut" Click="cmiRegexCut_Click"/>
-                                    <MenuItem Name="cmiRegexCopy" Header="Copy" Click="cmiRegexCopy_Click"/>
-                                    <MenuItem Name="cmiRegexPaste" Header="Paste" Click="cmiRegexPaste_Click"/>
+                                    <MenuItem Header="Cut" Command="ApplicationCommands.Cut"/>
+                                    <MenuItem Header="Copy" Command="ApplicationCommands.Copy"/>
+                                    <MenuItem Header="Paste" Command="ApplicationCommands.Paste"/>
                                     <Separator/>
-                                    <MenuItem Name="cmiRegexCopyForOnOneLine" Header="Copy on one line" Click="cmiRegexCopyForOnOneLine_Click"/>
-                                    <MenuItem Name="cmiRegexCopyForXml" Header="Copy for XML" Click="cmiRegexCopyForXml_Click"/>
-                                    <MenuItem Name="cmiRegexPasteFromXml" Header="Paste from XML" Click="cmiRegexPasteFromXml_Click"/>
+                                    <MenuItem Name="cmiRegexCopyForOnOneLine" Header="Copy on one line" Click="CmiRegexCopyForOnOneLine_Click"/>
+                                    <MenuItem Name="CmiRegexCopyForCSharpString" Header="Copy for C# string" Click="CmiRegexCopyForCSharpString_Click" />
+                                    <MenuItem Name="cmiRegexCopyForXml" Header="Copy for XML" Click="CmiRegexCopyForXml_Click"/>
+                                    <MenuItem Name="cmiRegexPasteFromXml" Header="Paste from XML" Click="CmiRegexPasteFromXml_Click"/>
                                     <Separator />
-                                    <MenuItem Name="cmiRegexSelectAll" Header="Select All" Click="cmiRegexSelectAll_Click"/>
+                                    <MenuItem Header="Select All" Command="ApplicationCommands.SelectAll"/>
                                 </ContextMenu>
                             </avalonEdit:TextEditor.ContextMenu>
                         </avalonEdit:TextEditor>
@@ -298,8 +331,7 @@
                 <GridSplitter
                     Grid.Row="1"
                     VerticalAlignment="Stretch" 
-                    HorizontalAlignment="Stretch"
-                    ResizeBehavior="PreviousAndNext"/>
+                    HorizontalAlignment="Stretch"/>
                 <Grid Grid.Row="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />
@@ -332,17 +364,24 @@
                         <CheckBox x:Name="CSharpReplaceCheckbox"
                                   Margin="5,0"
                                   IsChecked="{Binding CSharpReplaceMode}"
+                                  Checked="CSharpReplaceCheckbox_IsChecked_Changed"
+                                  Unchecked="CSharpReplaceCheckbox_IsChecked_Changed"
                                   VerticalAlignment="Center"
-                                  Content="_C#">
+                                  Content="_C#"
+                                  ToolTipService.ShowDuration="600000">
                             <CheckBox.ToolTip>
                                 <StackPanel>
-                                    <TextBlock>You must use at least one return keyword to return a string</TextBlock>
+                                    <TextBlock>You must use at least one <Bold>return</Bold> keyword to return a string</TextBlock>
                                     <TextBlock>You can use the following variables :</TextBlock>
-                                    <TextBlock>- match : Contains the current Regex Match</TextBlock>
-                                    <TextBlock>- index : The index of the current match in the current file</TextBlock>
-                                    <TextBlock>- fileName : (If in directory search) the fileName where the match was found</TextBlock>
-                                    <TextBlock>- globalIndex : (If in directory search) the index of the match in all files</TextBlock>
-                                    <TextBlock>- fileIndex : (If in directory search) the index of the file</TextBlock>
+                                    <TextBlock>- <Bold>match</Bold> : Contains the current Regex Match</TextBlock>
+                                    <TextBlock>- <Bold>matchIndex</Bold> : The index of the current match in the current file</TextBlock>
+                                    <TextBlock>- <Bold>fileName</Bold> : (If in directory search) the fileName where the match was found</TextBlock>
+                                    <TextBlock>- <Bold>globalIndex</Bold> : (If in directory search) the index of the match in all files</TextBlock>
+                                    <TextBlock>- <Bold>fileIndex</Bold> : (If in directory search) the index of the file</TextBlock>
+                                    <TextBlock Margin="0,5,0,0">You can add specific usings between <Bold>#usings</Bold> and <Bold>#endusings</Bold></TextBlock>
+                                    <TextBlock>You can declare shared variables, properties or methods putting code between <Bold>#global</Bold> and <Bold>#endglobal</Bold></TextBlock>
+                                    <TextBlock>Between <Bold>#before</Bold> and <Bold>#endbefore</Bold> you get the <Bold>text</Bold> and the <Bold>fileName</Bold> before it is used as input of the regex by returning a string you can redefine it.</TextBlock>
+                                    <TextBlock>Between <Bold>#after</Bold> and <Bold>#endafter</Bold> you get the <Bold>text</Bold> and the <Bold>fileName</Bold> after it is processed by the regex by returning a string you can modify it a last time.</TextBlock>
                                 </StackPanel>
                             </CheckBox.ToolTip>
                         </CheckBox>
@@ -352,36 +391,39 @@
                             Name="ReplaceEditor"
                             FontFamily="Consolas"
                             FontSize="12"
-                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
-                            TextChanged="ReplaceEditor_TextChanged" Margin="-1,-1,1,1"
+                            ScrollViewer.HorizontalScrollBarVisibility="Auto" 
+                            Margin="-1,-1,1,1"
                             ShowLineNumbers="{Binding ShowLinesNumbersReplaceEditorOption}">
                             <i:Interaction.Behaviors>
+                                <behaviors:SimplePropertyBindingBehavior PropertyName="Text" Value="{Binding ReplaceEditorText}" PropertyChangedTriggerEventName="TextChanged" />
                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowSpaces" Value="{Binding ShowSpaceCharsReplaceEditorOption}" />
                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowTabs" Value="{Binding ShowSpaceCharsReplaceEditorOption}" />
                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowEndOfLine" Value="{Binding ShowEndOfLinesReplaceEditorOption}" />
                             </i:Interaction.Behaviors>
                             <avalonEdit:TextEditor.ContextMenu>
                                 <ContextMenu Name="cmReplacefieldContextMenu">
-                                    <MenuItem Name="cmiReplaceGroupByNumber" Header="Groups by number" >
+                                    <MenuItem Name="cmiReplaceGroupByNumber" Header="Groups by number" Visibility="{Binding CSharpReplaceMode, Converter={converters:CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}">
                                         <MenuItem.Style>
                                             <Style TargetType="{x:Type MenuItem}">
                                                 <EventSetter Event="Click" Handler="InsertInReplaceFromContextMenu_Click" />
                                             </Style>
                                         </MenuItem.Style>
                                     </MenuItem>
-                                    <MenuItem Name="cmiReplaceGroupByName" Header="Groups by name" >
+                                    <MenuItem Name="cmiReplaceGroupByName" Header="Groups by name" Visibility="{Binding CSharpReplaceMode, Converter={converters:CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}">
                                         <MenuItem.Style>
                                             <Style TargetType="{x:Type MenuItem}">
                                                 <EventSetter Event="Click" Handler="InsertInReplaceFromContextMenu_Click" />
                                             </Style>
                                         </MenuItem.Style>
                                     </MenuItem>
-                                    <Separator/>
-                                    <MenuItem Name="cmiReplaceCut" Header="Cut" Click="cmiReplaceCut_Click"/>
-                                    <MenuItem Name="cmiReplaceCopy" Header="Copy" Click="cmiReplaceCopy_Click"/>
-                                    <MenuItem Name="cmiReplacePaste" Header="Paste" Click="cmiReplacePaste_Click"/>
+                                    <Separator Visibility="{Binding CSharpReplaceMode, Converter={converters:CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}"/>
+                                    <MenuItem Header="Cut" Command="ApplicationCommands.Cut"/>
+                                    <MenuItem Header="Copy" Command="ApplicationCommands.Copy"/>
+                                    <MenuItem Header="Paste" Command="ApplicationCommands.Paste"/>
                                     <Separator />
-                                    <MenuItem Name="cmiReplaceSelectAll" Header="Select All" Click="cmiReplaceSelectAll_Click"/>
+                                    <MenuItem Name="CmiReplaceCopyForCSharpString" Header="Copy for C# string" Click="CmiReplaceCopyForCSharpString_Click" />
+                                    <Separator />
+                                    <MenuItem Header="Select All" Command="ApplicationCommands.SelectAll"/>
                                 </ContextMenu>
                             </avalonEdit:TextEditor.ContextMenu>
                         </avalonEdit:TextEditor>
@@ -403,6 +445,11 @@
                         VirtualizingPanel.IsVirtualizing="True"
                         SelectedItemChanged="MatchResultsTreeView_SelectedItemChanged"
                         PreviewMouseRightButtonDown="OnPreviewMouseRightButtonDown">
+                        <TreeView.CommandBindings>
+                            <CommandBinding Command="ApplicationCommands.Copy" 
+                                            Executed="TreeViewCopy_CommandBinding_Executed"
+                                            CanExecute="TreeViewCopy_CommandBinding_CanExecuted" />
+                        </TreeView.CommandBindings>
                         <TreeView.ItemContainerStyle>
                             <Style TargetType="TreeViewItem">
                                 <Setter Property="IsExpanded" Value="{Binding IsExpanded, IsAsync=True}" />
@@ -423,6 +470,8 @@
                                 <Separator/>
                                 <MenuItem Header="Insert value in Replace field" Click="InsertValueInReplaceField_MenuItem_Click"/>
                                 <Separator/>
+                                <MenuItem Header="Copy value" Command="ApplicationCommands.Copy" />
+                                <Separator/>
                                 <MenuItem Header="Show Matches Level" Click="ShowMatchesMenu_Click"/>
                                 <MenuItem Header="Show Groups Level" Click="ShowGroupsMenu_Click"/>
                                 <MenuItem Header="Show Captures Level" Click="ShowCapturesMenu_Click"/>
@@ -433,6 +482,8 @@
                                 <MenuItem Header="Insert group by number in Replace field" Click="InsertGroupByNumberInReplaceField_MenuItem_Click"/>
                                 <MenuItem Header="Insert group by name in Replace field" Click="InsertGroupByNameInReplaceField_MenuItem_Click"/>
                                 <MenuItem Header="Insert value in Replace field" Click="InsertValueInReplaceField_MenuItem_Click"/>
+                                <Separator/>
+                                <MenuItem Header="Copy value" Command="ApplicationCommands.Copy" />
                                 <Separator/>
                                 <MenuItem Header="Show Matches Level" Click="ShowMatchesMenu_Click"/>
                                 <MenuItem Header="Show Groups Level" Click="ShowGroupsMenu_Click"/>
@@ -507,11 +558,71 @@
                         <Grid.RowDefinitions>
                             <RowDefinition x:Name="RegexLanguageElementFirstRow" Height="*" MinHeight="50" />
                             <RowDefinition Height="5" />
-                            <RowDefinition Height="0.1*" />
+                            <RowDefinition Height="0.1*" MinHeight="20"/>
                         </Grid.RowDefinitions>
-                        <TreeView Name="RegexLanguagesElementsTreeView" SelectedItemChanged="RegexLanguagesElementsTreeView_SelectedItemChanged">
+                        <DockPanel>
+                            <Grid DockPanel.Dock="Top">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <Label Content="_Find..."
+                                       VerticalAlignment="Center"
+                                       Margin="2,0"
+                                       Padding="0"
+                                       Target="{Binding ElementName=FindLanguageElementTextBox}"
+                                       Foreground="Gray" />
+                                <TextBox x:Name="FindLanguageElementTextBox"
+                                         TextChanged="FindLanguageElementTextBox_TextChanged"
+                                         PreviewKeyDown="FindLanguageElementTextBox_PreviewKeyDown"
+                                         local:TextBoxHelper.ClearOnKey="Esc">
+                                    <TextBox.Background>
+                                        <MultiBinding Converter="{converters:ExpressionEvalMultiBindingConverter Expression='bindings[0] || bindings[1].Length > 0 ? Brushes.White : Brushes.Transparent'}">
+                                            <Binding ElementName="FindLanguageElementTextBox" Path="IsFocused" />
+                                            <Binding ElementName="FindLanguageElementTextBox" Path="Text" />
+                                        </MultiBinding>
+                                    </TextBox.Background>
+                                </TextBox>
+                                <Button x:Name="ClearFindLanguageElementTextBoxButton"
+                                        Click="ClearFindLangueageElementTextBoxButton_Click"
+                                        BorderBrush="Transparent"
+                                        Background="Transparent"
+                                        HorizontalAlignment="Right"
+                                        VerticalAlignment="Center"
+                                        Visibility="{Binding Text, ElementName=FindLanguageElementTextBox, Converter={converters:ExpressionEvalConverter Expression='binding.Length > 0 ? Visibility.Visible : Visibility.Collapsed'}}">
+                                    <Path x:Name="ButtonPath"
+                                        Margin="3"
+                                        Stroke="Black"
+                                        StrokeThickness="1.5"
+                                        StrokeStartLineCap="Square"
+                                        StrokeEndLineCap="Square"
+                                        Stretch="Uniform"
+                                        VerticalAlignment="Center"
+                                        HorizontalAlignment="Center">
+                                        <Path.Data>
+                                            <PathGeometry>
+                                                <PathGeometry.Figures>
+                                                    <PathFigure StartPoint="0,0">
+                                                        <LineSegment Point="6,6"/>
+                                                    </PathFigure>
+                                                    <PathFigure StartPoint="0,6">
+                                                        <LineSegment Point="6,0"/>
+                                                    </PathFigure>
+                                                </PathGeometry.Figures>
+                                            </PathGeometry>
+                                        </Path.Data>
+                                    </Path>
+                                </Button>
+                            </Grid>
+                            <TreeView Name="RegexLanguagesElementsTreeView" 
+                                  SelectedItemChanged="RegexLanguagesElementsTreeView_SelectedItemChanged"
+                                  KeyDown="RegexLanguagesElementsTreeView_KeyDown">
                                 <TreeView.Resources>
-                                    <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElementGroup}" ItemsSource="{Binding Elements}">
+                                    <Style TargetType="{x:Type TreeViewItem}">
+                                        <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
+                                        <Setter Property="Visibility" Value="{Binding Visible, Converter={converters:CustomBoolToVisibilityConverter}}" />
+                                    </Style>
+                                    <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElementGroup}" 
+                                                              ItemsSource="{Binding Elements}">
                                         <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}">
                                             <Image Source="{StaticResource RegexLanguageElementsGroupPicture}" Width="16" Height="16" Margin="3,0"/>
                                             <TextBlock Text="{Binding Name}"/>
@@ -519,25 +630,46 @@
                                         </StackPanel>
                                     </HierarchicalDataTemplate>
                                     <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElement}">
-                                        <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}" MouseDown="RegexLanguageElement_StackPanel_MouseDown" MouseUp="RegexLanguageElement_StackPanel_MouseUp">
-                                            <Image Source="{StaticResource RegexLanguageElementPicture}" Width="16" Height="16" Margin="3,0"/>
-                                            <TextBlock Text="{Binding Name}"/>
+                                        <StackPanel Background="Transparent" 
+                                                    Orientation="Horizontal" 
+                                                    ToolTip="{Binding Description}"
+                                                    MouseDown="RegexLanguageElement_StackPanel_MouseDown"
+                                                    MouseUp="RegexLanguageElement_StackPanel_MouseUp">
+                                            <Image Source="{StaticResource RegexLanguageElementPicture}" 
+                                                   Width="16" Height="16" 
+                                                   Margin="3,0"/>
+                                            <local:SearchableTextControl
+                                                SearchText="{Binding Text, ElementName=FindLanguageElementTextBox}"
+                                                IsHighlight="True"
+                                                IsMatchCase="False"
+                                                IsMatchAccents="False"
+                                                Focusable="False"
+                                                IsHitTestVisible="False"
+                                                Text="{Binding Name}"/>
                                             <TextBlock Text="{Binding Value}" Foreground="Blue"/>
                                         </StackPanel>
                                     </HierarchicalDataTemplate>
                                 </TreeView.Resources>
                             </TreeView>
-                            <GridSplitter
-                            Grid.Row="1"
-                            VerticalAlignment="Stretch" 
-                            HorizontalAlignment="Stretch"/>
-                        <TextBox Name="tbxRegexLanguageElementDescription" 
-                                     IsReadOnly="True"
-                                     TextWrapping="Wrap"
-                                     Grid.Row="2"
-                                     Background="WhiteSmoke"
-                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                                     ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                        </DockPanel>
+                        <GridSplitter 
+                                Grid.Row="1"
+                                VerticalAlignment="Stretch" 
+                                HorizontalAlignment="Stretch"/>
+                        <local:SearchableTextControl x:Name="tbxRegexLanguageElementDescription" 
+                                                     Padding="2,0"
+                                                     Grid.Row="2"
+                                                     Focusable="True"
+                                                     BorderBrush="Gray"
+                                                     BorderThickness="1"
+                                                     Background="WhiteSmoke"
+                                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
+                                                     SearchText="{Binding Text, ElementName=FindLanguageElementTextBox}"
+                                                     IsHighlight="True"
+                                                     IsMatchCase="False"
+                                                     IsSelectable="True"
+                                                     IsMatchAccents="False"/>
                     </Grid>
                 </TabItem>
                 <TabItem Name="ReplaceTabItem" Header="_Replace Elements" >
@@ -545,7 +677,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition x:Name="ReplaceLanguageElementFirstRow" Height="*" MinHeight="50" />
                             <RowDefinition Height="5" />
-                            <RowDefinition Height="0.1*" MinHeight="30" />
+                            <RowDefinition Height="0.1*" MinHeight="20" />
                         </Grid.RowDefinitions>
                         <ListView Name="ReplaceLanguageElementsListView" SelectionChanged="ReplaceLanguageElementsListView_SelectionChanged">
                             <ListView.ItemTemplate>
@@ -571,7 +703,7 @@
                                      ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="RegOptionsTabItem" Header="Regex _Options" >
+                <TabItem x:Name="RegOptionsTabItem" Header="Regex Op_tions" >
                     <ItemsControl Name="icRegexOptions">
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
@@ -581,78 +713,157 @@
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </TabItem>
-                <TabItem x:Name="TextSourceTabItem" Header="Text _Source">
-                    <GroupBox Header="Execute Regex on :">
-                        <GroupBox.Resources>
-                            <Style TargetType="RadioButton">
-                                <Setter Property="Margin" Value="0,0,0,5" />
-                            </Style>
-                            <Style TargetType="ComboBox">
-                                <Setter Property="Margin" Value="1,0,0,0" />
-                            </Style>
-                        </GroupBox.Resources>
-                        <StackPanel Margin="5">
-                            <RadioButton x:Name="CurrentTabTextSourceRadioButton" 
-                                         Content="Current _tab" 
-                                         IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CurrentTab'}" />
-                            <RadioButton x:Name="CurrentSelectedTextSourceRadioButton" 
-                                         Content="Current se_lection"
-                                         IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CurrentSelection'}"/>
-                            <RadioButton x:Name="SpecifiedDirectoryTextSourceRadioButton" 
-                                         Content="Specified _directory"
-                                         IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='Directory'}"/>
-                            <DockPanel IsEnabled="{Binding IsChecked, ElementName=SpecifiedDirectoryTextSourceRadioButton}">
-                                <StackPanel DockPanel.Dock="Bottom"
-                                            Margin="5,0">
-                                    <CheckBox x:Name="SearchSubDirectoriesCheckBox" 
-                                          IsChecked="{Binding TextSourceDirectorySearchSubDirectories}"
-                                          Content="Su_b directories" />
-                                    <CheckBox x:Name="ShowNotMatchedFilesCheckBox" 
-                                          IsChecked="{Binding TextSourceDirectoryShowNotMatchedFiles}"
-                                          Content="Show _not matched files" />
-                                    <CheckBox x:Name="OpenFilesForReplaceCheckBox" 
-                                          IsChecked="{Binding OpenFilesForReplace}"
-                                          Content="_Open files to replace in editor (otherwise modify the file on the disk)" />
-                                    <CheckBox x:Name="ShowEmptiesMatchesCheckBox" 
+                <TabItem x:Name="TextSourceTabItem" Header="Ot_her Options">
+                    <DockPanel>
+                        <GroupBox Header="Results" 
+                                  DockPanel.Dock="Bottom">
+                            <StackPanel Margin="5,5,5,0">
+                                <CheckBox x:Name="ShowEmptiesMatchesCheckBox" 
                                           IsChecked="{Binding ShowEmptyMatches}"
                                           Content="Show _empties matches" />
+                                <CheckBox x:Name="PrintFileNamesWhenExtractCheckBox" 
+                                          IsChecked="{Binding PrintFileNameWhenExtract}"
+                                          Content="Print Filenames when extract" />
+                            </StackPanel>
+                        </GroupBox>
+                        <GroupBox Header="Text Source">
+                            <GroupBox.Resources>
+                                <Style TargetType="RadioButton">
+                                    <Setter Property="Margin" Value="0,0,0,5" />
+                                </Style>
+                                <Style TargetType="ComboBox">
+                                    <Setter Property="Margin" Value="1,0,0,0" />
+                                </Style>
+                            </GroupBox.Resources>
+                            <DockPanel>
+                                <WrapPanel Margin="5" DockPanel.Dock="Top">
+                                    <RadioButton x:Name="CurrentTabTextSourceRadioButton" 
+                                         Margin="5,0"
+                                         Content="Current _tab" 
+                                         IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CurrentTab'}" />
+                                    <RadioButton x:Name="CurrentSelectedTextSourceRadioButton" 
+                                         Margin="5,0"
+                                         Content="Current se_lection"
+                                         IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CurrentSelection'}"/>
+                                    <RadioButton x:Name="SpecifiedDirectoryTextSourceRadioButton" 
+                                         Margin="5,0"
+                                         Content="Specified _directory"
+                                         IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='Directory'}"/>
+                                    <RadioButton x:Name="CSharpScriptTextSourceRadioButton" 
+                                         Margin="5,0"
+                                         Content="C# _Script"
+                                         IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CSharpScript'}"/>
+                                </WrapPanel>
 
-                                </StackPanel>
+                                <StackPanel Margin="5" 
+                                            DockPanel.Dock="Top"
+                                            Visibility="{Binding IsChecked, ElementName=SpecifiedDirectoryTextSourceRadioButton, Converter={converters:CustomBoolToVisibilityConverter}}">
 
-                                <Grid DockPanel.Dock="Bottom"
-                                      Margin="0,5">
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="Auto" />
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-                                    <Label Content="_Filters"
+                                    <DockPanel>
+                                        <Button x:Name="SpecifiedDirectoryTextSourcePathButton"
+                                        Content="..." 
+                                        Padding="10,0" 
+                                        DockPanel.Dock="Right"
+                                        Click="SpecifiedDirectoryTextSourcePathButton_Click"/>
+                                        <ComboBox x:Name="SpecifiedDirectoryTextSourcePathComboBox" 
+                                          Text="{Binding TextSourceDirectoryPath, UpdateSourceTrigger=PropertyChanged}"
+                                          ItemsSource="{Binding TextSourceDirectoryPathHistory}"
+                                          IsEditable="True"/>
+                                    </DockPanel>
+
+                                    <Grid Margin="0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="Auto" />
+                                            <ColumnDefinition Width="*" />
+                                        </Grid.ColumnDefinitions>
+                                        <Label Content="_Filters"
                                            VerticalAlignment="Center"
                                            Padding="3,0"
                                            ToolTip="File Patterns supporting * and ? wildcards.Multi patterns separated by [,] char"/>
-                                    <ComboBox x:Name="SpecifiedDirectoryTextSourceFilterComboBox"
+                                        <ComboBox x:Name="SpecifiedDirectoryTextSourceFilterComboBox"
                                               Text="{Binding TextSourceDirectorySearchFilter, UpdateSourceTrigger=PropertyChanged}"
                                               ItemsSource="{Binding TextSourceDirectorySearchFilterHistory}"
                                               Grid.Column="1"
                                               VerticalAlignment="Center"
                                               IsEditable="True"/>
-                                </Grid>
-                                <Button x:Name="SpecifiedDirectoryTextSourcePathButton"
-                                        Content="..." 
-                                        Padding="10,0" 
-                                        DockPanel.Dock="Right"
-                                        Click="SpecifiedDirectoryTextSourcePathButton_Click"/>
-                                <ComboBox x:Name="SpecifiedDirectoryTextSourcePathComboBox" 
-                                          Text="{Binding TextSourceDirectoryPath, UpdateSourceTrigger=PropertyChanged}"
-                                          ItemsSource="{Binding TextSourceDirectoryPathHistory}"
-                                          IsEditable="True"/>
+                                    </Grid>
+
+                                    <StackPanel Margin="5">
+                                        <CheckBox x:Name="SearchSubDirectoriesCheckBox" 
+                                          IsChecked="{Binding TextSourceDirectorySearchSubDirectories}"
+                                          Content="Su_b directories" />
+                                        <CheckBox x:Name="ShowNotMatchedFilesCheckBox" 
+                                          IsChecked="{Binding TextSourceDirectoryShowNotMatchedFiles}"
+                                          Content="Show _not matched files" />
+                                        <CheckBox x:Name="OpenFilesForReplaceCheckBox" 
+                                          IsChecked="{Binding OpenFilesForReplace}"
+                                          Content="_Open files to replace in editor (otherwise modify the file on the disk)" />
+                                    </StackPanel>
+                                </StackPanel>
+
+                                <DockPanel Visibility="{Binding IsChecked, ElementName=CSharpScriptTextSourceRadioButton, Converter={converters:CustomBoolToVisibilityConverter}}" >
+                                    <WrapPanel DockPanel.Dock="Top">
+                                        <WrapPanel.Resources>
+                                            <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button" />
+                                            <Style BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" TargetType="ToggleButton" />
+                                        </WrapPanel.Resources>
+                                        <ToggleButton x:Name="ToggleShowLinesNumberInCSharpTextSourceButton" 
+                                                      IsChecked="{Binding ShowLinesNumbersCSharpTextSourceEditorOption}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="{StaticResource ShowLinesNumbers}" Width="16" Height="16" ToolTip="Show/Hide lines numbers"/>
+                                            </StackPanel>
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="ToggleShowSpacesInCSharpTextSourceButton" 
+                                                      IsChecked="{Binding ShowSpaceCharsCSharpTextSourceEditorOption}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="{StaticResource ShowSpaces}" Width="16" Height="16" ToolTip="Show/Hide spaces and tabulations" />
+                                            </StackPanel>
+                                        </ToggleButton>
+                                        <ToggleButton x:Name="ToggleShowReturnsInCSharpTextSourceButton" 
+                                                      IsChecked="{Binding ShowEndOfLinesCSharpTextSourceEditorOption}">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Image Source="{StaticResource ShowReturns}" Width="16" Height="16" ToolTip="Show/Hide end of lines" />
+                                            </StackPanel>
+                                        </ToggleButton>
+                                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                                        <Button x:Name="TestCSharpTextSourceButton"
+                                                Click="TestCSharpTextSourceButton_Click">
+                                            <Image Source="{StaticResource Play}" Width="16" Height="16" ToolTip="Test and Show Result" />
+                                        </Button>
+                                        <CheckBox Content="In a new tab"
+                                                  VerticalAlignment="Center"
+                                                  IsChecked="{Binding ShowCSharpTextSourceTestInANewTab}"/>
+                                    </WrapPanel>
+                                    <Border BorderBrush="Gray" 
+                                            BorderThickness="1">
+                                        <avalonEdit:TextEditor
+                                            Name="TextSourceEditor"
+                                            FontFamily="Consolas"
+                                            FontSize="12"
+                                            SyntaxHighlighting="C#"
+                                            ShowLineNumbers="{Binding ShowLinesNumbersCSharpTextSourceEditorOption}"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+                                            <avalonEdit:TextEditor.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Cut" Command="ApplicationCommands.Cut"/>
+                                                    <MenuItem Header="Copy" Command="ApplicationCommands.Copy"/>
+                                                    <MenuItem Header="Paste" Command="ApplicationCommands.Paste"/>
+                                                    <Separator />
+                                                    <MenuItem Header="Select All" Command="ApplicationCommands.SelectAll"/>
+                                                </ContextMenu>
+                                            </avalonEdit:TextEditor.ContextMenu>
+                                            <i:Interaction.Behaviors>
+                                                <behaviors:SimplePropertyBindingBehavior PropertyName="Text" Value="{Binding CSharpTextSourceEditorText}" PropertyChangedTriggerEventName="TextChanged" />
+                                                <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowSpaces" Value="{Binding ShowSpaceCharsCSharpTextSourceEditorOption}" />
+                                                <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowTabs" Value="{Binding ShowSpaceCharsCSharpTextSourceEditorOption}" />
+                                                <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowEndOfLine" Value="{Binding ShowEndOfLinesCSharpTextSourceEditorOption}" />
+                                            </i:Interaction.Behaviors>
+                                        </avalonEdit:TextEditor>
+                                    </Border>
+                                </DockPanel>
                             </DockPanel>
-                            <StackPanel Margin="5,0">
-                                <CheckBox x:Name="PrintFileNamesWhenExtractCheckBox" 
-                                          IsChecked="{Binding PrintFileNameWhenExtract}"
-                                          Content="Print Filenames when extract" />
-                            </StackPanel>
-                        </StackPanel>
-                    </GroupBox>
+                        </GroupBox>
+                    </DockPanel>
                 </TabItem>
             </TabControl>
         </Grid>

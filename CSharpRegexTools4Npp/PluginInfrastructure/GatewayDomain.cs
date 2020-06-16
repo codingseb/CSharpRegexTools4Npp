@@ -30,11 +30,11 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// <param name="blue">a number 0-255</param>
         public Colour(int red, int green, int blue)
         {
-            if(red > 255 || red < 0)
+            if (red > 255 || red < 0)
                 throw new ArgumentOutOfRangeException("red", "must be 0-255");
-            if(green > 255 || green < 0)
+            if (green > 255 || green < 0)
                 throw new ArgumentOutOfRangeException("green", "must be 0-255");
-            if(blue > 255 || blue < 0)
+            if (blue > 255 || blue < 0)
                 throw new ArgumentOutOfRangeException("blue", "must be 0-255");
             Red = red;
             Green = green;
@@ -150,7 +150,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return b;
         }
 
-		public override string ToString()
+        public override string ToString()
         {
             return "Position: " + pos;
         }
@@ -202,7 +202,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// </summary>
         public KeyModifier(SciMsg SCK_KeyCode, SciMsg SCMOD_modifier)
         {
-            value = (int) SCK_KeyCode | ((int) SCMOD_modifier << 16);
+            value = (int)SCK_KeyCode | ((int)SCMOD_modifier << 16);
         }
 
         public int Value
@@ -218,7 +218,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         {
             cpMin = cpmin; cpMax = cpmax;
         }
-
         public int cpMin;
         public int cpMax;
     }
@@ -246,7 +245,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             _sciTextRange.chrg = chrRange;
             _sciTextRange.lpstrText = Marshal.AllocHGlobal(stringCapacity);
         }
-
         public TextRange(int cpmin, int cpmax, int stringCapacity)
         {
             _sciTextRange.chrg.cpMin = cpmin;

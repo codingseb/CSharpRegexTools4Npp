@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
@@ -32,9 +33,20 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)command, wParam, lParam);
         }
 
+        IntPtr Send(NppMsg command, int wParam, int lParam)
+        {
+            return Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)command, wParam, lParam);
+        }
+
         IntPtr Send(NppMsg command, IntPtr wParam, IntPtr lParam)
         {
             return Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)command, wParam, lParam);
+        }
+
+        public NotepadPPGateway CallMenuCommand(int nppMenuCmd)
+        {
+            Send(NppMsg.NPPM_MENUCOMMAND, Unused, nppMenuCmd);
+            return this;
         }
 
         public NotepadPPGateway FileNew()
@@ -83,11 +95,52 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return result;
         }
 
-        public NotepadPPGateway ShowOpenedDocument(string tabPath)
+        public int GetTabIndex(string tabPath, bool smart = false)
+        {
+            int index = GetAllOpenedDocuments.IndexOf(tabPath);
+
+            if (smart && index < 0)
+                index = GetAllOpenedDocuments.FindIndex(tab => Path.GetFileName(tab).Equals(tabPath));
+
+            if (smart && index < 0)
+                index = GetAllOpenedDocuments.FindIndex(tab => tab.Contains(tabPath));
+
+            return index;
+        }
+
+        public int GetTabIndex(string tabPath)
+        {
+            return GetTabIndex(tabPath, false);
+        }
+
+        public NotepadPPGateway ShowTab(string tabPath, bool smart)
         {
             try
             {
-                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_SWITCHTOFILE, 0, tabPath);
+                ShowTab(GetTabIndex(tabPath, smart));
+            }
+            catch { }
+
+            return this;
+        }
+
+
+        public NotepadPPGateway ShowTab(string tabPath)
+        {
+            try
+            {
+                ShowTab(GetTabIndex(tabPath));
+            }
+            catch { }
+
+            return this;
+        }
+
+        public NotepadPPGateway ShowTab(int index)
+        {
+            try
+            {
+                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_ACTIVATEDOC, 0, index);
             }
             catch { }
 
@@ -189,8 +242,34 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public NotepadPPGateway SetCurrentLanguage(LangType language)
         {
-            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_SETCURRENTLANGTYPE, Unused, (int)language);
+            SetCurrentLanguage((int)language);
             return this;
+        }
+
+        public unsafe NotepadPPGateway SetCurrentLanguage(string language)
+        {
+            fixed (byte* languagePtr = Encoding.UTF8.GetBytes(language))
+            {
+                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_SETCURRENTLANGTYPE, Unused, (IntPtr)languagePtr);
+            }
+            return this;
+        }
+
+        public NotepadPPGateway SetCurrentLanguage(int language)
+        {
+            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_SETCURRENTLANGTYPE, Unused, language);
+            return this;
+        }
+
+        public LangType GetCurrentLanguage()
+        {
+            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_GETCURRENTLANGTYPE, Unused, out int language);
+            return (LangType)language;
+        }
+
+        public void SetPluginMenuChecked(int id, bool check)
+        {
+            Send(NppMsg.NPPM_SETMENUITEMCHECK, PluginBase._funcItems.Items[id]._cmdID, check ? 1 : 0);
         }
     }
 }

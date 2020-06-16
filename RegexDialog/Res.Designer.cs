@@ -19,7 +19,7 @@ namespace RegexDialog {
     // à l'aide d'un outil, tel que ResGen ou Visual Studio.
     // Pour ajouter ou supprimer un membre, modifiez votre fichier .ResX, puis réexécutez ResGen
     // avec l'option /str ou régénérez votre projet VS.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "15.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Res {
@@ -61,26 +61,46 @@ namespace RegexDialog {
         }
         
         /// <summary>
-        ///   Recherche une chaîne localisée semblable à using System.Collections.Generic;
-        ///using System.IO;
+        ///   Recherche une chaîne localisée semblable à             // To make a replace
+        ///            string replace = regex.Replace(input, replacement);
+        ///            Console.WriteLine(replace);
+        ///
+        ///            //To get all matches
+        ///            MatchCollection matches = regex.Matches(input);
+        ///            Console.WriteLine(string.Join(&quot;\r\n&quot;, matches.Cast&lt;Match&gt;().Select(match =&gt; match.Value)));
+        ///.
+        /// </summary>
+        internal static string CSharpReplaceCallingCode {
+            get {
+                return ResourceManager.GetString("CSharpReplaceCallingCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à using System.Collections;
+        ///using System.Collections.Generic;
+        ///using System.Collections.ObjectModel;
+        ///using System.ComponentModel;
+        ///using System.Globalization;
         ///using System.Linq;
         ///using System.Text;
         ///using System.Text.RegularExpressions;
-        ///using System.Windows;
+        ///using RegexDialog;
+        /////usings
         ///
-        ///public class Script
+        ///public class CSharpReplaceContainer
         ///{
-        ///    public string Replace(Match match, int index, string fileName, int globalIndex, int fileIndex)
+        ///    //global
+        ///
+        ///    //match
+        ///    public string Replace(Match match, int matchIndex, string fileName, int globalIndex, int fileIndex)
         ///    {
         ///        //code
         ///    }
+        ///    //endmatch
         ///
-        ///    public string Replace(Match match, Group group, int index, string fileName, int globalIndex, int fileIndex)
-        ///    {
-        ///        //code
-        ///    }
-        ///
-        ///    public string Replace(Match match, Group group, Ca [le reste de la chaîne a été tronqué]&quot;;.
+        ///    //group
+        ///    pu [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string CSharpReplaceContainer {
             get {
@@ -109,7 +129,7 @@ namespace RegexDialog {
         ///    &quot;Data&quot;: [
         ///        {
         ///            &quot;Name&quot;: &quot;Character Escapes&quot;,
-        ///            &quot;Description&quot;: &quot;Escape characters that signal to the regular expression parser that the character&quot;,
+        ///            &quot;Description&quot;: &quot;Escape characters that signal to the regular expression parser a special char&quot;,
         ///            &quot;Elements&quot;: [
         ///                {
         ///                    &quot;Name&quot;: &quot;Bell &quot;,
@@ -118,7 +138,7 @@ namespace RegexDialog {
         ///                },
         ///                {
         ///                    &quot;Name&quot;: &quot;Backspace &quot;,
-        ///                    &quot;Description&quot;: &quot;Matches a backspace [le reste de la chaîne a été tronqué]&quot;;.
+        ///                    &quot;Description&quot;: &quot;Matches a backspace \\u [le reste de la chaîne a été tronqué]&quot;;.
         /// </summary>
         internal static string RegexLanguageElements {
             get {
@@ -164,6 +184,124 @@ namespace RegexDialog {
         internal static string ReplaceLanguageElements {
             get {
                 return ResourceManager.GetString("ReplaceLanguageElements", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à             // To make a replace
+        ///            string replace = regex.Replace(input, replacement);
+        ///            Console.WriteLine(replace);
+        ///
+        ///            //To get all matches
+        ///            MatchCollection matches = regex.Matches(input);
+        ///            Console.WriteLine(string.Join(&quot;\r\n&quot;, matches.Cast&lt;Match&gt;().Select(match =&gt; match.Value)));
+        ///.
+        /// </summary>
+        internal static string StandardReplaceCode {
+            get {
+                return ResourceManager.GetString("StandardReplaceCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à   &lt;ItemGroup&gt;
+        ///    &lt;Resource Include=&quot;TextSource.txt&quot; /&gt;
+        ///  &lt;/ItemGroup&gt;
+        ///.
+        /// </summary>
+        internal static string TextSourceAsResourceInCsProj {
+            get {
+                return ResourceManager.GetString("TextSourceAsResourceInCsProj", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à using System.Collections;
+        ///using System.Collections.Generic;
+        ///using System.Collections.ObjectModel;
+        ///using System.ComponentModel;
+        ///using System.Globalization;
+        ///using System.Linq;
+        ///using System.Text;
+        ///using System.Text.RegularExpressions;
+        ///using RegexDialog;
+        /////usings
+        ///
+        ///public class TextSourceContainer
+        ///{
+        ///    public object Get()
+        ///    {
+        ///        //code
+        ///    }
+        ///}
+        ///.
+        /// </summary>
+        internal static string TextSourceContainer {
+            get {
+                return ResourceManager.GetString("TextSourceContainer", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à using System;
+        ///using System.Linq;
+        ///using System.Text;
+        ///using System.Text.RegularExpressions;
+        ///
+        ///namespace _projectname_
+        ///{
+        ///    class Program
+        ///    {
+        ///        private static string pattern = &quot;$pattern$&quot;;
+        ///        private static string replacement = &quot;$replacement$&quot;;
+        ///        private static RegexOptions options = _options_;
+        ///        private static Regex regex = new Regex(pattern, options);
+        ///
+        ///        private static string input = (new TextSourceContainer()).Get().ToString();
+        ///
+        ///        static void Main(string[ [le reste de la chaîne a été tronqué]&quot;;.
+        /// </summary>
+        internal static string VSProgram {
+            get {
+                return ResourceManager.GetString("VSProgram", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à &lt;Project Sdk=&quot;Microsoft.NET.Sdk&quot;&gt;
+        ///
+        ///  &lt;PropertyGroup&gt;
+        ///    &lt;OutputType&gt;Exe&lt;/OutputType&gt;
+        ///    &lt;TargetFramework&gt;netcoreapp3.0&lt;/TargetFramework&gt;
+        ///  &lt;/PropertyGroup&gt;
+        ///
+        ///&lt;!-- Resources --&gt;
+        ///&lt;/Project&gt;
+        ///.
+        /// </summary>
+        internal static string VSProject {
+            get {
+                return ResourceManager.GetString("VSProject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Recherche une chaîne localisée semblable à Microsoft Visual Studio Solution File, Format Version 12.00
+        ///Project(&quot;{$guid2$}&quot;) = &quot;$projectname$&quot;, &quot;$projectname$\$projectname$.csproj&quot;, &quot;{$guid1$}&quot;
+        ///EndProject
+        ///Global
+        ///	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+        ///		Debug|Any CPU = Debug|Any CPU
+        ///		Release|Any CPU = Release|Any CPU
+        ///	EndGlobalSection
+        ///	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+        ///		{$guid1$}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        ///		{$guid1$}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        ///		{$guid1$}.Release|Any [le reste de la chaîne a été tronqué]&quot;;.
+        /// </summary>
+        internal static string VSSolution {
+            get {
+                return ResourceManager.GetString("VSSolution", resourceCulture);
             }
         }
     }
