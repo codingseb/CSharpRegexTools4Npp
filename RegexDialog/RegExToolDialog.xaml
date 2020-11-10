@@ -169,6 +169,9 @@
                 <MenuItem Header="Clear Directory History" Click="ClearDirectoryHistory_Click" />
                 <MenuItem Header="Clear Directory Filter History" Click="ClearDirectoryFilterHistory_Click" />
             </MenuItem>
+            <MenuItem Header="_?" >
+                <MenuItem Header="_Help and about on Github" Click="Help_MenuItem_Click"/>
+            </MenuItem>
         </Menu>
         <Border DockPanel.Dock="Top">
             <WrapPanel >

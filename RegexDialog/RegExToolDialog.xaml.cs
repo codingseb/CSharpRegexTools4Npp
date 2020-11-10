@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows;
@@ -212,6 +213,8 @@ namespace RegexDialog
             NamespacesForExpressionEvalConverters.NamespaceToAdd.Add("RegexDialog");
 
             InitializeComponent();
+
+            Title += " - " + Assembly.GetCallingAssembly().GetName().Version.ToString();
 
             Init();
         }
@@ -2272,6 +2275,15 @@ namespace RegexDialog
                     e.Handled = true;
                 }
             }
+        }
+
+        private void Help_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Process.Start("https://github.com/codingseb/CSharpRegexTools4Npp");
+            }
+            catch { }
         }
     }
 }
