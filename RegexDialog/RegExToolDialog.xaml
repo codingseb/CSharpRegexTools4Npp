@@ -98,12 +98,12 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="Export To Visual Studio _Solution..." Click="ExportToVisualStudio_Click">
+                <!--<MenuItem Header="Export To Visual Studio _Solution..." Click="ExportToVisualStudio_Click">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource VS}"  />
                     </MenuItem.Icon>
                 </MenuItem>
-                <Separator />
+                <Separator />-->
                 <MenuItem Header="_Exit" Click="Exit_MenuItem_Click" >
                     <MenuItem.Icon>
                         <Image Source="{StaticResource ExitPicture}" />
