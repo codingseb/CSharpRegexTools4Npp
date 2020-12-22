@@ -184,7 +184,9 @@ namespace RegexDialog
                         foreach (var item in items) Dictionary.Add(item);
                 }
                 else
+                {
                     Dictionary = new Dictionary<TKey, TValue>(items);
+                }
 
                 OnCollectionChanged(NotifyCollectionChangedAction.Add, items.ToArray());
             }
