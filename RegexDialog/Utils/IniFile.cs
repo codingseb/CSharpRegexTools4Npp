@@ -1292,7 +1292,6 @@ namespace RegexDialog
 
 
             return path;
-
         }
 
         /// <summary>
@@ -1691,7 +1690,6 @@ namespace RegexDialog
 
             if (oldComment.Equals(""))
             {
-
                 CommentChangingEventArgs tmpArgs = new CommentChangingEventArgs(section, "", oldComment, comment, false);
 
                 OnCommentChanging(tmpArgs);
@@ -1957,7 +1955,6 @@ namespace RegexDialog
                             currentCommentOrEmptyLines = "";
                             fileHeaderPossible = false;
                         }
-
                     }
                 }
 
@@ -2059,7 +2056,6 @@ namespace RegexDialog
                             currentCommentOrEmptyLines = "";
                             fileHeaderPossible = false;
                         }
-
                     }
                 }
 
@@ -2199,7 +2195,6 @@ namespace RegexDialog
                     }
                     else if (result.Contains(";"))
                         IsQuoted[key] = true;
-
                 }
 
                 return result;
@@ -2290,7 +2285,6 @@ namespace RegexDialog
                         SetKey(key, "");
                         return "";
                     }
-
                 }
                 set
                 {
@@ -2577,7 +2571,6 @@ namespace RegexDialog
         /// </summary>
         public class IniFileSavingEventArgs : EventArgs
         {
-
             /// <summary>
             /// Constructeur
             /// </summary>

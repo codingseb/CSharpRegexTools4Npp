@@ -46,13 +46,11 @@ namespace RegexDialog
         public static string ToLiteral(this string input)
         {
             using (var writer = new StringWriter())
+            using (var provider = CodeDomProvider.CreateProvider("CSharp"))
             {
-                using (var provider = CodeDomProvider.CreateProvider("CSharp"))
-                {
-                    provider.GenerateCodeFromExpression(new CodePrimitiveExpression(input), writer, new CodeGeneratorOptions { IndentString = "\t" });
-                    var literal = writer.ToString();
-                    return literal.Replace(string.Format("\" +{0}\t\"", Environment.NewLine), "").Trim('"');
-                }
+                provider.GenerateCodeFromExpression(new CodePrimitiveExpression(input), writer, new CodeGeneratorOptions { IndentString = "\t" });
+                var literal = writer.ToString();
+                return literal.Replace(string.Format("\" +{0}\t\"", Environment.NewLine), "").Trim('"');
             }
         }
 

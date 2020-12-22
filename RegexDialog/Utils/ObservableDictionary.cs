@@ -62,13 +62,13 @@ namespace RegexDialog
 
         public bool Remove(TKey key)
         {
-            if (key == null) throw new ArgumentNullException("key");
-
-            Dictionary.TryGetValue(key, out TValue value);
+            if (key == null) throw new ArgumentNullException(nameof(key));
+            Dictionary.TryGetValue(key, out _);
             var removed = Dictionary.Remove(key);
             if (removed)
-                //OnCollectionChanged(NotifyCollectionChangedAction.Remove, new KeyValuePair<TKey, TValue>(key, value));
+            {
                 OnCollectionChanged();
+            }
 
             return removed;
         }
@@ -172,7 +172,7 @@ namespace RegexDialog
 
         public void AddRange(IDictionary<TKey, TValue> items)
         {
-            if (items == null) throw new ArgumentNullException("items");
+            if (items == null) throw new ArgumentNullException(nameof(items));
 
             if (items.Count > 0)
             {
@@ -192,7 +192,7 @@ namespace RegexDialog
 
         private void Insert(TKey key, TValue value, bool add)
         {
-            if (key == null) throw new ArgumentNullException("key");
+            if (key == null) throw new ArgumentNullException(nameof(key));
 
             if (Dictionary.TryGetValue(key, out TValue item))
             {

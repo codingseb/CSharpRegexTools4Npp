@@ -81,6 +81,5 @@ namespace RegexDialog.Converters
                 return Converter1.ConvertBack(Converter2.ConvertBack(value, targetType, parameter, culture), targetType, parameter, culture);
             }
         }
-
     }
 }

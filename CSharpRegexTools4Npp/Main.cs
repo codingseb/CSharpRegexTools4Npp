@@ -10,7 +10,7 @@ using System.Windows.Interop;
 
 namespace CSharpRegexTools4Npp
 {
-    public class Main
+    public static class Main
     {
         internal const string PluginName = "C# Regex Tools 4 Npp";
         private static int idMyDlg = 0;
@@ -41,16 +41,16 @@ namespace CSharpRegexTools4Npp
 
         private enum WindowLongFlags : int
         {
-            GWL_EXSTYLE = -20,
-            GWLP_HINSTANCE = -6,
-            GWLP_HWNDPARENT = -8,
-            GWL_ID = -12,
-            GWL_STYLE = -16,
             GWL_USERDATA = -21,
+            GWL_EXSTYLE = -20,
+            GWL_STYLE = -16,
+            GWL_ID = -12,
+            GWLP_HWNDPARENT = -8,
+            GWLP_HINSTANCE = -6,
             GWL_WNDPROC = -4,
-            DWLP_USER = 0x8,
             DWLP_MSGRESULT = 0x0,
             DWLP_DLGPROC = 0x4,
+            DWLP_USER = 0x8,
             WS_EX_LAYERED = 0x80000
         }
 
@@ -62,7 +62,6 @@ namespace CSharpRegexTools4Npp
 
         public static void OnNotification(ScNotification notification)
         {
-
         }
 
         internal static void CommandMenuInit()
@@ -86,10 +85,8 @@ namespace CSharpRegexTools4Npp
 
         public static void ShowTheDialog()
         {
-
             try
             {
-
                 IntPtr hWnd = FindWindow(null, "C# Regex Tools");
 
                 if (hWnd.ToInt64() > 0)
@@ -131,6 +128,8 @@ namespace CSharpRegexTools4Npp
 
                         SaveCurrentDocument = () => BNpp.NotepadPP.SaveCurrentFile(),
 
+                        SetCurrentTabInCSharpHighlighting = () => BNpp.NotepadPP.SetCurrentLanguage(LangType.L_CS),
+
                         TryOpen = (fileName, onlyIfAlreadyOpen) =>
                         {
                             try
@@ -167,7 +166,6 @@ namespace CSharpRegexTools4Npp
                             {
                                 return false;
                             }
-
                         },
 
                         GetCurrentFileName = () => BNpp.NotepadPP.CurrentFileName
@@ -177,15 +175,12 @@ namespace CSharpRegexTools4Npp
 
                     SetWindowLong(new WindowInteropHelper(dialog).Handle, (int)WindowLongFlags.GWLP_HWNDPARENT, PluginBase.nppData._nppHandle);
                     SetLayeredWindowAttributes(new WindowInteropHelper(dialog).Handle, 0, 128, LWA_ALPHA);
-
                 }
             }
             catch (Exception exception)
             {
                 MessageBox.Show(exception.Message + "\r\n" + exception.StackTrace, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
-
-
         }
     }
 }

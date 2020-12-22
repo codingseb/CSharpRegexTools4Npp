@@ -173,6 +173,8 @@ namespace RegexDialog
         /// </summary>
         public Func<int> GetSelectionLength { get; set; }
 
+        public Action SetCurrentTabInCSharpHighlighting { get; set; }
+
         /// <summary>
         /// L'expression régulière éditée dans la boite de dialogue
         /// </summary>
@@ -190,7 +192,7 @@ namespace RegexDialog
         }
 
         /// <summary>
-        /// Le text de remplacement à utiliser pour le replace de'expression régulière
+        /// Le texte de remplacement à utiliser pour le replace de'expression régulière
         /// </summary>
         public string ReplacePatternText
         {
@@ -1155,7 +1157,6 @@ namespace RegexDialog
             RegexEditor.TextArea.Caret.Offset += moveCaret;
             RegexEditor.SelectionStart = RegexEditor.TextArea.Caret.Offset;
             RegexEditor.SelectionLength = 0;
-
         }
 
         private void RegexLanguageElement_StackPanel_MouseUp(object sender, MouseButtonEventArgs e)
@@ -1171,9 +1172,9 @@ namespace RegexDialog
         {
             try
             {
-                if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount >= 2 && sender is FrameworkElement)
+                if (e.LeftButton == MouseButtonState.Pressed && e.ClickCount >= 2 && sender is FrameworkElement element)
                 {
-                    ReplaceLanguageElement rle = (ReplaceLanguageElement)((FrameworkElement)sender).DataContext;
+                    ReplaceLanguageElement rle = (ReplaceLanguageElement)element.DataContext;
 
                     int moveCaret = 0;
 
@@ -1217,10 +1218,10 @@ namespace RegexDialog
             {
                 if (RegexLanguagesElementsTreeView.SelectedValue != null)
                 {
-                    if (RegexLanguagesElementsTreeView.SelectedValue is RegexLanguageElementGroup)
-                        tbxRegexLanguageElementDescription.Text = ((RegexLanguageElementGroup)RegexLanguagesElementsTreeView.SelectedValue).Description;
-                    if (RegexLanguagesElementsTreeView.SelectedValue is RegexLanguageElement)
-                        tbxRegexLanguageElementDescription.Text = ((RegexLanguageElement)RegexLanguagesElementsTreeView.SelectedValue).Description;
+                    if (RegexLanguagesElementsTreeView.SelectedValue is RegexLanguageElementGroup group)
+                        tbxRegexLanguageElementDescription.Text = group.Description;
+                    if (RegexLanguagesElementsTreeView.SelectedValue is RegexLanguageElement element)
+                        tbxRegexLanguageElementDescription.Text = element.Description;
                 }
             }
             catch { }
@@ -1231,9 +1232,9 @@ namespace RegexDialog
             try
             {
                 if (ReplaceLanguageElementsListView.SelectedValue != null
-                    && ReplaceLanguageElementsListView.SelectedValue is ReplaceLanguageElement)
+                    && ReplaceLanguageElementsListView.SelectedValue is ReplaceLanguageElement element)
                 {
-                    tbxReplacLanguageElementDescription.Text = ((ReplaceLanguageElement)ReplaceLanguageElementsListView.SelectedValue).Description;
+                    tbxReplacLanguageElementDescription.Text = element.Description;
                 }
             }
             catch
@@ -2284,6 +2285,101 @@ namespace RegexDialog
                 Process.Start("https://github.com/codingseb/CSharpRegexTools4Npp");
             }
             catch { }
+        }
+
+        private void ShowInCSharpButton_Click(object sender, RoutedEventArgs e)
+        {
+            SetToHistory(0);
+
+            string regex = RegexEditor.Text;
+            string replace = ReplaceEditor.Text;
+
+            if(regex.Contains(@"\"))
+            {
+                regex = $"@\"{ regex.Replace("\"", "\"\"") }\"";
+            }
+            else
+            {
+                regex = $"\"{regex.Replace(@"\", @"\\").Replace("\"", "\\\"")}\"";
+            }
+
+            regex = regex.Replace("\r", "\\r").Replace("\n", "\\n");
+
+            if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
+            {
+                replace = cSharpReplaceSpecialZoneCleaningRegex.Replace(replace, string.Empty);
+
+                replace = string.Join("\r\n",
+                    replace
+                        .Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
+                        .Select(line => "    " + line));
+
+                replace = " match =>\r\n{\r\n" + replace.TrimEnd() + "\r\n}";
+            }
+            else
+            {
+                if (replace.Contains(@"\"))
+                {
+                    replace = $"@\"{ replace.Replace("\"", "\"\"") }\"";
+                }
+                else
+                {
+                    replace = $"\"{replace.Replace(@"\", @"\\").Replace("\"", "\\\"").Replace("\r", "\\r").Replace("\n", "\\n")}\"";
+                }
+            }
+
+            const string commentSep = "// ---------------------------------------\r\n";
+
+            string options = string.Join(" | ", regExOptionViewModelsList
+                .Where(re => re.Selected)
+                .Select(re => $"RegexOptions.{ re.RegexOptions }"));
+
+            if(!string.IsNullOrWhiteSpace(options))
+            {
+                options = $", {options}";
+            }
+
+            string cSharpCode = commentSep
+               + "// Using \r\n"
+               + commentSep
+               + "using System.Text.RegularExpressions;"
+               + "\r\n\r\n"
+               + commentSep
+               + "// Static Regex\r\n"
+               + commentSep + "\r\n"
+               + "// IsMatch\r\n"
+               + $"bool isMatch = Regex.IsMatch(input, {regex}{options});"
+               + "\r\n\r\n"
+               + "// Match\r\n"
+               + $"Match match = Regex.Match(input, {regex}{options});"
+               + "\r\n\r\n"
+               + "// Matches\r\n"
+               + $"MatchCollection matchCollection = Regex.Matches(input, {regex}{options});"
+               + "\r\n\r\n"
+               + "// Replace\r\n"
+               + $"string resultText = Regex.Replace(input, {regex}, {replace}{options});"
+               + "\r\n\r\n"
+               + commentSep
+               + "// Instance Regex\r\n"
+               + commentSep + "\r\n"
+               + "// Create the regex\r\n"
+               + $"Regex regexInstance = new Regex({regex}{options});\r\n"
+               + "\r\n\r\n"
+               + "// IsMatch\r\n"
+               + $"bool isMatch = regexInstance.IsMatch(input);"
+               + "\r\n\r\n"
+               + "// Match\r\n"
+               + $"Match match = regexInstance.Match(input);"
+               + "\r\n\r\n"
+               + "// Matches\r\n"
+               + $"MatchCollection matchCollection = regexInstance.Matches(input);"
+               + "\r\n\r\n"
+               + "// Replace\r\n"
+               + $"string resultText = regexInstance.Replace(input,{replace});";
+
+            SetTextInNew(cSharpCode);
+
+            SetCurrentTabInCSharpHighlighting();
         }
     }
 }

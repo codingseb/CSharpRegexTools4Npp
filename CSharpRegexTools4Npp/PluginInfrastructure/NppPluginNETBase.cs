@@ -45,7 +45,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return (curScintilla == 0) ? nppData._scintillaMainHandle : nppData._scintillaSecondHandle;
         }
 
-
         public static readonly Func<IScintillaGateway> gatewayFactory = () => new ScintillaGateway(GetCurrentScintilla());
 
         public static Func<IScintillaGateway> GetGatewayFactory()

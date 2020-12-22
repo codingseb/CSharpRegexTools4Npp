@@ -30,6 +30,7 @@
         <BitmapImage x:Key="ReplacePicture" UriSource="Resources/text_replace.png" />
         <BitmapImage x:Key="SelectPicture" UriSource="Resources/select.png" />
         <BitmapImage x:Key="ExtractPicture" UriSource="Resources/table_export.png" />
+        <BitmapImage x:Key="ShowInCSharp" UriSource="Resources/page_white_csharp.png" />
         <BitmapImage x:Key="GroupOKPicture" UriSource="Resources/bullet_code.png" />
         <BitmapImage x:Key="GroupNOKPicture" UriSource="Resources/bullet_code_red.png" />
         <BitmapImage x:Key="CapturePicture" UriSource="Resources/textfield_rename.png" />
@@ -208,47 +209,15 @@
                 </Button>
                 <Button x:Name="ReplaceAllButton" Click="ReplaceAllButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ReplacePicture}" Width="16" Height="16" ToolTip="Replace All"/>
+                        <Image Source="{StaticResource ReplacePicture}" Width="16" Height="16" ToolTip="Replace All (Maintain [Ctrl] Key down to put the result in a new tab)"/>
                     </StackPanel>
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <ToggleButton x:Name="ToggleShowLinesNumberInRegexButton" 
-                              IsChecked="{Binding ShowLinesNumbersRegexEditorOption}">
+                <Button x:Name="ShowInCSharpButton" Click="ShowInCSharpButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ShowLinesNumbers}" Width="16" Height="16" ToolTip="Show/Hide lines numbers in C# Regex Field"/>
+                        <Image Source="{StaticResource ShowInCSharp}" Width="16" Height="16" ToolTip="Show the regex in C#"/>
                     </StackPanel>
-                </ToggleButton>
-                <ToggleButton x:Name="ToggleShowSpacesInRegexButton" 
-                              IsChecked="{Binding ShowSpaceCharsRegexEditorOption}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ShowSpaces}" Width="16" Height="16" ToolTip="Show/Hide Spaces and tabulations in C# Regex Field" />
-                    </StackPanel>
-                </ToggleButton>
-                <ToggleButton x:Name="ToggleShowReturnsInRegexButton" 
-                              IsChecked="{Binding ShowEndOfLinesRegexEditorOption}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ShowReturns}" Width="16" Height="16" ToolTip="Show/Hide end of lines in C# Regex Field" />
-                    </StackPanel>
-                </ToggleButton>
-                <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <ToggleButton x:Name="ToggleShowLinesNumberInReplaceButton" 
-                              IsChecked="{Binding ShowLinesNumbersReplaceEditorOption}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ShowLinesNumbers}" Width="16" Height="16" ToolTip="Show/Hide lines numbers in Replace Field"/>
-                    </StackPanel>
-                </ToggleButton>
-                <ToggleButton x:Name="ToggleShowSpacesInReplaceButton" 
-                              IsChecked="{Binding ShowSpaceCharsReplaceEditorOption}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ShowSpaces}" Width="16" Height="16" ToolTip="Show/Hide Spaces and tabulations in Replace Field" />
-                    </StackPanel>
-                </ToggleButton>
-                <ToggleButton x:Name="ToggleShowReturnsInReplaceButton" 
-                             IsChecked="{Binding ShowEndOfLinesReplaceEditorOption}">
-                    <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ShowReturns}" Width="16" Height="16" ToolTip="Show/Hide end of lines in Replace Field" />
-                    </StackPanel>
-                </ToggleButton>
+                </Button>
             </WrapPanel>
         </Border>
         <Grid Margin="0,5,0,0">
@@ -271,6 +240,10 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button" />
+                            <Style BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" TargetType="ToggleButton" />
+                        </StackPanel.Resources>
                         <Label Name="RegexEditorLabel" Target="{Binding ElementName=RegexEditor}" >C# _Regex</Label>
                         <Button Name="RegexHistoryButton" Margin="0,2" Click="RegexHistoryButton_Click">
                             <Image Source="{StaticResource DownArrow}"/>
@@ -296,6 +269,26 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </Popup>
+                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                        <ToggleButton x:Name="ToggleShowLinesNumberInRegexButton" 
+                              IsChecked="{Binding ShowLinesNumbersRegexEditorOption}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{StaticResource ShowLinesNumbers}" Width="16" Height="16" ToolTip="Show/Hide lines numbers in C# Regex Field"/>
+                            </StackPanel>
+                        </ToggleButton>
+                        <ToggleButton x:Name="ToggleShowSpacesInRegexButton" 
+                              IsChecked="{Binding ShowSpaceCharsRegexEditorOption}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{StaticResource ShowSpaces}" Width="16" Height="16" ToolTip="Show/Hide Spaces and tabulations in C# Regex Field" />
+                            </StackPanel>
+                        </ToggleButton>
+                        <ToggleButton x:Name="ToggleShowReturnsInRegexButton" 
+                              IsChecked="{Binding ShowEndOfLinesRegexEditorOption}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{StaticResource ShowReturns}" Width="16" Height="16" ToolTip="Show/Hide end of lines in C# Regex Field" />
+                            </StackPanel>
+                        </ToggleButton>
+
                     </StackPanel>
                     <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1">
                         <avalonEdit:TextEditor
@@ -341,6 +334,10 @@
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button" />
+                            <Style BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" TargetType="ToggleButton" />
+                        </StackPanel.Resources>
                         <Label Target="{Binding ElementName=ReplaceEditor}">Re_place</Label>
                         <Button Name="ReplaceHistoryButton" Margin="0,2" Click="ReplaceHistoryButton_Click">
                             <Image Source="{StaticResource DownArrow}"/>
@@ -364,6 +361,7 @@
                                 </ListBox.ItemTemplate>
                             </ListBox>
                         </Popup>
+                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
                         <CheckBox x:Name="CSharpReplaceCheckbox"
                                   Margin="5,0"
                                   IsChecked="{Binding CSharpReplaceMode}"
@@ -388,6 +386,25 @@
                                 </StackPanel>
                             </CheckBox.ToolTip>
                         </CheckBox>
+                        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
+                        <ToggleButton x:Name="ToggleShowLinesNumberInReplaceButton" 
+                              IsChecked="{Binding ShowLinesNumbersReplaceEditorOption}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{StaticResource ShowLinesNumbers}" Width="16" Height="16" ToolTip="Show/Hide lines numbers in Replace Field"/>
+                            </StackPanel>
+                        </ToggleButton>
+                        <ToggleButton x:Name="ToggleShowSpacesInReplaceButton" 
+                              IsChecked="{Binding ShowSpaceCharsReplaceEditorOption}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{StaticResource ShowSpaces}" Width="16" Height="16" ToolTip="Show/Hide Spaces and tabulations in Replace Field" />
+                            </StackPanel>
+                        </ToggleButton>
+                        <ToggleButton x:Name="ToggleShowReturnsInReplaceButton" 
+                             IsChecked="{Binding ShowEndOfLinesReplaceEditorOption}">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{StaticResource ShowReturns}" Width="16" Height="16" ToolTip="Show/Hide end of lines in Replace Field" />
+                            </StackPanel>
+                        </ToggleButton>
                     </StackPanel>
                     <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="1" >
                         <avalonEdit:TextEditor

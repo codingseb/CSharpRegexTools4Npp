@@ -4,7 +4,6 @@ using static CSharpRegexTools4Npp.PluginInfrastructure.Win32;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
-
     /// <summary>
     /// This it the plugin-writers primary interface to Notepad++/Scintilla.
     /// It takes away all the complexity with command numbers and Int-pointer casting.
