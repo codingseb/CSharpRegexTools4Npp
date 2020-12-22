@@ -61,15 +61,15 @@ To Launch the tools use one of these 3 methods :
 ![Text-sources](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Text-Sources.png) 
 
 ## Credits
-Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) (under the [Apache-2.0 license](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/blob/master/LICENSE.md)) Merged manually with a part of the version used in [CS-Script.Npp](https://github.com/oleg-shilo/cs-script.npp) (under MIT license) for better x64 support and remodified for the way I use it.  
+Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) ([Apache-2.0 license](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/blob/master/LICENSE.md)) Merged manually with a part of the version used in [CS-Script.Npp](https://github.com/oleg-shilo/cs-script.npp) (under MIT license) for better x64 support and remodified for the way I use it.  
 use :  
-[AvalonEdit](https://github.com/icsharpcode/AvalonEdit) For Regex edition and syntax Highlighting  (under MIT license)  
-[CS-Script](https://github.com/oleg-shilo/cs-script/) For C# Match replace (under MIT license)  
-[Newtonsoft.Json](https://www.newtonsoft.com/json) (under MIT license)  
-[Ookii.Dialogs](http://www.ookii.org/software/dialogs/) (For Open and Save dialogs [under specific license](https://github.com/codingseb/CSharpRegexTools4Npp/blob/master/Licenses/Ooki%20license.txt))  
-[PropertyChanged.Fody](https://github.com/Fody/PropertyChanged) (under MIT license)  
-[Costura.fody](https://github.com/Fody/Costura) Merge all in one DLL, without it it doesn't work (under MIT license)  
+[AvalonEdit](https://github.com/icsharpcode/AvalonEdit) For Regex edition and syntax Highlighting  (MIT license)  
+[CS-Script](https://github.com/oleg-shilo/cs-script/) For C# Match replace (MIT license)  
+[Newtonsoft.Json](https://www.newtonsoft.com/json) (MIT license)  
+[Ookii.Dialogs](http://www.ookii.org/software/dialogs/) (For Open and Save dialogs [specific license](https://github.com/codingseb/CSharpRegexTools4Npp/blob/master/Licenses/Ooki%20license.txt))  
+[PropertyChanged.Fody](https://github.com/Fody/PropertyChanged) (MIT license)  
+[Costura.fody](https://github.com/Fody/Costura) Merge all in one DLL, without it it doesn't work (MIT license)  
 
 And for icons :
 
-[FatCow](https://www.fatcow.com/free-icons) (under [Creative Commons 3.0](https://creativecommons.org/licenses/by/3.0/us/))
+[FatCow](https://www.fatcow.com/free-icons) ([Creative Commons 3.0](https://creativecommons.org/licenses/by/3.0/us/))
