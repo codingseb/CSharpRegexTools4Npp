@@ -36,7 +36,7 @@
 		$(ProgramW6432) points to the 64bit Program Files (on 32 bit windows it is blank) -->
     <MakeDir Directories="$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\" Condition="Exists('$(MSBuildProgramFiles32)\Notepad++\plugins\') AND !Exists('$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x86'" />
     <Copy 
-        SourceFiles="@(ReleaseFiles)" 
+        SourceFiles="@(ReleaseFiles)"         
         DestinationFolder="$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\" 
         Condition="Exists('$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x86'"
         ContinueOnError="false" />

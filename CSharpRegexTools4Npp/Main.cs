@@ -2,6 +2,7 @@
 using RegexDialog;
 using System;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -87,6 +88,8 @@ namespace CSharpRegexTools4Npp
         {
             try
             {
+                AppDomain.CurrentDomain.SetupInformation.PrivateBinPath = @"plugins\CSharpRegexTools4Npp";
+
                 IntPtr hWnd = FindWindow(null, "C# Regex Tools");
 
                 if (hWnd.ToInt64() > 0)

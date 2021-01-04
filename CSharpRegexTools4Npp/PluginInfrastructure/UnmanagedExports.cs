@@ -4,6 +4,7 @@ using NppPlugin.DllExport;
 using System;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using CSScriptNativeApi;
 
 namespace CSharpRegexTools4Npp
 {

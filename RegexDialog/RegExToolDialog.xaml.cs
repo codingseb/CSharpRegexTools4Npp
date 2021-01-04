@@ -48,7 +48,7 @@ namespace RegexDialog
 
         private bool mustSelectEditor;
 
-        private readonly IEvaluator csEval = CSScript.Evaluator;
+        private readonly IEvaluator csEval = CSScript.MonoEvaluator;
 
         private readonly BracketColorizer currentBracketColorizer = new BracketColorizer();
         private readonly BracketColorizer matchingBracketColorizer = new BracketColorizer();
