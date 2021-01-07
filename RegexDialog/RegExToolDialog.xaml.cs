@@ -2248,9 +2248,13 @@ namespace RegexDialog
             {
                 languageElementGroups.ForEach(languageElementGroup =>
                 {
-                    languageElementGroup.Elements.ForEach(regexLanguageElement => regexLanguageElement.Visible =
-                        regexLanguageElement.Name.RemoveAccents().IndexOf(FindLanguageElementTextBox.Text.RemoveAccents(), StringComparison.OrdinalIgnoreCase) >= 0
-                        || regexLanguageElement.Description.RemoveAccents().IndexOf(FindLanguageElementTextBox.Text.RemoveAccents(), StringComparison.OrdinalIgnoreCase) >= 0);
+                    languageElementGroup.Elements.ForEach(regexLanguageElement =>
+                    {
+                        regexLanguageElement.Visible =
+                          regexLanguageElement.Name.RemoveAccents().IndexOf(FindLanguageElementTextBox.Text.RemoveAccents(), StringComparison.OrdinalIgnoreCase) >= 0
+                          || regexLanguageElement.Value.IndexOf(FindLanguageElementTextBox.Text.RemoveAccents(), StringComparison.OrdinalIgnoreCase) >= 0
+                          || regexLanguageElement.Description.RemoveAccents().IndexOf(FindLanguageElementTextBox.Text.RemoveAccents(), StringComparison.OrdinalIgnoreCase) >= 0;
+                    });
                     languageElementGroup.Visible = languageElementGroup.Elements.Any(regexLanguageElement => regexLanguageElement.Visible);
                     languageElementGroup.IsExpanded = languageElementGroup.Visible;
                 });

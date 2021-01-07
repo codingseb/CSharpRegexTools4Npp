@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace RegexDialog
 {
+    [DebuggerDisplay("[{GetType().Name}] - {Name} - {Description}")]
     internal class RegexLanguageElementGroup : NotifyPropertyChangedBaseClass
     {
         public string Name { get; set; }

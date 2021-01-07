@@ -1,5 +1,8 @@
-﻿namespace RegexDialog
+﻿using System.Diagnostics;
+
+namespace RegexDialog
 {
+    [DebuggerDisplay("[{GetType().Name}] - {Name} - {Value} - {Description}")]
     internal class RegexLanguageElement : NotifyPropertyChangedBaseClass
     {
         public string Name { get; set; }
