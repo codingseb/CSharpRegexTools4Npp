@@ -77,13 +77,13 @@ namespace RegexDialog
 
         public bool CSharpReplaceMode { get; set; }
 
-        public int OptionTabControlSelectedTabItemIndex { get; set; } = 0;
+        public int OptionTabControlSelectedTabItemIndex { get; set; }
 
         public double? DialogLeft { get; set; } = 0;
         public double? DialogTop { get; set; } = 0;
         public double? DialogWidth { get; set; } = 800;
         public double? DialogHeight { get; set; } = 400;
-        public bool DialogMaximized { get; set; } = false;
+        public bool DialogMaximized { get; set; }
 
         public GridLength GridFirstColumnWidth { get; set; } = new GridLength(1, GridUnitType.Star);
         public GridLength GridSecondColumnWidth { get; set; } = new GridLength(1, GridUnitType.Star);

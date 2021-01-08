@@ -19,9 +19,9 @@ namespace RegexDialog
         public virtual void RefreshExpands()
         { }
 
-        public virtual bool IsExpanded { get; set; } = false;
+        public virtual bool IsExpanded { get; set; }
 
-        public bool IsSelected { get; set; } = false;
+        public bool IsSelected { get; set; }
 
         public virtual string ElementType
         {
@@ -33,15 +33,15 @@ namespace RegexDialog
 
         public string FileName { get; set; } = string.Empty;
 
-        public Capture RegexElement { get; } = null;
+        public Capture RegexElement { get; }
 
-        public int RegexElementNb { get; } = 0;
+        public int RegexElementNb { get; }
 
-        public RegexResult Parent { get; set; } = null;
+        public RegexResult Parent { get; set; }
 
         public List<RegexResult> Children { get; set; } = new List<RegexResult>();
 
-        public Regex Regex { get; private set; }
+        public Regex Regex { get; }
 
         public virtual string Name
         {
@@ -91,7 +91,7 @@ namespace RegexDialog
             }
         }
 
-        public virtual int SelectionIndex { get; set; } = 0;
+        public virtual int SelectionIndex { get; set; }
 
         public virtual int Index
         {

@@ -127,6 +127,9 @@
   <data name="RegexLanguageElements" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\regexlanguageelements.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
+  <data name="RegexOptionsDescriptions" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>resources\regexoptionsdescriptions.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+  </data>
   <data name="Regex_syntax_color" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\regex_syntax_color.xshd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
   </data>

@@ -316,7 +316,7 @@ namespace RegexDialog
                 .ToList()
                 .ForEach(regexOption =>
                 {
-                    if (regexOption != RegexOptions.None && regexOption != RegexOptions.Compiled)
+                    if (regexOption != RegexOptions.None)
                     {
                         RegExOptionViewModel reovm = new RegExOptionViewModel
                         {
@@ -2384,6 +2384,12 @@ namespace RegexDialog
             SetTextInNew(cSharpCode);
 
             SetCurrentTabInCSharpHighlighting();
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
+        {
+            Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
+            e.Handled = true;
         }
     }
 }

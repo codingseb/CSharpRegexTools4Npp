@@ -433,7 +433,7 @@ namespace RegexDialog
         /// Default : false
         /// the cache is the static Dictionary TypesResolutionCaching (so it is shared by all instances of ExpressionEvaluator that have CacheTypesResolutions enabled)
         /// </summary>
-        public bool CacheTypesResolutions { get; set; } = false;
+        public bool CacheTypesResolutions { get; set; }
 
         /// <summary>
         /// A shared cache for types resolution.
@@ -766,7 +766,7 @@ namespace RegexDialog
         /// If <c>ThrowSyntaxException</c> a exception is throw if no return keyword is met.
         /// By default : ReturnAutomaticallyLastEvaluatedExpression;
         /// </summary>
-        public OptionOnNoReturnKeywordFoundInScriptAction OptionOnNoReturnKeywordFoundInScriptAction { get; set; } = OptionOnNoReturnKeywordFoundInScriptAction.ReturnAutomaticallyLastEvaluatedExpression;
+        public OptionOnNoReturnKeywordFoundInScriptAction OptionOnNoReturnKeywordFoundInScriptAction { get; set; }
 
         #endregion
 
@@ -3620,13 +3620,13 @@ namespace RegexDialog
         /// <summary>
         /// if <c>true</c> the variable is affected, if <c>false</c> it means that the variable does not exist.
         /// </summary>
-        public bool HasValue { get; set; } = false;
+        public bool HasValue { get; set; }
 
         /// <summary>
         /// In the case of on the fly instance property definition the instance of the object on which this Property is called.
         /// Otherwise is set to null.
         /// </summary>
-        public object This { get; } = null;
+        public object This { get; }
 
         /// <summary>
         /// A reference on the current expression evaluator.
@@ -3664,7 +3664,7 @@ namespace RegexDialog
         /// <summary>
         /// If set to true cancel the evaluation of the current variable, field or property and throw an exception it does not exists
         /// </summary>
-        public bool CancelEvaluation { get; set; } = false;
+        public bool CancelEvaluation { get; set; }
     }
 
     public partial class FunctionEvaluationEventArg : EventArgs
@@ -3742,13 +3742,13 @@ namespace RegexDialog
         /// <summary>
         /// if <c>true</c> the function evaluation has been done, if <c>false</c> it means that the function does not exist.
         /// </summary>
-        public bool FunctionReturnedValue { get; set; } = false;
+        public bool FunctionReturnedValue { get; set; }
 
         /// <summary>
         /// In the case of on the fly instance method definition the instance of the object on which this method (function) is called.
         /// Otherwise is set to null.
         /// </summary>
-        public object This { get; } = null;
+        public object This { get; }
 
         /// <summary>
         /// A reference on the current expression evaluator.
@@ -3786,7 +3786,7 @@ namespace RegexDialog
         /// <summary>
         /// If set to true cancel the evaluation of the current function or method and throw an exception that the function does not exists
         /// </summary>
-        public bool CancelEvaluation { get; set; } = false;
+        public bool CancelEvaluation { get; set; }
     }
 
     #endregion

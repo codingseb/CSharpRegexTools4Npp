@@ -25,8 +25,8 @@ namespace RegexDialog.Converters
         /// </summary>
         public IValueConverter Converter2 { get; set; }
 
-        public object Converter1Parameter { get; set; } = null;
-        public object Converter2Parameter { get; set; } = null;
+        public object Converter1Parameter { get; set; }
+        public object Converter2Parameter { get; set; }
 
         /// <summary>
         /// For a list of converters to chain (Use as content Property, Converter1 and Converter2 must be null)

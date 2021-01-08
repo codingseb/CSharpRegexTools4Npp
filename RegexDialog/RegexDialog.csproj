@@ -287,6 +287,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Res.resx</DependentUpon>
     </Compile>
+    <None Include="Resources\RegexOptionsDescriptions.json" />
     <None Include="Resources\VSProgram.cs" />
     <Resource Include="Resources\StandardReplaceCode.cs" />
     <Resource Include="Resources\CSharpReplaceCallingCode.cs" />

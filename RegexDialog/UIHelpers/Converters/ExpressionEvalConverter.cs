@@ -25,23 +25,23 @@ namespace RegexDialog.Converters
         /// <summary>
         /// If <c>true</c> evaluate a string binding as an expression, if false just inject the binding in the Expression, By default : <c>false</c>
         /// </summary>
-        public bool EvaluateBindingAsAnExpression { get; set; } = false;
+        public bool EvaluateBindingAsAnExpression { get; set; }
 
         /// <summary>
         /// If <c>true</c> evaluate a string binding as an expression, if <c>false</c> just inject the binding in the ExpressionForConvertBack, By default : <c>false</c>
         /// </summary>
-        public bool EvaluateBindingAsAnExpressionForConvertBack { get; set; } = false;
+        public bool EvaluateBindingAsAnExpressionForConvertBack { get; set; }
 
         /// <summary>
         /// If <c>true</c> Evaluate function is callables in an expression. If <c>false</c> Evaluate is not callable.
         /// By default : false for security
         /// </summary>
-        public bool IsEvaluateFunctionActivated { get; set; } = false;
+        public bool IsEvaluateFunctionActivated { get; set; }
 
         /// <summary>
         /// If <c>true</c> throw up all evaluate exceptions, if <c>false</c> just return the exception message as a string, By default <c>false</c>
         /// </summary>
-        public bool ThrowExceptions { get; set; } = false;
+        public bool ThrowExceptions { get; set; }
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {

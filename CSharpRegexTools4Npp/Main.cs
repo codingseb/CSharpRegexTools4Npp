@@ -3,6 +3,7 @@ using RegexDialog;
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Input;
@@ -89,7 +90,7 @@ namespace CSharpRegexTools4Npp
             {
                 AppDomain.CurrentDomain.SetupInformation.PrivateBinPath = @"plugins\CSharpRegexTools4Npp";
 
-                IntPtr hWnd = FindWindow(null, "C# Regex Tools");
+                IntPtr hWnd = FindWindow(null, "C# Regex Tools - " + Assembly.GetCallingAssembly().GetName().Version.ToString());
 
                 if (hWnd.ToInt64() > 0)
                 {
@@ -156,7 +157,7 @@ namespace CSharpRegexTools4Npp
                                     result = false;
                                 }
 
-                                hWnd = FindWindow(null, "C# Regex Tool");
+                                hWnd = FindWindow(null, "C# Regex Tool - " + Assembly.GetCallingAssembly().GetName().Version.ToString());
                                 if (hWnd.ToInt64() > 0)
                                 {
                                     SetForegroundWindow(hWnd);

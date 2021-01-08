@@ -12,7 +12,7 @@ namespace RegexDialog.Converters
     /// </summary>
     public class CustomBoolToVisibilityConverter : BaseConverter, IValueConverter
     {
-        public Visibility? InDesigner { get; set; } = null;
+        public Visibility? InDesigner { get; set; }
 
         /// <summary>
         /// The Value of the visibility when the source value is DependencyProperty.UnsetValue
@@ -30,7 +30,7 @@ namespace RegexDialog.Converters
         /// The Value of the visibility when the source value is true
         /// Default is Visibility.Visible
         /// </summary>
-        public Visibility TrueValue { get; set; } = Visibility.Visible;
+        public Visibility TrueValue { get; set; }
 
         /// <summary>
         /// The Value of the visibility when the source value is true

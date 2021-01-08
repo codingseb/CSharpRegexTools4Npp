@@ -160,6 +160,18 @@ namespace RegexDialog {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {
+        ///  &quot;Compiled&quot;: &quot;Specifies that the regular expression is compiled to an assembly. This yields faster execution but increases startup time. This value should not be assigned to the Options property when calling the CompileToAssembly(RegexCompilationInfo[], AssemblyName) method.&quot;,
+        ///  &quot;CultureInvariant&quot;: &quot;Specifies that cultural differences in language is ignored.&quot;,
+        ///  &quot;ECMAScript&quot;: &quot;Enables ECMAScript-compliant behavior for the expression. This value can be used only in conjunction with the IgnoreCase, Mult [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string RegexOptionsDescriptions {
+            get {
+                return ResourceManager.GetString("RegexOptionsDescriptions", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot;?&gt;
         ///&lt;SyntaxDefinition name=&quot;Regex&quot; xmlns=&quot;http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008&quot;&gt;
         ///    &lt;Color name=&quot;Substitution&quot; foreground=&quot;Blue&quot; fontWeight=&quot;bold&quot;/&gt;

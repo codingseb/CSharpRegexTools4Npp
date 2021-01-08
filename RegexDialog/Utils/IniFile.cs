@@ -2551,7 +2551,7 @@ namespace RegexDialog
             /// Obtient ou définit une valeur boolean qui définit si le changement
             /// doit-être annuler(<c>true</c>) ou être maintenue (<c>false</c>).
             /// </summary>
-            public bool Cancel { get; set; } = false;
+            public bool Cancel { get; set; }
 
             /// <summary>
             /// Si <c>true</c> C'est un commentaire placé avant la clé ou la section spécifiée.
@@ -2581,7 +2581,7 @@ namespace RegexDialog
             /// Obtient ou définit une valeur boolean qui définit si la sauvegarde
             /// doit-être annuler(<c>true</c>) ou être maintenue (<c>false</c>).
             /// </summary>
-            public bool Cancel { get; set; } = false;
+            public bool Cancel { get; set; }
         }
     }
 }

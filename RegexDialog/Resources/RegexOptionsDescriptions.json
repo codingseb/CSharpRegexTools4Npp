@@ -1,0 +1,12 @@
+{
+  "Compiled": "Specifies that the regular expression is compiled to an assembly.\r\nThis yields faster execution but increases startup time.\r\nThis value should not be assigned to the Options property when calling the CompileToAssembly(RegexCompilationInfo[], AssemblyName) method.",
+  "CultureInvariant": "Specifies that cultural differences in language is ignored.",
+  "ECMAScript": "Enables ECMAScript-compliant behavior for the expression.\r\nThis value can be used only in conjunction with the IgnoreCase, Multiline, and Compiled values.\r\nThe use of this value with any other values results in an exception.",
+  "ExplicitCapture": "Specifies that the only valid captures are explicitly named or numbered groups of the form (?<name>...).\r\nThis allows unnamed parentheses to act as noncapturing groups without the syntactic clumsiness of the expression (?:...).",
+  "IgnoreCase": "Specifies case-insensitive matching.",
+  "IgnorePatternWhitespace": "Eliminates unescaped white space from the pattern and enables comments marked with #.\r\nHowever, this value does not affect or eliminate white space in character classes, numeric quantifiers,\r\nor tokens that mark the beginning of individual regular expression language elements.",
+  "Multiline": "Multiline mode.\r\nChanges the meaning of ^ and $ so they match at the beginning and end, respectively, of any line, and not just the beginning and end of the entire string. ",
+  "None": "Specifies that no options are set.",
+  "RightToLeft": "Specifies that the search will be from right to left instead of from left to right.",
+  "Singleline": "Specifies single-line mode.\r\nChanges the meaning of the dot (.) so it matches every character (instead of every character except \\n)."
+}
