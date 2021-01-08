@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -307,6 +308,29 @@ namespace RegexDialog
 
             // Set Treeview Matches Result base contextMenu
             MatchResultsTreeView.ContextMenu = MatchResultsTreeView.Resources["cmMatchResultsMenu"] as ContextMenu;
+
+            CheckUpdates();
+        }
+
+        private async void CheckUpdates()
+        {
+            double hoursFromLastCheck = Math.Abs((DateTime.Now - Config.Instance.LastUpdateCheck).TotalHours);
+
+            //if (hoursFromLastCheck > 8)
+            if (true)
+            {
+                try
+                {
+                    HttpClient client = new HttpClient();
+
+                    var response = await client.GetAsync("https://github.com/codingseb/CSharpRegexTools4Npp/releases");
+
+                    string responseText = await response.Content.ReadAsStringAsync();
+
+
+                }
+                catch { }
+            }
         }
 
         private void BuildRegexOptionsCheckBoxs()

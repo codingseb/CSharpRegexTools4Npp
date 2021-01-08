@@ -130,5 +130,7 @@ namespace RegexDialog
         public bool ShowEndOfLinesCSharpTextSourceEditorOption { get; set; }
 
         public bool ShowCSharpTextSourceTestInANewTab { get; set; } = true;
+
+        public DateTime LastUpdateCheck { get; set; } = DateTime.Now.AddHours(-8);
     }
 }
