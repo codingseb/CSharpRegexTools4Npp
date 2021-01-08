@@ -578,7 +578,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition x:Name="RegexLanguageElementFirstRow" Height="*" MinHeight="50" />
                             <RowDefinition Height="5" />
-                            <RowDefinition Height="0.1*" MinHeight="20"/>
+                            <RowDefinition Height="0.2*" MinHeight="20"/>
                         </Grid.RowDefinitions>
                         <DockPanel>
                             <Grid DockPanel.Dock="Top">
@@ -680,20 +680,23 @@
                                 Grid.Row="1"
                                 VerticalAlignment="Stretch" 
                                 HorizontalAlignment="Stretch"/>
-                        <local:SearchableTextControl x:Name="tbxRegexLanguageElementDescription" 
-                                                     Padding="2,0"
-                                                     Grid.Row="2"
-                                                     Focusable="True"
-                                                     BorderBrush="Gray"
-                                                     BorderThickness="1"
-                                                     Background="WhiteSmoke"
-                                                     ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
-                                                     ScrollViewer.VerticalScrollBarVisibility="Auto"
-                                                     SearchText="{Binding Text, ElementName=FindLanguageElementTextBox}"
-                                                     IsHighlight="True"
-                                                     IsMatchCase="False"
-                                                     IsSelectable="True"
-                                                     IsMatchAccents="False"/>
+                        <Border BorderThickness="1"
+                                BorderBrush="Gray"
+                                Grid.Row="2">
+                            <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                <local:SearchableTextControl x:Name="tbxRegexLanguageElementDescription" 
+                                                             Padding="2,0"
+                                                             Focusable="True"
+                                                             BorderThickness="0"
+                                                             Background="WhiteSmoke"
+                                                             ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                                             SearchText="{Binding Text, ElementName=FindLanguageElementTextBox}"
+                                                             IsHighlight="True"
+                                                             IsMatchCase="False"
+                                                             IsSelectable="True"
+                                                             IsMatchAccents="False"/>
+                            </ScrollViewer>
+                        </Border>
                     </Grid>
                 </TabItem>
                 <TabItem Name="ReplaceTabItem" Header="_Replace Elements" >
@@ -701,7 +704,7 @@
                         <Grid.RowDefinitions>
                             <RowDefinition x:Name="ReplaceLanguageElementFirstRow" Height="*" MinHeight="50" />
                             <RowDefinition Height="5" />
-                            <RowDefinition Height="0.1*" MinHeight="20" />
+                            <RowDefinition Height="0.2*" MinHeight="20" />
                         </Grid.RowDefinitions>
                         <ListView Name="ReplaceLanguageElementsListView" SelectionChanged="ReplaceLanguageElementsListView_SelectionChanged">
                             <ListView.ItemTemplate>
@@ -728,24 +731,42 @@
                     </Grid>
                 </TabItem>
                 <TabItem x:Name="RegOptionsTabItem" Header="Regex Op_tions" >
-                    <StackPanel>
-                        <ItemsControl Name="icRegexOptions">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate>
-                                    <CheckBox IsChecked="{Binding Selected}"
-                                              Content="{Binding Name}"
-                                              ToolTip="{Binding Description}"/>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                        <TextBlock>
-                            <Hyperlink NavigateUri="https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions" 
-                                       RequestNavigate="Hyperlink_RequestNavigate">
-                                More informations on Regex options
-                            </Hyperlink>
-                        </TextBlock>
-
-                    </StackPanel>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" MinHeight="50" />
+                            <RowDefinition Height="5" />
+                            <RowDefinition Height="0.2*" MinHeight="20" />
+                        </Grid.RowDefinitions>
+                        <StackPanelEx Margin="5" MarginBetweenChildren="5">
+                            <ListBox Name="icRegexOptions"
+                                     SelectionChanged="icRegexOptions_SelectionChanged"
+                                     BorderThickness="0">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <CheckBox IsChecked="{Binding Selected}"
+                                                  Content="{Binding Name}"
+                                                  ToolTip="{Binding Description}"/>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ListBox>
+                            <TextBlock>
+                                <Hyperlink NavigateUri="https://docs.microsoft.com/en-us/dotnet/api/system.text.regularexpressions.regexoptions" 
+                                           RequestNavigate="Hyperlink_RequestNavigate">
+                                    More informations on Regex options
+                                </Hyperlink>
+                            </TextBlock>
+                        </StackPanelEx>
+                        <GridSplitter Grid.Row="1"
+                                VerticalAlignment="Stretch" 
+                                HorizontalAlignment="Stretch"/>
+                        <TextBox Name="tbxRegexOptionDescription" 
+                                 IsReadOnly="True"
+                                 TextWrapping="Wrap"
+                                 Grid.Row="2"
+                                 Background="WhiteSmoke"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                 ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+                    </Grid>
                 </TabItem>
                 <TabItem x:Name="TextSourceTabItem" Header="Ot_her Options">
                     <DockPanel>

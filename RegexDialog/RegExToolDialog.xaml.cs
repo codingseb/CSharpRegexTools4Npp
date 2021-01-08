@@ -2391,5 +2391,13 @@ namespace RegexDialog
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
+
+        private void icRegexOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if(icRegexOptions.SelectedValue is RegExOptionViewModel optionModel)
+            {
+                tbxRegexOptionDescription.Text = optionModel.Description;
+            }
+        }
     }
 }
