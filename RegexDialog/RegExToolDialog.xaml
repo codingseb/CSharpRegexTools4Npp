@@ -139,6 +139,12 @@
                         <Image Source="{StaticResource ReplacePicture}" Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
+                <Separator  />
+                <MenuItem Header="Show the regex in _C#" Click="ShowInCSharpButton_Click">
+                    <MenuItem.Icon>
+                        <Image Source="{StaticResource ShowInCSharp}" Width="16" Height="16" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
             <MenuItem Header="_Parameters">
                 <MenuItem Name="miRegexOptions" Header="_Regex Options" >
