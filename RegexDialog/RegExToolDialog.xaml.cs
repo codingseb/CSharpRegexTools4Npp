@@ -3,6 +3,7 @@ using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Win32;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Ookii.Dialogs.Wpf;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Reflection;
 using System.Text;
@@ -107,6 +109,8 @@ namespace RegexDialog
 
         public delegate bool TryOpenDelegate(string fileName, bool onlyIfAlreadyOpen);
         public delegate void SetPositionDelegate(int index, int length);
+
+        public static Action InitIsOK { get; set; }
 
         /// <summary>
         /// Fonction de récupération du texte à utiliser comme input pour l'expression régulière
@@ -309,28 +313,7 @@ namespace RegexDialog
             // Set Treeview Matches Result base contextMenu
             MatchResultsTreeView.ContextMenu = MatchResultsTreeView.Resources["cmMatchResultsMenu"] as ContextMenu;
 
-            CheckUpdates();
-        }
-
-        private async void CheckUpdates()
-        {
-            double hoursFromLastCheck = Math.Abs((DateTime.Now - Config.Instance.LastUpdateCheck).TotalHours);
-
-            //if (hoursFromLastCheck > 8)
-            if (true)
-            {
-                try
-                {
-                    HttpClient client = new HttpClient();
-
-                    var response = await client.GetAsync("https://github.com/codingseb/CSharpRegexTools4Npp/releases");
-
-                    string responseText = await response.Content.ReadAsStringAsync();
-
-
-                }
-                catch { }
-            }
+            InitIsOK?.Invoke();
         }
 
         private void BuildRegexOptionsCheckBoxs()

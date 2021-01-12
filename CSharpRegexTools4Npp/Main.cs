@@ -1,8 +1,12 @@
 ﻿using CSharpRegexTools4Npp.PluginInfrastructure;
+using Newtonsoft.Json.Linq;
 using RegexDialog;
 using System;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Net;
+using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -84,13 +88,59 @@ namespace CSharpRegexTools4Npp
             Marshal.FreeHGlobal(pTbIcons);
         }
 
+        private static async void CheckUpdates(RegExToolDialog dialog)
+        {
+            double hoursFromLastCheck = Math.Abs((DateTime.Now - Config.Instance.LastUpdateCheck).TotalHours);
+
+            //if (hoursFromLastCheck > 8)
+            if (true)
+            {
+                ServicePointManager.ServerCertificateValidationCallback += (_, __, ___, ____) => true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+                try
+                {
+                    HttpClient client = new HttpClient();
+                    client.DefaultRequestHeaders.Add("Accept-Language", "en-US;q=0.5,en;q=0.3");
+                    client.DefaultRequestHeaders.Add("User-Agent", "C# App");
+
+                    var response = await client.GetAsync("https://api.github.com/repos/codingseb/CSharpRegexTools4Npp/releases/latest").ConfigureAwait(true);
+
+                    string responseText = await response.Content.ReadAsStringAsync();
+
+                    var jsonResult = JObject.Parse(responseText);
+
+                    int[] latestVersion = jsonResult["name"].ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
+                    int[] currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
+
+                    Debug.WriteLine($"{latestVersion} - {currentVersion}");
+
+                    for(int i = 0; i < latestVersion.Length && i < currentVersion.Length;i++)
+                    {
+                        if(latestVersion[i] > currentVersion[i])
+                        {
+                            Config.Instance.UpdateAvailable = true;
+                            Config.Instance.UpdateURL = "https://github.com/codingseb/CSharpRegexTools4Npp/releases";
+                            break;
+                        }
+                        else if(latestVersion[i] < currentVersion[i])
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch
+                { }
+            }
+        }
+
         public static void ShowTheDialog()
         {
             try
             {
                 AppDomain.CurrentDomain.SetupInformation.PrivateBinPath = @"plugins\CSharpRegexTools4Npp";
 
-                IntPtr hWnd = FindWindow(null, "C# Regex Tools - " + Assembly.GetCallingAssembly().GetName().Version.ToString());
+                IntPtr hWnd = FindWindow(null, "C# Regex Tools - " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
 
                 if (hWnd.ToInt64() > 0)
                 {
@@ -98,7 +148,11 @@ namespace CSharpRegexTools4Npp
                 }
                 else
                 {
-                    var dialog = new RegExToolDialog
+                    RegExToolDialog dialog = null;
+
+                    RegExToolDialog.InitIsOK = () => CheckUpdates(dialog);
+
+                    dialog = new RegExToolDialog
                     {
                         GetText = () => BNpp.Text,
 
@@ -157,7 +211,7 @@ namespace CSharpRegexTools4Npp
                                     result = false;
                                 }
 
-                                hWnd = FindWindow(null, "C# Regex Tool - " + Assembly.GetCallingAssembly().GetName().Version.ToString());
+                                hWnd = FindWindow(null, "C# Regex Tool - " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
                                 if (hWnd.ToInt64() > 0)
                                 {
                                     SetForegroundWindow(hWnd);

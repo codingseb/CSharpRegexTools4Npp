@@ -45,6 +45,12 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CodingSeb.Converters, Version=1.0.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodingSeb.Converters.1.0.3\lib\net45\CodingSeb.Converters.dll</HintPath>
+    </Reference>
+    <Reference Include="CodingSeb.ExpressionEvaluator, Version=1.4.16.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodingSeb.ExpressionEvaluator.1.4.16\lib\net45\CodingSeb.ExpressionEvaluator.dll</HintPath>
+    </Reference>
     <Reference Include="CodingSeb.Layouts, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CodingSeb.Layouts.1.0.1\lib\net47\CodingSeb.Layouts.dll</HintPath>
     </Reference>

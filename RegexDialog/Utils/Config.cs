@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace RegexDialog
 {
-    internal class Config : NotifyPropertyChangedBaseClass
+    public class Config : NotifyPropertyChangedBaseClass
     {
         #region Json singleton
 
@@ -65,6 +65,12 @@ namespace RegexDialog
         private void Init()
         {
         }
+
+        [JsonIgnore]
+        public bool UpdateAvailable { get; set; }
+
+        [JsonIgnore]
+        public string UpdateURL { get; set; }
 
         public string RegexEditorText { get; set; }
         public string ReplaceEditorText { get; set; }
