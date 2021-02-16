@@ -606,6 +606,8 @@ namespace RegexDialog
                         MatchResultsTreeView.ItemsSource = GetMatchesFor(sourceScript.Get().ToString(), "script");
 
                         MatchesResultLabel.Content = $"{i} matches [Index,Length] + {countAllCaptures - i} empties matches";
+
+                        csEval.UnloadOwnerDomain();
                     }
                     else
                     {
@@ -737,6 +739,8 @@ namespace RegexDialog
                                 index++;
                                 return script.Replace(match, index, "script", index, 0);
                             }), "script", null));
+
+                            csEval.UnloadOwnerDomain();
                             break;
                         default:
                             currentFileName = GetCurrentFileName?.Invoke() ?? string.Empty;
@@ -749,6 +753,8 @@ namespace RegexDialog
                             }), currentFileName, null));
                             break;
                     }
+
+                    csEval.UnloadOwnerDomain();
                 }
                 else
                 {
@@ -809,6 +815,7 @@ namespace RegexDialog
                             text = script.Get().ToString();
                             nbrOfElementToReplace = regex.Matches(text).Count;
                             SetTextInNew(regex.Replace(text, ReplaceEditor.Text));
+                            csEval.UnloadOwnerDomain();
                             break;
                         default:
                             text = GetCurrentText();
@@ -947,6 +954,10 @@ namespace RegexDialog
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message + ex.StackTrace);
+            }
+            finally
+            {
+                csEval.UnloadOwnerDomain();
             }
         }
 
@@ -1607,6 +1618,10 @@ namespace RegexDialog
             {
                 MessageBox.Show(exception.Message);
             }
+            finally
+            {
+                csEval.UnloadOwnerDomain();
+            }
         }
 
         private void InsertValueInReplaceField_MenuItem_Click(object sender, RoutedEventArgs e)
@@ -2119,6 +2134,10 @@ namespace RegexDialog
             catch (Exception exception)
             {
                 MessageBox.Show($"{exception}");
+            }
+            finally
+            {
+                csEval.UnloadOwnerDomain();
             }
         }
 
