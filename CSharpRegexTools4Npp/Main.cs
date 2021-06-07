@@ -97,7 +97,8 @@ namespace CSharpRegexTools4Npp
             {
                 toolbarIcons tbIcons = new toolbarIcons
                 {
-                    hToolbarBmp = tbBmp.GetHbitmap()
+                    hToolbarBmp = tbBmp.GetHbitmap(),
+                    hToolbarIcon = tbBmp.GetHicon(),
                 };
 
                 IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
