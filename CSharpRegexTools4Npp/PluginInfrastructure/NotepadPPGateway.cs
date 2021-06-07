@@ -1,6 +1,7 @@
 ﻿// NPP plugin platform for .Net v0.94.00 by Kasper B. Graversen etc.
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -214,6 +215,21 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
                 var path = new StringBuilder(2000);
                 Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_GETNPPDIRECTORY, path.Capacity, path);
                 return path.ToString();
+            }
+        }
+
+        public string NppBinVersion
+        {
+            get
+            {
+                try
+                {
+                    return FileVersionInfo.GetVersionInfo(Path.Combine(NppBinDirectoryPath, "notepad++.exe")).FileVersion;
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
 

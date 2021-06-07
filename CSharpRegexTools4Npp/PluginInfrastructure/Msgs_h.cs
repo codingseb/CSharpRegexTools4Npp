@@ -173,6 +173,13 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_ADDTOOLBARICON = Constants.NPPMSG + 41,
 
         /// <summary>
+        /// void NPPM_ADDTOOLBARICON_FORDARKMODE(UINT funcItem[X]._cmdID, toolbarIconsWithDarkMode iconHandles)
+        /// Use NPPM_ADDTOOLBARICON_FORDARKMODE instead obsolete NPPM_ADDTOOLBARICON which doesn't support the dark mode
+        /// 2 formats / 3 icons are needed:  1 * BMP + 2 * ICO 
+        /// </summary>
+        NPPM_ADDTOOLBARICON_FORDARKMODE = Constants.NPPMSG + 101,
+
+        /// <summary>
         ///winVer NPPM_GETWINDOWSVERSION(0, 0)
         /// </summary>
         NPPM_GETWINDOWSVERSION = Constants.NPPMSG + 42,

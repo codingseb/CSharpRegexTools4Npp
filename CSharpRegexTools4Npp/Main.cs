@@ -77,15 +77,34 @@ namespace CSharpRegexTools4Npp
 
         internal static void SetToolBarIcon()
         {
-            toolbarIcons tbIcons = new toolbarIcons
+            if (!string.IsNullOrEmpty(BNpp.NotepadPP.NppBinVersion)
+                && int.TryParse(BNpp.NotepadPP.NppBinVersion.Split('.')[0], out int majorVersion)
+                && majorVersion >= 8)
             {
-                hToolbarBmp = tbBmp.GetHbitmap()
-            };
+                toolbarIconsWithDarkMode tbIcons = new toolbarIconsWithDarkMode
+                {
+                    hToolbarBmp = tbBmp.GetHbitmap(),
+                    hToolbarIcon = tbBmp.GetHicon(),
+                    hToolbarIconDarkMode = tbBmp.GetHicon()
+                };
 
-            IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
-            Marshal.StructureToPtr(tbIcons, pTbIcons, false);
-            Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_ADDTOOLBARICON, PluginBase._funcItems.Items[idMyDlg]._cmdID, pTbIcons);
-            Marshal.FreeHGlobal(pTbIcons);
+                IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
+                Marshal.StructureToPtr(tbIcons, pTbIcons, false);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_ADDTOOLBARICON_FORDARKMODE, PluginBase._funcItems.Items[idMyDlg]._cmdID, pTbIcons);
+                Marshal.FreeHGlobal(pTbIcons);
+            }
+            else
+            {
+                toolbarIcons tbIcons = new toolbarIcons
+                {
+                    hToolbarBmp = tbBmp.GetHbitmap()
+                };
+
+                IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
+                Marshal.StructureToPtr(tbIcons, pTbIcons, false);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_ADDTOOLBARICON, PluginBase._funcItems.Items[idMyDlg]._cmdID, pTbIcons);
+                Marshal.FreeHGlobal(pTbIcons);
+            }
         }
 
         private static async void CheckUpdates(RegExToolDialog dialog)

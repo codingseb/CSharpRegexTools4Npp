@@ -183,28 +183,28 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         IDC_BTN_CAPTION = 1050,
 
         DMM_MSG = 0x5000,
-        DMM_CLOSE = (DMM_MSG + 1),
-        DMM_DOCK = (DMM_MSG + 2),
-        DMM_FLOAT = (DMM_MSG + 3),
-        DMM_DOCKALL = (DMM_MSG + 4),
-        DMM_FLOATALL = (DMM_MSG + 5),
-        DMM_MOVE = (DMM_MSG + 6),
-        DMM_UPDATEDISPINFO = (DMM_MSG + 7),
-        DMM_GETIMAGELIST = (DMM_MSG + 8),
-        DMM_GETICONPOS = (DMM_MSG + 9),
-        DMM_DROPDATA = (DMM_MSG + 10),
-        DMM_MOVE_SPLITTER = (DMM_MSG + 11),
-        DMM_CANCEL_MOVE = (DMM_MSG + 12),
-        DMM_LBUTTONUP = (DMM_MSG + 13),
+        DMM_CLOSE = DMM_MSG + 1,
+        DMM_DOCK = DMM_MSG + 2,
+        DMM_FLOAT = DMM_MSG + 3,
+        DMM_DOCKALL = DMM_MSG + 4,
+        DMM_FLOATALL = DMM_MSG + 5,
+        DMM_MOVE = DMM_MSG + 6,
+        DMM_UPDATEDISPINFO = DMM_MSG + 7,
+        DMM_GETIMAGELIST = DMM_MSG + 8,
+        DMM_GETICONPOS = DMM_MSG + 9,
+        DMM_DROPDATA = DMM_MSG + 10,
+        DMM_MOVE_SPLITTER = DMM_MSG + 11,
+        DMM_CANCEL_MOVE = DMM_MSG + 12,
+        DMM_LBUTTONUP = DMM_MSG + 13,
 
         DMN_FIRST = 1050,
-        DMN_CLOSE = (DMN_FIRST + 1),
+        DMN_CLOSE = DMN_FIRST + 1,
         //nmhdr.Code = DWORD(DMN_CLOSE, 0));
         //nmhdr.hwndFrom = hwndNpp;
         //nmhdr.IdFrom = ctrlIdNpp;
 
-        DMN_DOCK = (DMN_FIRST + 2),
-        DMN_FLOAT = (DMN_FIRST + 3)
+        DMN_DOCK = DMN_FIRST + 2,
+        DMN_FLOAT = DMN_FIRST + 3
         //nmhdr.Code = DWORD(DMN_XXX, int newContainer);
         //nmhdr.hwndFrom = hwndNpp;
         //nmhdr.IdFrom = ctrlIdNpp;
@@ -215,5 +215,14 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     {
         public IntPtr hToolbarBmp;
         public IntPtr hToolbarIcon;
+    }
+
+    // All 3 handles below should be set so the icon will be displayed correctly if toolbar icon sets are changed by users, also in dark mode
+    [StructLayout(LayoutKind.Sequential)]
+    public struct toolbarIconsWithDarkMode
+    {
+        public IntPtr hToolbarBmp;
+        public IntPtr hToolbarIcon;
+        public IntPtr hToolbarIconDarkMode;
     }
 }
