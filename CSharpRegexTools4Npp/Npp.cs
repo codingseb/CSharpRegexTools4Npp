@@ -4,7 +4,7 @@ using System.Text;
 
 namespace CSharpRegexTools4Npp
 {
-    public static class BNpp
+    public static class Npp
     {
         public static NotepadPPGateway NotepadPP { get; } = new NotepadPPGateway();
 

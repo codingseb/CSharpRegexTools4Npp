@@ -77,8 +77,8 @@ namespace CSharpRegexTools4Npp
 
         internal static void SetToolBarIcon()
         {
-            if (!string.IsNullOrEmpty(BNpp.NotepadPP.NppBinVersion)
-                && int.TryParse(BNpp.NotepadPP.NppBinVersion.Split('.')[0], out int majorVersion)
+            if (!string.IsNullOrEmpty(Npp.NotepadPP.NppBinVersion)
+                && int.TryParse(Npp.NotepadPP.NppBinVersion.Split('.')[0], out int majorVersion)
                 && majorVersion >= 8)
             {
                 toolbarIconsWithDarkMode tbIcons = new toolbarIconsWithDarkMode
@@ -174,38 +174,38 @@ namespace CSharpRegexTools4Npp
 
                     dialog = new RegExToolDialog
                     {
-                        GetText = () => BNpp.Text,
+                        GetText = () => Npp.Text,
 
                         SetText = text =>
                         {
                             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                             {
-                                BNpp.NotepadPP.FileNew();
+                                Npp.NotepadPP.FileNew();
                             }
 
-                            BNpp.Text = text;
+                            Npp.Text = text;
                         },
 
                         SetTextInNew = text =>
                         {
-                            BNpp.NotepadPP.FileNew();
+                            Npp.NotepadPP.FileNew();
 
-                            BNpp.Text = text;
+                            Npp.Text = text;
                         },
 
-                        GetSelectedText = () => BNpp.SelectedText,
+                        GetSelectedText = () => Npp.SelectedText,
 
-                        SetPosition = (index, length) => BNpp.SelectTextAndShow(index, index + length),
+                        SetPosition = (index, length) => Npp.SelectTextAndShow(index, index + length),
 
-                        SetSelection = (index, length) => BNpp.AddSelection(index, index + length),
+                        SetSelection = (index, length) => Npp.AddSelection(index, index + length),
 
-                        GetSelectionStartIndex = () => BNpp.SelectionStart,
+                        GetSelectionStartIndex = () => Npp.SelectionStart,
 
-                        GetSelectionLength = () => BNpp.SelectionLength,
+                        GetSelectionLength = () => Npp.SelectionLength,
 
-                        SaveCurrentDocument = () => BNpp.NotepadPP.SaveCurrentFile(),
+                        SaveCurrentDocument = () => Npp.NotepadPP.SaveCurrentFile(),
 
-                        SetCurrentTabInCSharpHighlighting = () => BNpp.NotepadPP.SetCurrentLanguage(LangType.L_CS),
+                        SetCurrentTabInCSharpHighlighting = () => Npp.NotepadPP.SetCurrentLanguage(LangType.L_CS),
 
                         TryOpen = (fileName, onlyIfAlreadyOpen) =>
                         {
@@ -213,18 +213,18 @@ namespace CSharpRegexTools4Npp
                             {
                                 bool result = false;
 
-                                if (BNpp.NotepadPP.CurrentFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                                if (Npp.NotepadPP.CurrentFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     result = true;
                                 }
-                                else if (BNpp.NotepadPP.GetAllOpenedDocuments.Any(s => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                                else if (Npp.NotepadPP.GetAllOpenedDocuments.Any(s => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                                 {
-                                    BNpp.NotepadPP.ShowTab(fileName);
+                                    Npp.NotepadPP.ShowTab(fileName);
                                     result = true;
                                 }
                                 else if (!onlyIfAlreadyOpen)
                                 {
-                                    result = BNpp.NotepadPP.OpenFile(fileName);
+                                    result = Npp.NotepadPP.OpenFile(fileName);
                                 }
                                 else
                                 {
@@ -245,7 +245,7 @@ namespace CSharpRegexTools4Npp
                             }
                         },
 
-                        GetCurrentFileName = () => BNpp.NotepadPP.CurrentFileName
+                        GetCurrentFileName = () => Npp.NotepadPP.CurrentFileName
                     };
 
                     dialog.Show();
