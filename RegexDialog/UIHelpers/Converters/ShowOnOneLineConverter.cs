@@ -8,12 +8,12 @@ namespace RegexDialog.Converters
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return value.ToString().Replace("\r", "").Replace("\n", "");
+            return value?.ToString().Replace("\r", "").Replace("\n", "");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            throw new NotImplementedException();
+            return value;
         }
     }
 }

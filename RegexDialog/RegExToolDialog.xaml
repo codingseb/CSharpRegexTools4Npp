@@ -47,7 +47,7 @@
             <MenuItem Header="Copy" Command="ApplicationCommands.Copy" />
         </ContextMenu>
 
-        <Style TargetType="{x:Type local:SearchableTextControl}">
+        <Style TargetType="local:SearchableTextControl">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type local:SearchableTextControl}">
@@ -432,21 +432,21 @@
                             </i:Interaction.Behaviors>
                             <avalonEdit:TextEditor.ContextMenu>
                                 <ContextMenu Name="cmReplacefieldContextMenu">
-                                    <MenuItem Name="cmiReplaceGroupByNumber" Header="Groups by number" Visibility="{Binding CSharpReplaceMode, Converter={converters:CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}">
+                                    <MenuItem Name="cmiReplaceGroupByNumber" Header="Groups by number" Visibility="{Binding CSharpReplaceMode, Converter={CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}">
                                         <MenuItem.Style>
                                             <Style TargetType="{x:Type MenuItem}">
                                                 <EventSetter Event="Click" Handler="InsertInReplaceFromContextMenu_Click" />
                                             </Style>
                                         </MenuItem.Style>
                                     </MenuItem>
-                                    <MenuItem Name="cmiReplaceGroupByName" Header="Groups by name" Visibility="{Binding CSharpReplaceMode, Converter={converters:CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}">
+                                    <MenuItem Name="cmiReplaceGroupByName" Header="Groups by name" Visibility="{Binding CSharpReplaceMode, Converter={CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}">
                                         <MenuItem.Style>
                                             <Style TargetType="{x:Type MenuItem}">
                                                 <EventSetter Event="Click" Handler="InsertInReplaceFromContextMenu_Click" />
                                             </Style>
                                         </MenuItem.Style>
                                     </MenuItem>
-                                    <Separator Visibility="{Binding CSharpReplaceMode, Converter={converters:CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}"/>
+                                    <Separator Visibility="{Binding CSharpReplaceMode, Converter={CustomBoolToVisibilityConverter TrueValue=Collapsed, FalseValue=Visible}}"/>
                                     <MenuItem Header="Cut" Command="ApplicationCommands.Cut"/>
                                     <MenuItem Header="Copy" Command="ApplicationCommands.Copy"/>
                                     <MenuItem Header="Paste" Command="ApplicationCommands.Paste"/>
@@ -468,7 +468,7 @@
                 <Label DockPanel.Dock="Top" Name="MatchesResultLabel" Target="{Binding ElementName=MatchResultsTreeView}" >Matches [Index,Length]</Label>
                 <Button DockPanel.Dock="Bottom"
                         Content="Restore Last Search _Selection"
-                        Visibility="{Binding TextSourceOn, Converter={converters:ChainingConverter Converter1={converters:EnumBooleanConverter}, Converter2={converters:CustomBoolToVisibilityConverter}, Converter1Parameter='CurrentSelection'}}"
+                        Visibility="{Binding TextSourceOn, Converter={converters:ChainingConverter Converter1={converters:EnumBooleanConverter}, Converter2={CustomBoolToVisibilityConverter}, Converter1Parameter='CurrentSelection'}}"
                         Click="RestoreLastMachesSelectionButton_Click" />
                 <Border Grid.Row="1" BorderBrush="Gray" BorderThickness="0">
                     <TreeView Name="MatchResultsTreeView"
@@ -653,7 +653,7 @@
                                 <TreeView.Resources>
                                     <Style TargetType="{x:Type TreeViewItem}">
                                         <Setter Property="IsExpanded" Value="{Binding IsExpanded, Mode=TwoWay}" />
-                                        <Setter Property="Visibility" Value="{Binding Visible, Converter={converters:CustomBoolToVisibilityConverter}}" />
+                                        <Setter Property="Visibility" Value="{Binding Visible, Converter={CustomBoolToVisibilityConverter}}" />
                                     </Style>
                                     <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElementGroup}" 
                                                               ItemsSource="{Binding Elements}">
@@ -822,7 +822,7 @@
 
                                 <StackPanel Margin="5" 
                                             DockPanel.Dock="Top"
-                                            Visibility="{Binding IsChecked, ElementName=SpecifiedDirectoryTextSourceRadioButton, Converter={converters:CustomBoolToVisibilityConverter}}">
+                                            Visibility="{Binding IsChecked, ElementName=SpecifiedDirectoryTextSourceRadioButton, Converter={CustomBoolToVisibilityConverter}}">
 
                                     <DockPanel>
                                         <Button x:Name="SpecifiedDirectoryTextSourcePathButton"
@@ -866,7 +866,7 @@
                                     </StackPanel>
                                 </StackPanel>
 
-                                <DockPanel Visibility="{Binding IsChecked, ElementName=CSharpScriptTextSourceRadioButton, Converter={converters:CustomBoolToVisibilityConverter}}" >
+                                <DockPanel Visibility="{Binding IsChecked, ElementName=CSharpScriptTextSourceRadioButton, Converter={CustomBoolToVisibilityConverter}}" >
                                     <WrapPanel DockPanel.Dock="Top">
                                         <WrapPanel.Resources>
                                             <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button" />
