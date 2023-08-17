@@ -214,7 +214,7 @@
                 </Button>
                 <Button x:Name="ExtractMatchesButton" Click="ExtractMatchesButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ExtractPicture}" Width="16" Height="16" ToolTip="Extract All Matches"/>
+                        <Image Source="{StaticResource ExtractPicture}" Width="16" Height="16" ToolTip="Extract All Matches (Maintain [Shift] Key down to apply the replacement in the extraction)"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="ReplaceAllButton" Click="ReplaceAllButton_Click">

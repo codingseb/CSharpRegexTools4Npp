@@ -392,12 +392,12 @@ namespace RegexDialog
 
                     handled = true;
                 }
-                else if (posStringToMatchingPosDict.ContainsKey((pos).ToString()))
+                else if (posStringToMatchingPosDict.ContainsKey(pos.ToString()))
                 {
                     currentBracketColorizer.StartOffset = pos;
                     currentBracketColorizer.EndOffset = pos + 1;
-                    matchingBracketColorizer.StartOffset = posStringToMatchingPosDict[(pos).ToString()];
-                    matchingBracketColorizer.EndOffset = posStringToMatchingPosDict[(pos).ToString()] + 1;
+                    matchingBracketColorizer.StartOffset = posStringToMatchingPosDict[pos.ToString()];
+                    matchingBracketColorizer.EndOffset = posStringToMatchingPosDict[pos.ToString()] + 1;
 
                     handled = true;
                 }
@@ -902,16 +902,26 @@ namespace RegexDialog
                         if (Config.Instance.PrintFileNameWhenExtract)
                             sb.Append("\r\n").AppendLine(fileName);
 
-                        if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
+                        if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.LeftShift))
                         {
-                            int index = 0;
-
-                            matches.ForEach(match =>
+                            if (CSharpReplaceCheckbox.IsChecked.GetValueOrDefault())
                             {
-                                sb.Append(script.Replace(match, index, fileName, globalIndex, fileIndex));
-                                globalIndex++;
-                                index++;
-                            });
+                                int index = 0;
+
+                                matches.ForEach(match =>
+                                {
+                                    sb.Append(script.Replace(match, index, fileName, globalIndex, fileIndex));
+                                    globalIndex++;
+                                    index++;
+                                });
+                            }
+                            else
+                            {
+                                matches.ForEach(match =>
+                                {
+                                    sb.Append(match.Result(ReplaceEditor.Text));
+                                });
+                            }
                         }
                         else
                         {
