@@ -748,8 +748,8 @@
                             <RowDefinition Height="0.2*" MinHeight="20" />
                         </Grid.RowDefinitions>
                         <StackPanelEx Margin="5" MarginBetweenChildren="5">
-                            <ListBox Name="icRegexOptions"
-                                     SelectionChanged="icRegexOptions_SelectionChanged"
+                            <ListBox Name="RegexOptionsListBox"
+                                     SelectionChanged="RegexOptionsListBox_SelectionChanged"
                                      BorderThickness="0">
                                 <ItemsControl.ItemTemplate>
                                     <DataTemplate>

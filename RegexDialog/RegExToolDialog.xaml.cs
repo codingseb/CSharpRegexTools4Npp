@@ -331,7 +331,7 @@ namespace RegexDialog
                     }
                 });
 
-            icRegexOptions.ItemsSource = regExOptionViewModelsList;
+            RegexOptionsListBox.ItemsSource = regExOptionViewModelsList;
             miRegexOptions.ItemsSource = regExOptionViewModelsList;
         }
 
@@ -917,10 +917,7 @@ namespace RegexDialog
                             }
                             else
                             {
-                                matches.ForEach(match =>
-                                {
-                                    sb.Append(match.Result(ReplaceEditor.Text));
-                                });
+                                matches.ForEach(match => sb.Append(match.Result(ReplaceEditor.Text)));
                             }
                         }
                         else
@@ -2425,9 +2422,9 @@ namespace RegexDialog
             e.Handled = true;
         }
 
-        private void icRegexOptions_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void RegexOptionsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(icRegexOptions.SelectedValue is RegExOptionViewModel optionModel)
+            if(RegexOptionsListBox.SelectedValue is RegExOptionViewModel optionModel)
             {
                 tbxRegexOptionDescription.Text = optionModel.Description;
             }
