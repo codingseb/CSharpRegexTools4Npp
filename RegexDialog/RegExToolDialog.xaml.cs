@@ -976,7 +976,22 @@ namespace RegexDialog
 
             filter.Split(';', ',', '|')
                 .ToList()
-                .ForEach(pattern => result.AddRange(Directory.GetFiles(Config.Instance.TextSourceDirectoryPath, pattern, Config.Instance.TextSourceDirectorySearchSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)));
+                .ForEach(pattern =>
+                {
+                    if (pattern.StartsWith("//") && pattern.EndsWith("//"))
+                    {
+                        result.RemoveAll(path => Regex.IsMatch(path, pattern.Trim('/'), RegexOptions.IgnoreCase));
+                    }
+                    else if (pattern.StartsWith("/") && pattern.EndsWith("/"))
+                    {
+                        result.AddRange(Directory.GetFiles(Config.Instance.TextSourceDirectoryPath, "*", Config.Instance.TextSourceDirectorySearchSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                            .Where(path => Regex.IsMatch(path, pattern.Trim('/'), RegexOptions.IgnoreCase)));
+                    }
+                    else
+                    {
+                        result.AddRange(Directory.GetFiles(Config.Instance.TextSourceDirectoryPath, pattern, Config.Instance.TextSourceDirectorySearchSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly));
+                    }
+                });
 
             return result;
         }

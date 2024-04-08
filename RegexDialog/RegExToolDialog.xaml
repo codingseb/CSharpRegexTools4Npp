@@ -844,7 +844,7 @@
                                         <Label Content="_Filters"
                                            VerticalAlignment="Center"
                                            Padding="3,0"
-                                           ToolTip="File Patterns supporting * and ? wildcards.Multi patterns separated by [,] char"/>
+                                           ToolTip="File Patterns supporting * and ? wildcards.Multi patterns separated by [,] char. Begin and end the pattern with / to filter with a Regex and double // to exclude paths after adding it."/>
                                         <ComboBox x:Name="SpecifiedDirectoryTextSourceFilterComboBox"
                                               Text="{Binding TextSourceDirectorySearchFilter, UpdateSourceTrigger=PropertyChanged}"
                                               ItemsSource="{Binding TextSourceDirectorySearchFilterHistory}"
