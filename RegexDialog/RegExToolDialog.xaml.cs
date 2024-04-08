@@ -218,7 +218,7 @@ namespace RegexDialog
 
             InitializeComponent();
 
-            Title += " - " + Assembly.GetCallingAssembly().GetName().Version.ToString();
+            Title += $" - {Assembly.GetCallingAssembly().GetName().Version}";
 
             Init();
         }
