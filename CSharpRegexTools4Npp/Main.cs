@@ -160,7 +160,7 @@ namespace CSharpRegexTools4Npp
             {
                 AppDomain.CurrentDomain.SetupInformation.PrivateBinPath = @"plugins\CSharpRegexTools4Npp";
 
-                IntPtr hWnd = FindWindow(null, "C# Regex Tools - " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                IntPtr hWnd = FindWindow(null, $"C# Regex Tools - {Assembly.GetExecutingAssembly().GetName().Version}");
 
                 if (hWnd.ToInt64() > 0)
                 {
@@ -231,7 +231,7 @@ namespace CSharpRegexTools4Npp
                                     result = false;
                                 }
 
-                                hWnd = FindWindow(null, "C# Regex Tool - " + Assembly.GetExecutingAssembly().GetName().Version.ToString());
+                                hWnd = FindWindow(null, $"C# Regex Tool - {Assembly.GetExecutingAssembly().GetName().Version}");
                                 if (hWnd.ToInt64() > 0)
                                 {
                                     SetForegroundWindow(hWnd);
