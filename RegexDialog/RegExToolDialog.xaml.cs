@@ -272,7 +272,7 @@ namespace RegexDialog
                 .ReferenceAssemblyByName("System.Windows.Forms")
                 .ReferenceAssemblyByName("Ookii.dialogs.Wpf")
                 .ReferenceAssemblyByName("Newtonsoft.Json")
-                .ReferenceAssemblyByName("EPPlus");
+                .ReferenceAssemblyByName("ClosedXML");
 
             RegexEditor.Text = Config.Instance.RegexEditorText;
 

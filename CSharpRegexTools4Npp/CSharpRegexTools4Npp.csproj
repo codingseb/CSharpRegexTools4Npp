@@ -135,6 +135,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="PluginInfrastructure\DllExport\Mono.Cecil.dll" />
+    <Content Include="PluginInfrastructure\DllExport\NppPlugin.DllExport.dll" />
+    <Content Include="PluginInfrastructure\DllExport\NppPlugin.DllExport.MSBuild.dll" />
     <Resource Include="FodyWeavers.xml">
       <SubType>Designer</SubType>
     </Resource>
