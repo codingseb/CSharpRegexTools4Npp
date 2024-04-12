@@ -1,14 +1,20 @@
-﻿using Newtonsoft.Json;
+﻿using ClosedXML.Excel;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using System.Web.UI.WebControls;
 using System.Windows;
 
 namespace RegexDialog
 {
     public sealed class Config : NotifyPropertyChangedBaseClass
     {
+        private bool isInit = false;
+
         #region Json singleton
 
         private static readonly string fileName = Path.Combine(PathUtils.AppDataRoamingPath, "Config.json");
@@ -64,6 +70,50 @@ namespace RegexDialog
 
         private void Init()
         {
+            List<ExcelCellTextSource> excelCellTextSources = new List<ExcelCellTextSource>()
+            {
+                new ExcelCellTextSource()
+                {
+                    Name = "Formatted content",
+                    GetValue = cell => cell.GetFormattedString()
+                },
+                new ExcelCellTextSource()
+                {
+                    Name = "Content as text",
+                    GetValue = cell => cell.GetString()
+                },
+                new ExcelCellTextSource()
+                {
+                    Name = "FormulaA1",
+                    GetValue = cell => cell.HasFormula ? cell.FormulaA1 : ""
+                },
+                new ExcelCellTextSource()
+                {
+                    Name = "FormulaR1C1",
+                    GetValue = cell => cell.HasFormula ? cell.FormulaR1C1 : ""
+                },
+                new ExcelCellTextSource()
+                {
+                    Name = "Comment text",
+                    GetValue = cell => cell.HasComment ? cell.GetComment().Text : ""
+                },
+                new ExcelCellTextSource()
+                {
+                    Name = "Comment author",
+                    GetValue = cell => cell.HasComment ? cell.GetComment().Author : ""
+                },
+            };
+
+            excelCellTextSources.ForEach(s1 =>
+            {
+                s1.IsSelected = ExcelCellTextSources.Find(s2 => s1.Name.Equals(s2.Name))?.IsSelected ?? false;
+                s1.PropertyChanged += SubPropertyChanged_PropertyChanged;
+            });
+
+            ExcelCellTextSources = excelCellTextSources;
+
+            isInit = true;
+            OnTextSourceExcelPathChanged();
         }
 
         [JsonIgnore]
@@ -113,6 +163,74 @@ namespace RegexDialog
         public bool TextSourceDirectorySearchSubDirectories { get; set; }
 
         public bool TextSourceDirectoryShowNotMatchedFiles { get; set; } = true;
+
+        public string TextSourceExcelPath { get; set; } = string.Empty;
+        public ObservableCollection<string> TextSourceExcelPathHistory { get; set; } = new ObservableCollection<string>();
+
+        public void OnTextSourceExcelPathChanged()
+        {
+            if(isInit && File.Exists(TextSourceExcelPath))
+            {
+                isInit = false;
+                try
+                {
+                    using (XLWorkbook workbook = new XLWorkbook(TextSourceExcelPath))
+                    {
+                        ExcelSheets.ForEach(sheetSelection => sheetSelection.PropertyChanged -= SubPropertyChanged_PropertyChanged);
+
+                        ExcelSheets = workbook
+                            .Worksheets
+                            .Select(sheet => ExcelSheets.Find(sheetSelection => sheet.Name.Equals(sheetSelection.Name)) ?? new ExcelSheetSelection { Name = sheet.Name})
+                            .ToList();
+
+                        ExcelSheets.ForEach(sheetSelection => sheetSelection.PropertyChanged += SubPropertyChanged_PropertyChanged);
+                    }
+                }
+                catch { }
+                finally
+                {
+                    isInit = true;
+                }
+            }
+        }
+
+        private void SubPropertyChanged_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (isInit)
+                Save();
+        }
+
+        public bool AllSheetSelection { get; set; } = true;
+
+        public void OnAllSheetSelectionChanged()
+        {
+            if (isInit)
+            {
+                isInit = false;
+                ExcelSheets.ForEach(sheetSelection => sheetSelection.IsSelected = AllSheetSelection);
+                isInit = true;
+                Save();
+            }
+        }
+
+        public List<ExcelSheetSelection> ExcelSheets { get; set; } = new List<ExcelSheetSelection>();
+
+        public string ExcelTextSourceSeparator { get; set; } = "|";
+
+        public bool AllExcelCellTextSource { get; set; }
+
+        public void OnAllExcelCellTextSourceChanged()
+        {
+            if (isInit)
+            {
+                isInit = false;
+                ExcelCellTextSources.ForEach(selection => selection.IsSelected = AllExcelCellTextSource);
+                isInit = true;
+                Save();
+            }
+        }
+
+        public List<ExcelCellTextSource> ExcelCellTextSources { get; set; } = new List<ExcelCellTextSource>();
 
         public bool PrintFileNameWhenExtract { get; set; }
 

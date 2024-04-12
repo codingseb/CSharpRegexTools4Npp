@@ -1,4 +1,6 @@
+using ClosedXML.Excel;
 using CSScriptLibrary;
+using DocumentFormat.OpenXml.Spreadsheet;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Win32;
@@ -474,6 +476,24 @@ namespace RegexDialog
                 Config.Instance.TextSourceDirectoryPath = keepValue;
             }
 
+            if (historyNbr == 0 && File.Exists(Config.Instance.TextSourceExcelPath))
+            {
+                string keepValue = Config.Instance.TextSourceExcelPath;
+
+                if (Config.Instance.TextSourceExcelPathHistory.Contains(keepValue))
+                    Config.Instance.TextSourceExcelPathHistory.Remove(keepValue);
+
+                if (keepValue.Length > 0)
+                    Config.Instance.TextSourceExcelPathHistory.Insert(0, keepValue);
+
+                while (Config.Instance.TextSourceExcelPathHistory.Count > Config.Instance.HistoryToKeep)
+                {
+                    Config.Instance.TextSourceExcelPathHistory.RemoveAt(Config.Instance.TextSourceExcelPathHistory.Count - 1);
+                }
+
+                Config.Instance.TextSourceExcelPath = keepValue;
+            }
+
             if (historyNbr == 0)
             {
                 string keepValue = Config.Instance.TextSourceDirectorySearchFilter;
@@ -595,6 +615,43 @@ namespace RegexDialog
                             .Where(regexFileResult => Config.Instance.TextSourceDirectoryShowNotMatchedFiles || regexFileResult.Children.Count > 0);
 
                         MatchesResultLabel.Content = $"{i} matches [Index,Length] + {countAllCaptures - i} empties matches found in {ff}/{ft} files";
+                    }
+                    else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
+                    {
+                        using(XLWorkbook workbook = new XLWorkbook(Config.Instance.TextSourceExcelPath))
+                        {
+                            var elementNb = 0;
+                            MatchResultsTreeView.ItemsSource = Config.Instance.ExcelSheets
+                              .FindAll(sheetSelection => sheetSelection.IsSelected)
+                              .Select(sheetSelection =>
+                              {
+                                  var sheet = workbook.Worksheet(sheetSelection.Name);
+
+                                  RegexExcelSheetResult excelSheetResult = new RegexExcelSheetResult(regex, null, elementNb++, "", sheetSelection.Name);
+
+                                  List<RegexResult> results = new List<RegexResult>();
+
+                                  if (sheet != null)
+                                  {
+                                      foreach (var cell in sheetSelection.GetCells(sheet))
+                                      {
+                                          results.AddRange(
+                                              GetMatchesFor(GetCellText(cell))
+                                                .Select(match =>
+                                                {
+                                                    match.InfoSup = cell.Address.ToString();
+                                                    return match;
+                                                }));
+                                      }
+                                  }
+
+                                  excelSheetResult.Children = results;
+
+                                  return excelSheetResult;
+                              });
+
+                            MatchesResultLabel.Content = $"{i} matches [Index,Length] + {countAllCaptures - i} empties matches";
+                        }
                     }
                     else if (Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
                     {
@@ -876,6 +933,18 @@ namespace RegexDialog
             }
         }
 
+        private string GetCellText(IXLCell cell)
+        {
+            return string.Join(Config.Instance
+                    .ExcelTextSourceSeparator
+                    .Replace(@"\r", "\r")
+                    .Replace(@"\n", "\n")
+                    .Replace(@"\t", "\t"),
+                Config.Instance.ExcelCellTextSources
+                    .Where(source => source.IsSelected && !string.IsNullOrEmpty(source.GetValue?.Invoke(cell) ?? ""))
+                    .Select(source => source.GetValue?.Invoke(cell) ?? ""));
+        }
+
         private void ExtractMatchesButton_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -936,6 +1005,26 @@ namespace RegexDialog
                 {
                     fileNames = GetFiles();
                     fileNames.ForEach(fileName => Extract(File.ReadAllText(fileName), fileName));
+                }
+                else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
+                {
+                    using (XLWorkbook workbook = new XLWorkbook(Config.Instance.TextSourceExcelPath))
+                    {
+                        Config.Instance.ExcelSheets
+                          .FindAll(sheetSelection => sheetSelection.IsSelected)
+                          .ForEach(sheetSelection =>
+                          {
+                              var sheet = workbook.Worksheet(sheetSelection.Name);
+
+                              if (sheet != null)
+                              {
+                                  foreach (var cell in sheetSelection.GetCells(sheet))
+                                  {
+                                      Extract(GetCellText(cell));
+                                  }
+                              }
+                          });
+                    }
                 }
                 else if (Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
                 {
@@ -1020,6 +1109,36 @@ namespace RegexDialog
                     }
 
                     MessageBox.Show(found ? $"Yes (Found in \"{fileName}\")" : $"No (In Any files of \"{Config.Instance.TextSourceDirectoryPath}\")");
+                }
+                else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
+                {
+                    using (XLWorkbook workbook = new XLWorkbook(Config.Instance.TextSourceExcelPath))
+                    {
+                        bool found = false;
+                        string sheetName = string.Empty;
+                        string cellName = string.Empty;
+
+                        Config.Instance.ExcelSheets
+                            .FindAll(sheetSelection => sheetSelection.IsSelected)
+                            .ForEach(sheetSelection =>
+                            {
+                                var sheet = workbook.Worksheet(sheetSelection.Name);
+
+                                foreach(var cell in sheetSelection.GetCells(sheet))
+                                {
+                                    found = Regex.IsMatch(GetCellText(cell), RegexEditor.Text, GetRegexOptions());
+
+                                    if (found)
+                                    {
+                                        sheetName = sheet.Name;
+                                        cellName = cell.Address.ToString();
+                                        return;
+                                    }
+                                }
+                            });
+
+                        MessageBox.Show(found ? $"Yes (Found in sheet \"{sheetName}\" in cell {cellName})" : "No");
+                    }
                 }
                 else
                 {
@@ -1578,9 +1697,9 @@ namespace RegexDialog
                             if (regexResult is RegexMatchResult regexMatchResult)
                                 newText = beforeMatch + ((dynamic)csEval.LoadCode(ReplaceScriptForMatch)).Replace((Match)regexMatchResult.RegexElement, regexMatchResult.RegexElementNb, regexResult.FileName, regexMatchResult.RegexElementNb, 0) + afterMatch;
                             else if (regexResult is RegexGroupResult regexGroupResult)
-                                newText = beforeMatch + ((dynamic)csEval.LoadCode(ReplaceScriptForGroup)).Replace((Match)regexGroupResult.Parent.RegexElement, (Group)regexGroupResult.RegexElement, regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
+                                newText = beforeMatch + ((dynamic)csEval.LoadCode(ReplaceScriptForGroup)).Replace((Match)regexGroupResult.Parent.RegexElement, (System.Text.RegularExpressions.Group)regexGroupResult.RegexElement, regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
                             else if (regexResult is RegexCaptureResult regexCaptureResult)
-                                newText = beforeMatch + ((dynamic)csEval.LoadCode(ReplaceScriptForCapture)).Replace((Match)regexCaptureResult.Parent.Parent.RegexElement, (Group)regexCaptureResult.Parent.RegexElement, (Capture)regexCaptureResult.RegexElement, regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
+                                newText = beforeMatch + ((dynamic)csEval.LoadCode(ReplaceScriptForCapture)).Replace((Match)regexCaptureResult.Parent.Parent.RegexElement, (System.Text.RegularExpressions.Group)regexCaptureResult.Parent.RegexElement, (Capture)regexCaptureResult.RegexElement, regexResult.RegexElementNb, regexResult.FileName, regexResult.RegexElementNb, 0) + afterMatch;
                         }
                         else
                         {
@@ -2118,6 +2237,28 @@ namespace RegexDialog
             }
             catch { }
         }
+        private void SpecifiedExcelTextSourcePathButton_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                OpenFileDialog openFileDialog = new OpenFileDialog()
+                {
+                    DefaultExt = ".xlsx",
+                    Filter = "Excel Files|*.xlsx"
+                };
+
+                if (File.Exists(SpecifiedExcelTextSourcePathComboBox.Text))
+                {
+                    openFileDialog.InitialDirectory = Path.GetDirectoryName(SpecifiedExcelTextSourcePathComboBox.Text);
+                }
+
+                if (openFileDialog.ShowDialog(GetWindow(this)) ?? false)
+                {
+                    SpecifiedExcelTextSourcePathComboBox.Text = openFileDialog.FileName;
+                }
+            }
+            catch { }
+        }
 
         private void RestoreLastMachesSelectionButton_Click(object sender, RoutedEventArgs e)
         {
@@ -2343,9 +2484,9 @@ namespace RegexDialog
             string regex = RegexEditor.Text;
             string replace = ReplaceEditor.Text;
 
-            if(regex.Contains(@"\"))
+            if (regex.Contains(@"\"))
             {
-                regex = $"@\"{ regex.Replace("\"", "\"\"") }\"";
+                regex = $"@\"{regex.Replace("\"", "\"\"")}\"";
             }
             else
             {
@@ -2369,7 +2510,7 @@ namespace RegexDialog
             {
                 if (replace.Contains(@"\"))
                 {
-                    replace = $"@\"{ replace.Replace("\"", "\"\"") }\"";
+                    replace = $"@\"{replace.Replace("\"", "\"\"")}\"";
                 }
                 else
                 {
@@ -2381,9 +2522,9 @@ namespace RegexDialog
 
             string options = string.Join(" | ", regExOptionViewModelsList
                 .Where(re => re.Selected)
-                .Select(re => $"RegexOptions.{ re.RegexOptions }"));
+                .Select(re => $"RegexOptions.{re.RegexOptions}"));
 
-            if(!string.IsNullOrWhiteSpace(options))
+            if (!string.IsNullOrWhiteSpace(options))
             {
                 options = $", {options}";
             }
@@ -2439,7 +2580,7 @@ namespace RegexDialog
 
         private void RegexOptionsListBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if(RegexOptionsListBox.SelectedValue is RegExOptionViewModel optionModel)
+            if (RegexOptionsListBox.SelectedValue is RegExOptionViewModel optionModel)
             {
                 tbxRegexOptionDescription.Text = optionModel.Description;
             }

@@ -33,6 +33,8 @@ namespace RegexDialog
 
         public string FileName { get; set; } = string.Empty;
 
+        public string InfoSup { get; set; } = string.Empty;
+
         public Capture RegexElement { get; }
 
         public int RegexElementNb { get; }
@@ -53,7 +55,7 @@ namespace RegexDialog
                 {
                     if (RegexElement != null)
                     {
-                        result = ElementType + " " + RegexElementNb.ToString() + " [" + RegexElement.Index.ToString() + "," + RegexElement.Length.ToString() + "]: ";
+                        result = $"{ElementType} {RegexElementNb.ToString()} [{RegexElement.Index.ToString()},{RegexElement.Length.ToString()}]{(string.IsNullOrEmpty(InfoSup) ? "" : $" - {InfoSup} ")}: ";
                     }
                 }
                 catch

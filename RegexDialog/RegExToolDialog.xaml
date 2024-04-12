@@ -7,7 +7,7 @@
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
         xmlns:behaviors="clr-namespace:RegexDialog.Behaviors"
         Title="C# Regex Tools" 
-        Height="422.75" 
+        Height="600" 
         MinHeight="300"
         MinWidth="600"
         Width="1427.97" 
@@ -217,7 +217,7 @@
                         <Image Source="{StaticResource ExtractPicture}" Width="16" Height="16" ToolTip="Extract All Matches (Maintain [Shift] Key down to apply the replacement in the extraction)"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="ReplaceAllButton" Click="ReplaceAllButton_Click">
+                <Button x:Name="ReplaceAllButton" Click="ReplaceAllButton_Click" IsEnabled="{Binding TextSourceOn, Converter={converters:ExpressionEvalConverter Expression='binding != RegexTextSource.Excel'}}">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource ReplacePicture}" Width="16" Height="16" ToolTip="Replace All (Maintain [Ctrl] Key down to put the result in a new tab)"/>
                     </StackPanel>
@@ -524,6 +524,11 @@
                                     <TextBlock x:Name="FileTextBlock" Text="{Binding Name}"/>
                                 </StackPanel>
                             </HierarchicalDataTemplate>
+                            <HierarchicalDataTemplate DataType="{x:Type local:RegexExcelSheetResult}" ItemsSource="{Binding Children}">
+                                <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding SheetName}">
+                                    <TextBlock x:Name="FileTextBlock" Text="{Binding Name}"/>
+                                </StackPanel>
+                            </HierarchicalDataTemplate>
                             <HierarchicalDataTemplate DataType="{x:Type local:RegexMatchResult}" 
                                                       ItemsSource="{Binding Children}">
                                 <StackPanel Background="Transparent" 
@@ -818,6 +823,10 @@
                                          Margin="5,0"
                                          Content="C# _Script"
                                          IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CSharpScript'}"/>
+                                    <RadioButton x:Name="ExcelTextSourceRadioButton" 
+                                         Margin="5,0"
+                                         Content="_Excel"
+                                         IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='Excel'}"/>
                                 </WrapPanel>
 
                                 <StackPanel Margin="5" 
@@ -836,11 +845,7 @@
                                           IsEditable="True"/>
                                     </DockPanel>
 
-                                    <Grid Margin="0,5">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="Auto" />
-                                            <ColumnDefinition Width="*" />
-                                        </Grid.ColumnDefinitions>
+                                    <AutoGrid Margin="0,5" Columns="Auto,*">
                                         <Label Content="_Filters"
                                            VerticalAlignment="Center"
                                            Padding="3,0"
@@ -848,10 +853,9 @@
                                         <ComboBox x:Name="SpecifiedDirectoryTextSourceFilterComboBox"
                                               Text="{Binding TextSourceDirectorySearchFilter, UpdateSourceTrigger=PropertyChanged}"
                                               ItemsSource="{Binding TextSourceDirectorySearchFilterHistory}"
-                                              Grid.Column="1"
                                               VerticalAlignment="Center"
                                               IsEditable="True"/>
-                                    </Grid>
+                                    </AutoGrid>
 
                                     <StackPanel Margin="5">
                                         <CheckBox x:Name="SearchSubDirectoriesCheckBox" 
@@ -864,6 +868,82 @@
                                           IsChecked="{Binding OpenFilesForReplace}"
                                           Content="_Open files to replace in editor (otherwise modify the file on the disk)" />
                                     </StackPanel>
+                                </StackPanel>
+
+                                <StackPanel Margin="5"
+                                            DockPanel.Dock="Top"
+                                            Visibility="{Binding IsChecked, ElementName=ExcelTextSourceRadioButton, Converter={CustomBoolToVisibilityConverter}}">
+                                    <DockPanel>
+                                        <Button x:Name="SpecifiedExcelTextSourcePathButton"
+                                        Content="..." 
+                                        Padding="10,0" 
+                                        DockPanel.Dock="Right"
+                                        Click="SpecifiedExcelTextSourcePathButton_Click"/>
+                                        <ComboBox x:Name="SpecifiedExcelTextSourcePathComboBox" 
+                                              Text="{Binding TextSourceExcelPath, UpdateSourceTrigger=PropertyChanged}"
+                                              ItemsSource="{Binding TextSourceExcelPathHistory}"
+                                              IsEditable="True"/>
+                                    </DockPanel>
+                                    <CheckBox Content="_Sheets"
+                                              Margin="1,10,0,0"
+                                              IsChecked="{Binding AllSheetSelection}"
+                                              VerticalAlignment="Center"
+                                              Padding="3,0"/>
+                                    <Border BorderBrush="LightGray"
+                                            BorderThickness="1">
+                                        <ScrollViewer Height="100">
+                                            <ItemsControl ItemsSource="{Binding ExcelSheets}"
+                                                          Grid.IsSharedSizeScope="True">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate DataType="local:ExcelSheetSelection">
+                                                        <AutoGrid Columns="Auto,*" ColumnsSharedSizeGroups="Sheet">
+                                                            <CheckBox Content="{Binding Name}"
+                                                                  IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
+                                                            <TextBox  Text="{Binding Filter}"
+                                                                      Padding="0"
+                                                                      Margin="10,0,0,0">
+                                                                <TextBox.ToolTip>
+                                                                    <StackPanel>
+                                                                        <TextBlock>To filter cells to search in the sheet&#x0a;- Separate each range or cell by [;]</TextBlock>
+                                                                        <TextBlock>- Individual cell can be specified with A1 format</TextBlock>
+                                                                        <TextBlock>- Range can be specified with A1:ZZ99 format</TextBlock>
+                                                                        <TextBlock>- Column can be specified by it's letters A;E;BD (range of columns are possible C:F)</TextBlock>
+                                                                        <TextBlock>- Row can be specified by it's number 1;20;102 (range of rows are possible 3:6)</TextBlock>
+                                                                        <TextBlock>- [FR],[LR],[FC],[LC] are replaced by respectively first row number, last row number, first column letter, last column letter</TextBlock>
+                                                                    </StackPanel>
+                                                                </TextBox.ToolTip>
+                                                            </TextBox>
+                                                        </AutoGrid>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </Border>
+                                    <DockPanel Margin="1,10,0,0">
+                                        <CheckBox Content="_Cell Text Sources"
+                                                  IsChecked="{Binding AllExcelCellTextSource}"
+                                                  VerticalAlignment="Center"
+                                                  Padding="3,0"/>
+                                        <Label Content="Se_parator" 
+                                               Padding="5,0"
+                                               Target="{Binding ElementName=ExcelTextSourceSepratorTextBox}"/>
+                                        <TextBox x:Name="ExcelTextSourceSepratorTextBox" 
+                                                 Text="{Binding ExcelTextSourceSeparator, UpdateSourceTrigger=PropertyChanged}" />
+                                    </DockPanel>
+
+                                    <Border BorderBrush="LightGray"
+                                            BorderThickness="1">
+                                        <ScrollViewer Height="100">
+                                            <ItemsControl ItemsSource="{Binding ExcelCellTextSources}">
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate DataType="local:ExcelCellTextSource">
+                                                        <CheckBox Content="{Binding Name}"
+                                                                  IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
+                                        </ScrollViewer>
+                                    </Border>
                                 </StackPanel>
 
                                 <DockPanel Visibility="{Binding IsChecked, ElementName=CSharpScriptTextSourceRadioButton, Converter={CustomBoolToVisibilityConverter}}" >

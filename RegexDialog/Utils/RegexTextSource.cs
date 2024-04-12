@@ -5,6 +5,7 @@
         CurrentTab,
         CurrentSelection,
         Directory,
-        CSharpScript
+        CSharpScript,
+        Excel
     }
 }

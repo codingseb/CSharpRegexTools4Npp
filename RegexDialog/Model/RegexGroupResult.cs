@@ -47,7 +47,7 @@ namespace RegexDialog
                 return result;
             }
         }
-
+            
         public string GroupName
         {
             get
