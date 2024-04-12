@@ -102,6 +102,11 @@ namespace RegexDialog
                     Name = "Comment author",
                     GetValue = cell => cell.HasComment ? cell.GetComment().Author : ""
                 },
+                new ExcelCellTextSource()
+                {
+                    Name = "Cell address",
+                    GetValue = cell => cell.Address.ToString()
+                },
             };
 
             excelCellTextSources.ForEach(s1 =>

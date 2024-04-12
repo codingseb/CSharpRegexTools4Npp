@@ -650,7 +650,7 @@ namespace RegexDialog
                                   return excelSheetResult;
                               });
 
-                            MatchesResultLabel.Content = $"{i} matches [Index,Length] + {countAllCaptures - i} empties matches";
+                            MatchesResultLabel.Content = $"{i} matches [Index,Length] - Cell + {countAllCaptures - i} empties matches";
                         }
                     }
                     else if (Config.Instance.TextSourceOn == RegexTextSource.CSharpScript)
