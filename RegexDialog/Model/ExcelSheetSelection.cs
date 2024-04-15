@@ -12,7 +12,7 @@ namespace RegexDialog
         private readonly static Regex simpleColumnRegex = new Regex("^[A-Z]+$", RegexOptions.Compiled);
         private readonly static Regex simpleRowRegex = new Regex("^[1-9][0-9]*$", RegexOptions.Compiled);
         private readonly static Regex rangeRegex = new Regex("^[A-Z]+([1-9][0-9]*)?:[A-Z]+([1-9][0-9]*)?|[1-9][0-9]*:[1-9][0-9]*$", RegexOptions.Compiled);
-        private readonly static Regex evaluatedExpressionRegex = new Regex(@"\{(?<expression>[^\}])\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly static Regex evaluatedExpressionRegex = new Regex(@"\{(?<expression>[^\}]*)\}", RegexOptions.Compiled);
 
         public bool IsSelected { get; set; } = true;
         public string Name { get; set; } = string.Empty;
