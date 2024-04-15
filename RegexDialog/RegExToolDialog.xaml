@@ -915,7 +915,7 @@
                                                                                      FC, LC are variables for respectively First Column letter(s) and Last Column letter(s).<LineBreak/><Run Text="  "/>
                                                                                      FCN, LCN are variables for respectively First Column number and Last Column number.<LineBreak/><Run Text="  "/>
                                                                                      columnLetter.ToNumber() or ToNumber(columnLetter) Convert a column letter to its corresponding number<LineBreak/><Run Text="  "/>
-                                                                                     columnNumber.ToLetter() or ToLetter(columnNumber) Convert a column number to its corresponding letter(</TextBlock>
+                                                                                     columnNumber.ToLetter() or ToLetter(columnNumber) Convert a column number to its corresponding letter</TextBlock>
                                                                     </StackPanel>
                                                                 </TextBox.ToolTip>
                                                             </TextBox>
