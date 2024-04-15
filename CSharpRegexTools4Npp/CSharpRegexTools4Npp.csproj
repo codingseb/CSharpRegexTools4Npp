@@ -10,7 +10,7 @@
     <RootNamespace>CSharpRegexTools4Npp</RootNamespace>
     <AssemblyName>CSharpRegexTools4Npp</AssemblyName>
     <OutputPath>bin\Debug\</OutputPath>
-    <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
