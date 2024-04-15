@@ -627,9 +627,9 @@ namespace RegexDialog
                               {
                                   var sheet = workbook.Worksheet(sheetSelection.Name);
 
-                                  RegexExcelSheetResult excelSheetResult = new RegexExcelSheetResult(regex, null, elementNb++, "", sheetSelection.Name);
+                                  RegexExcelSheetResult excelSheetResult = new(regex, null, elementNb++, "", sheetSelection.Name);
 
-                                  List<RegexResult> results = new List<RegexResult>();
+                                  List<RegexResult> results = new();
 
                                   if (sheet != null)
                                   {

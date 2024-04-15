@@ -19,7 +19,7 @@ namespace RegexDialog {
     // class via a tool like ResGen or Visual Studio.
     // To add or remove a member, edit your .ResX file then rerun ResGen
     // with the /str option, or rebuild your VS project.
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "16.0.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     internal class Res {
@@ -161,9 +161,9 @@ namespace RegexDialog {
         
         /// <summary>
         ///   Looks up a localized string similar to {
-        ///  &quot;Compiled&quot;: &quot;Specifies that the regular expression is compiled to an assembly. This yields faster execution but increases startup time. This value should not be assigned to the Options property when calling the CompileToAssembly(RegexCompilationInfo[], AssemblyName) method.&quot;,
+        ///  &quot;Compiled&quot;: &quot;Specifies that the regular expression is compiled to an assembly.\r\nThis yields faster execution but increases startup time.\r\nThis value should not be assigned to the Options property when calling the CompileToAssembly(RegexCompilationInfo[], AssemblyName) method.&quot;,
         ///  &quot;CultureInvariant&quot;: &quot;Specifies that cultural differences in language is ignored.&quot;,
-        ///  &quot;ECMAScript&quot;: &quot;Enables ECMAScript-compliant behavior for the expression. This value can be used only in conjunction with the IgnoreCase, Mult [rest of string was truncated]&quot;;.
+        ///  &quot;ECMAScript&quot;: &quot;Enables ECMAScript-compliant behavior for the expression.\r\nThis value can be used only in conjunction with the IgnoreC [rest of string was truncated]&quot;;.
         /// </summary>
         internal static string RegexOptionsDescriptions {
             get {

@@ -109,6 +109,11 @@ namespace RegexDialog
                 },
                 new ExcelCellTextSource()
                 {
+                    Name = "Hyperlink tooltip",
+                    GetValue = cell => cell.HasHyperlink ? (cell.GetHyperlink().Tooltip ?? "") : ""
+                },
+                new ExcelCellTextSource()
+                {
                     Name = "Cell address",
                     GetValue = cell => cell.Address.ToString()
                 },

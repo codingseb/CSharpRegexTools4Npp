@@ -662,14 +662,16 @@
                                     </Style>
                                     <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElementGroup}" 
                                                               ItemsSource="{Binding Elements}">
-                                        <StackPanel Background="Transparent" Orientation="Horizontal" ToolTip="{Binding Description}">
+                                        <StackPanel Background="Transparent" 
+                                                    Orientation="Horizontal" 
+                                                    ToolTip="{Binding Description}">
                                             <Image Source="{StaticResource RegexLanguageElementsGroupPicture}" Width="16" Height="16" Margin="3,0"/>
                                             <TextBlock Text="{Binding Name}"/>
                                             <TextBlock Text="{Binding Value}" Foreground="Blue"/>
                                         </StackPanel>
                                     </HierarchicalDataTemplate>
                                     <HierarchicalDataTemplate DataType="{x:Type local:RegexLanguageElement}">
-                                        <StackPanel Background="Transparent" 
+                                        <StackPanel Background="Transparent"
                                                     Orientation="Horizontal" 
                                                     ToolTip="{Binding Description}"
                                                     MouseDown="RegexLanguageElement_StackPanel_MouseDown"
@@ -899,10 +901,14 @@
                                                         <AutoGrid Columns="Auto,*,Auto" ColumnsSharedSizeGroups="Sheet">
                                                             <CheckBox Content="{Binding Name}"
                                                                   IsChecked="{Binding IsSelected, UpdateSourceTrigger=PropertyChanged}" />
-                                                            <TextBox  Text="{Binding Filter}"
+                                                            <ComboBox Text="{Binding Filter}"
+                                                                      ItemsSource="{Binding Source={x:Static local:ExcelCellFilterExample.ExamplesList}}"
+                                                                      IsEditable="True"
                                                                       Padding="0"
+                                                                      DisplayMemberPath="Value"
+                                                                      Grid.IsSharedSizeScope="True"
                                                                       Margin="10,0,0,0">
-                                                                <TextBox.ToolTip>
+                                                                <ComboBox.ToolTip>
                                                                     <StackPanel>
                                                                         <TextBlock>To filter cells to search in the sheet</TextBlock>
                                                                         <TextBlock>- Separate each range or cell by ;</TextBlock>
@@ -917,8 +923,19 @@
                                                                                      columnLetter.ToNumber() or ToNumber(columnLetter) Convert a column letter to its corresponding number<LineBreak/><Run Text="  "/>
                                                                                      columnNumber.ToLetter() or ToLetter(columnNumber) Convert a column number to its corresponding letter</TextBlock>
                                                                     </StackPanel>
-                                                                </TextBox.ToolTip>
-                                                            </TextBox>
+                                                                </ComboBox.ToolTip>
+                                                                <ComboBox.ItemTemplate>
+                                                                    <DataTemplate>
+                                                                        <AutoGrid Columns="Auto,*" 
+                                                                                  ColumnsSharedSizeGroups="Name,Value" 
+                                                                                  Orientation="Horizontal"
+                                                                                  ChildMargin="0,0,10,0">
+                                                                            <TextBlock Text="{Binding Name}" />
+                                                                            <TextBlock Text="{Binding Value}" Foreground="Gray" />
+                                                                        </AutoGrid>
+                                                                    </DataTemplate>
+                                                                </ComboBox.ItemTemplate>
+                                                            </ComboBox>
                                                             <Button Content="="
                                                                     Padding="5,0"
                                                                     ToolTip="Evaluate expressions of the Filter and show the result filter"
