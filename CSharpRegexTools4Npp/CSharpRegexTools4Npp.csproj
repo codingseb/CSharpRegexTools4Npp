@@ -11,6 +11,7 @@
     <AssemblyName>CSharpRegexTools4Npp</AssemblyName>
     <OutputPath>bin\Debug\</OutputPath>
     <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
+	<LangVersion>9.0</LangVersion>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
