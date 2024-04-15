@@ -904,12 +904,18 @@
                                                                       Margin="10,0,0,0">
                                                                 <TextBox.ToolTip>
                                                                     <StackPanel>
-                                                                        <TextBlock>To filter cells to search in the sheet&#x0a;- Separate each range or cell by [;]</TextBlock>
+                                                                        <TextBlock>To filter cells to search in the sheet</TextBlock>
+                                                                        <TextBlock>- Separate each range or cell by ;</TextBlock>
                                                                         <TextBlock>- Individual cell can be specified with A1 format</TextBlock>
                                                                         <TextBlock>- Range can be specified with A1:ZZ99 format</TextBlock>
                                                                         <TextBlock>- Column can be specified by it's letters A;E;BD (range of columns are possible C:F)</TextBlock>
                                                                         <TextBlock>- Row can be specified by it's number 1;20;102 (range of rows are possible 3:6)</TextBlock>
-                                                                        <TextBlock>- [FR],[LR],[FC],[LC] are replaced by respectively first row number, last row number, first column letter, last column letter</TextBlock>
+                                                                        <TextBlock>- expressions between { and } are evaluate as math expression.<LineBreak/><Run Text="  "/>
+                                                                                     FR, LR are variables for respectively First Row number and Last Row number.<LineBreak/><Run Text="  "/>
+                                                                                     FC, LC are variables for respectively First Column letter(s) and Last Column letter(s).<LineBreak/><Run Text="  "/>
+                                                                                     FCN, LCN are variables for respectively First Column number and Last Column number.<LineBreak/><Run Text="  "/>
+                                                                                     columnLetter.ToNumber() or ToNumber(columnLetter) Convert a column letter to its corresponding number<LineBreak/><Run Text="  "/>
+                                                                                     columnNumber.ToLetter() or ToLetter(columnNumber) Convert a column number to its corresponding letter(</TextBlock>
                                                                     </StackPanel>
                                                                 </TextBox.ToolTip>
                                                             </TextBox>

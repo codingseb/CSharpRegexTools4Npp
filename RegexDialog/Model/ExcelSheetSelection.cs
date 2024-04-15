@@ -12,7 +12,7 @@ namespace RegexDialog
         private readonly static Regex simpleColumnRegex = new Regex("^[A-Z]+$", RegexOptions.Compiled);
         private readonly static Regex simpleRowRegex = new Regex("^[1-9][0-9]*$", RegexOptions.Compiled);
         private readonly static Regex rangeRegex = new Regex("^[A-Z]+([1-9][0-9]*)?:[A-Z]+([1-9][0-9]*)?|[1-9][0-9]*:[1-9][0-9]*$", RegexOptions.Compiled);
-        private readonly static Regex interpretedStuffRegex = new Regex(@"\[(?<var>FR|LR|FC|LC)\]", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private readonly static Regex evaluatedExpressionRegex = new Regex(@"\{(?<expression>[^\}])\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public bool IsSelected { get; set; } = true;
         public string Name { get; set; } = string.Empty;
@@ -58,22 +58,52 @@ namespace RegexDialog
 
         private string InterpretStuffInFilter(string filter, IXLWorksheet sheet)
         {
-            return interpretedStuffRegex.Replace(filter, match =>
+            ExpressionEvaluator evaluator = new ExpressionEvaluator(new Dictionary<string, object>()
             {
-                switch(match.Groups["var"].Value)
-                {
-                    case "FR":
-                        return sheet.FirstRowUsed().RangeAddress.FirstAddress.RowNumber.ToString();
-                    case "LR":
-                        return sheet.LastRowUsed().RangeAddress.FirstAddress.RowNumber.ToString();
-                    case "FC":
-                        return sheet.FirstColumnUsed().RangeAddress.FirstAddress.ColumnLetter;
-                    case "LC":
-                        return sheet.LastColumnUsed().RangeAddress.FirstAddress.ColumnLetter;
-                    default:
-                        return "";
-                }
+                { "FR", sheet.FirstRowUsed().RangeAddress.FirstAddress.RowNumber },
+                { "LR", sheet.LastRowUsed().RangeAddress.FirstAddress.RowNumber },
+                { "FC", sheet.FirstColumnUsed().RangeAddress.FirstAddress.ColumnLetter },
+                { "LC", sheet.LastColumnUsed().RangeAddress.FirstAddress.ColumnLetter },
+                { "FCN", sheet.FirstColumnUsed().RangeAddress.FirstAddress.ColumnNumber },
+                { "LCN", sheet.LastColumnUsed().RangeAddress.FirstAddress.ColumnNumber },
+                { "sheet", sheet },
             });
+
+            evaluator.EvaluateFunction += Evaluator_EvaluateFunction;
+
+            string result = evaluatedExpressionRegex.Replace(filter, match => evaluator.Evaluate(match.Groups["expression"].Value).ToString());
+
+            evaluator.EvaluateFunction -= Evaluator_EvaluateFunction;
+
+            return result;
+        }
+
+        private void Evaluator_EvaluateFunction(object sender, FunctionEvaluationEventArg e)
+        {
+            IXLWorksheet sheet = e.Evaluator.Variables["sheet"] as IXLWorksheet;
+
+            if(e.Name.Equals("ToNumber"))
+            {
+                if(e.This != null)
+                {
+                    e.Value = sheet.Column((string)e.This).ColumnNumber();
+                }
+                else
+                {
+                    e.Value = sheet.Column(e.EvaluateArg<string>(0)).ColumnNumber();
+                }
+            }
+            if(e.Name.Equals("ToLetter"))
+            {
+                if(e.This != null)
+                {
+                    e.Value = sheet.Column((int)e.This).ColumnLetter();
+                }
+                else
+                {
+                    e.Value = sheet.Column(e.EvaluateArg<int>(0)).ColumnLetter();
+                }
+            }
         }
     }
 }
