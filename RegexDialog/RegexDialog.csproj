@@ -57,6 +57,9 @@
     <Reference Include="CodingSeb.Layouts, Version=1.0.4.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\CodingSeb.Layouts.1.0.4\lib\net47\CodingSeb.Layouts.dll</HintPath>
     </Reference>
+    <Reference Include="CodingSeb.Mvvm, Version=1.2.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\CodingSeb.Mvvm.1.2.4\lib\net45\CodingSeb.Mvvm.dll</HintPath>
+    </Reference>
     <Reference Include="Costura, Version=5.7.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Costura.Fody.5.7.0\lib\netstandard1.0\Costura.dll</HintPath>
     </Reference>

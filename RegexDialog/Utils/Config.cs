@@ -104,6 +104,11 @@ namespace RegexDialog
                 },
                 new ExcelCellTextSource()
                 {
+                    Name = "Hyperlink",
+                    GetValue = cell => cell.HasHyperlink ? (cell.GetHyperlink().IsExternal ? cell.GetHyperlink().ExternalAddress.AbsoluteUri : cell.GetHyperlink().InternalAddress) : ""
+                },
+                new ExcelCellTextSource()
+                {
                     Name = "Cell address",
                     GetValue = cell => cell.Address.ToString()
                 },

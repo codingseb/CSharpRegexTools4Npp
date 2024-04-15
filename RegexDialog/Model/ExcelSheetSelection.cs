@@ -1,8 +1,12 @@
 ﻿using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Bibliography;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows;
+using System.Windows.Input;
 
 namespace RegexDialog
 {
@@ -17,6 +21,22 @@ namespace RegexDialog
         public bool IsSelected { get; set; } = true;
         public string Name { get; set; } = string.Empty;
         public string Filter { get; set; } = string.Empty;
+
+        [JsonIgnore]
+        public ICommand EvaluateCommand => new RelayCommand(_ =>
+        {
+            using(IXLWorkbook workbook = new XLWorkbook(Config.Instance.TextSourceExcelPath))
+            {
+                try
+                {
+                    MessageBox.Show(InterpretStuffInFilter(Filter, workbook.Worksheet(Name)));
+                }
+                catch(Exception exception)
+                {
+                    MessageBox.Show(exception.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+        });
 
         public IEnumerable<IXLCell> GetCells(IXLWorksheet sheet)
         {
