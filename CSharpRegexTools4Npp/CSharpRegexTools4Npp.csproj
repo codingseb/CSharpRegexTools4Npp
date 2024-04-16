@@ -1,52 +1,83 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	<!--<Import Project="PluginInfrastructure\DllExport\NppPlugin.DllExport.targets" />-->
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
-    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
     <OutputType>Library</OutputType>
     <LangVersion>9.0</LangVersion>
+		<AssemblyTitle>C# Regex Tools 4 Npp</AssemblyTitle>
+		<Product>C# Regex Tools 4 Npp</Product>
+		<Copyright>Copyright © CodingSeb 2024</Copyright>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+	  <StartAction>Program</StartAction>
+	  <StartProgram Condition="'$(Platform)'=='x64'">$(ProgramW6432)\Notepad++\notepad++.exe</StartProgram>
+	  <StartProgram Condition="'$(Platform)'=='x86'">$(MSBuildProgramFiles32)\Notepad++\notepad++.exe</StartProgram>
+	  <OutputPath>bin\$(Configuration)\$(Platform)</OutputPath>
+	  <Nullable>disable</Nullable>
+	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+	  <Platforms>x64;x86</Platforms>
+		<Version>1.1.11.0</Version>
+	  <AssemblyVersion>1.1.11.0</AssemblyVersion>
+	  <FileVersion>1.1.11.0</FileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <OutputPath>bin\Debug</OutputPath>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <OutputPath>bin\Release</OutputPath>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
-    <DefineConstants>TRACE;DEBUG;X64</DefineConstants>
-    <OutputPath>bin\Debug-x64</OutputPath>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x64' ">
-    <DefineConstants>TRACE;X64</DefineConstants>
-    <OutputPath>bin\Release-x64</OutputPath>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartAction>Program</StartAction>
-    <StartProgram Condition="'$(Platform)'=='x64'">$(ProgramW6432)\Notepad++\notepad++.exe</StartProgram>
-    <StartProgram Condition="'$(Platform)'=='x86'">$(MSBuildProgramFiles32)\Notepad++\notepad++.exe</StartProgram>
-  </PropertyGroup>
+	<UsingTask TaskName="NppPlugin.DllExport.MSBuild.DllExportTask"
+					 AssemblyFile="NppPlugin.DllExport.MSBuild.dll"/>
+	<Target Name="AfterBuild" DependsOnTargets="GetFrameworkPaths">
+		<PropertyGroup>
+			<!-- LibToolPath is optional - it's needed to debug C++, but you can still debug the C# code without it
+			If you don't have the C++ toolchain installed this is missing, but then you can't' debug C++ anyway -->
+			<LibToolPath Condition="Exists('$(DevEnvDir)\..\..\VC\bin')">$(DevEnvDir)\..\..\VC\bin</LibToolPath>
+		</PropertyGroup>
+		<DllExportTask Platform="$(Platform)"
+									 PlatformTarget="$(PlatformTarget)"
+									 CpuType="$(CpuType)"
+									 EmitDebugSymbols="$(DebugSymbols)"
+									 DllExportAttributeAssemblyName="$(DllExportAttributeAssemblyName)"
+									 DllExportAttributeFullName="$(DllExportAttributeFullName)"
+									 Timeout="$(DllExportTimeout)"
+									 KeyContainer="$(KeyContainerName)$(AssemblyKeyContainerName)"
+									 KeyFile="$(KeyOriginatorFile)"
+									 ProjectDirectory="$(MSBuildProjectDirectory)"
+									 InputFileName="$(TargetPath)"
+									 FrameworkPath="$(TargetedFrameworkDir);$(TargetFrameworkDirectory)"
+									 LibToolPath="$(LibToolPath)"
+									 LibToolDllPath="$(DevEnvDir)"
+									 SdkPath="$(SDK40ToolsPath)"/>
+
+		<ItemGroup>
+			<ReleaseFiles Include="$(TargetDir)*.dll"/>
+			<ReleaseFiles Include="$(TargetDir)*.pdb"/>
+		</ItemGroup>
+		<!-- $(MSBuildProgramFiles32) points to the 32 bit program files dir.
+		On 32 bit windows usually C:\Program Files\
+		On 64 bit windows usually C:\Program Files (x86)\
+		$(ProgramW6432) points to the 64bit Program Files (on 32 bit windows it is blank) -->
+		<MakeDir Directories="$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\" Condition="Exists('$(MSBuildProgramFiles32)\Notepad++\plugins\') AND !Exists('$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x86'" />
+		<Copy
+				SourceFiles="@(ReleaseFiles)"
+				DestinationFolder="$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\"
+				Condition="Exists('$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x86'"
+				ContinueOnError="false" />
+		<MakeDir Directories="$(ProgramW6432)\Notepad++\plugins\$(TargetName)\" Condition="Exists('$(ProgramW6432)\Notepad++\plugins\') AND !Exists('$(ProgramW6432)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x64'" />
+		<Copy
+				SourceFiles="@(ReleaseFiles)"
+				DestinationFolder="$(ProgramW6432)\Notepad++\plugins\$(TargetName)\"
+				Condition="Exists('$(ProgramW6432)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x64'"
+				ContinueOnError="false" />
+	</Target>
+  <ItemGroup>
+    <None Remove="NppPlugin.DllExport.targets" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="System.Configuration" />
     <Reference Include="System.IO.Compression" />
-    <Reference Include="System.Net.Http, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\Program Files (x86)\Microsoft Visual Studio\2019\Professional\MSBuild\Microsoft\Microsoft.NET.Build.Extensions\net461\lib\System.Net.Http.dll</HintPath>
-    </Reference>
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
     <None Update="FodyWeavers.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Update="PluginInfrastructure\DllExport\NppPlugin.DllExport.targets">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
@@ -60,14 +91,14 @@
     <Content Include="img\icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="FodyWeavers.xsd" />
+  </ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="..\RegexDialog\RegexDialog.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Costura.Fody" Version="4.1.0" />
-    <PackageReference Include="Fody" Version="6.3.0" />
+    <PackageReference Include="Costura.Fody" Version="5.7.0" PrivateAssets="all" />
+    <PackageReference Include="Fody" Version="6.8.0" PrivateAssets="all" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 </Project>
