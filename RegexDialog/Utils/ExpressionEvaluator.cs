@@ -31,28 +31,28 @@ namespace RegexDialog
         protected const string diactitics = "áàâãåǎăāąæéèêëěēĕėęěìíîïīĭįĳóôõöōŏőøðœùúûüǔũūŭůűųýþÿŷıćĉċčçďđĝğġģĥħĵķĺļľŀłńņňŋñŕŗřśŝşšţťŧŵźżžÁÀÂÃÅǍĂĀĄÆÉÈÊËĚĒĔĖĘĚÌÍÎÏĪĬĮĲÓÔÕÖŌŎŐØÐŒÙÚÛÜǓŨŪŬŮŰŲÝÞŸŶIĆĈĊČÇĎĐĜĞĠĢĤĦĴĶĹĻĽĿŁŃŅŇŊÑŔŖŘŚŜŞŠŢŤŦŴŹŻŽß";
         protected const string diactiticsKeywordsRegexPattern = "a-zA-Z_" + diactitics;
 
-        protected static readonly Regex varOrFunctionRegEx = new Regex($@"^((?<sign>[+-])|(?<prefixOperator>[+][+]|--)|(?<varKeyword>var\s+)|(?<inObject>(?<nullConditional>[?])?\.)?)(?<name>[{ diactiticsKeywordsRegexPattern }](?>[{ diactiticsKeywordsRegexPattern }0-9]*))(?>\s*)((?<assignationOperator>(?<assignmentPrefix>[+\-*/%&|^]|<<|>>)?=(?![=>]))|(?<postfixOperator>([+][+]|--)(?![{ diactiticsKeywordsRegexPattern}0-9]))|((?<isgeneric>[<](?>([{ diactiticsKeywordsRegexPattern }](?>[{ diactiticsKeywordsRegexPattern }0-9]*)|(?>\s+)|[,\.])+|(?<gentag>[<])|(?<-gentag>[>]))*(?(gentag)(?!))[>])?(?<isfunction>[(])?))", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        protected static readonly Regex varOrFunctionRegEx = new($@"^((?<sign>[+-])|(?<prefixOperator>[+][+]|--)|(?<varKeyword>var\s+)|(?<inObject>(?<nullConditional>[?])?\.)?)(?<name>[{ diactiticsKeywordsRegexPattern }](?>[{ diactiticsKeywordsRegexPattern }0-9]*))(?>\s*)((?<assignationOperator>(?<assignmentPrefix>[+\-*/%&|^]|<<|>>)?=(?![=>]))|(?<postfixOperator>([+][+]|--)(?![{ diactiticsKeywordsRegexPattern}0-9]))|((?<isgeneric>[<](?>([{ diactiticsKeywordsRegexPattern }](?>[{ diactiticsKeywordsRegexPattern }0-9]*)|(?>\s+)|[,\.])+|(?<gentag>[<])|(?<-gentag>[>]))*(?(gentag)(?!))[>])?(?<isfunction>[(])?))", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
         protected const string numberRegexOrigPattern = @"^(?<sign>[+-])?([0-9][0-9_{1}]*[0-9]|\d)(?<hasdecimal>{0}?([0-9][0-9_]*[0-9]|\d)(e[+-]?([0-9][0-9_]*[0-9]|\d))?)?(?<type>ul|[fdulm])?";
         protected string numberRegexPattern;
 
-        protected static readonly Regex otherBasesNumberRegex = new Regex("^(?<sign>[+-])?(?<value>0(?<type>x)([0-9a-f][0-9a-f_]*[0-9a-f]|[0-9a-f])|0(?<type>b)([01][01_]*[01]|[01]))", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        protected static readonly Regex stringBeginningRegex = new Regex("^(?<interpolated>[$])?(?<escaped>[@])?[\"]", RegexOptions.Compiled);
-        protected static readonly Regex internalCharRegex = new Regex(@"^['](\\[\\'0abfnrtv]|[^'])[']", RegexOptions.Compiled);
-        protected static readonly Regex indexingBeginningRegex = new Regex(@"^[?]?\[", RegexOptions.Compiled);
-        protected static readonly Regex assignationOrPostFixOperatorRegex = new Regex(@"^(?>\s*)((?<assignmentPrefix>[+\-*/%&|^]|<<|>>)?=(?![=>])|(?<postfixOperator>([+][+]|--)(?![" + diactiticsKeywordsRegexPattern + "0-9])))");
-        protected static readonly Regex genericsDecodeRegex = new Regex("(?<name>[^,<>]+)(?<isgeneric>[<](?>[^<>]+|(?<gentag>[<])|(?<-gentag>[>]))*(?(gentag)(?!))[>])?", RegexOptions.Compiled);
-        protected static readonly Regex genericsEndOnlyOneTrim = new Regex(@"(?>\s*)[>](?>\s*)$", RegexOptions.Compiled);
+        protected static readonly Regex otherBasesNumberRegex = new("^(?<sign>[+-])?(?<value>0(?<type>x)([0-9a-f][0-9a-f_]*[0-9a-f]|[0-9a-f])|0(?<type>b)([01][01_]*[01]|[01]))", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        protected static readonly Regex stringBeginningRegex = new("^(?<interpolated>[$])?(?<escaped>[@])?[\"]", RegexOptions.Compiled);
+        protected static readonly Regex internalCharRegex = new(@"^['](\\[\\'0abfnrtv]|[^'])[']", RegexOptions.Compiled);
+        protected static readonly Regex indexingBeginningRegex = new(@"^[?]?\[", RegexOptions.Compiled);
+        protected static readonly Regex assignationOrPostFixOperatorRegex = new(@"^(?>\s*)((?<assignmentPrefix>[+\-*/%&|^]|<<|>>)?=(?![=>])|(?<postfixOperator>([+][+]|--)(?![" + diactiticsKeywordsRegexPattern + "0-9])))");
+        protected static readonly Regex genericsDecodeRegex = new("(?<name>[^,<>]+)(?<isgeneric>[<](?>[^<>]+|(?<gentag>[<])|(?<-gentag>[>]))*(?(gentag)(?!))[>])?", RegexOptions.Compiled);
+        protected static readonly Regex genericsEndOnlyOneTrim = new(@"(?>\s*)[>](?>\s*)$", RegexOptions.Compiled);
 
-        protected static readonly Regex endOfStringWithDollar = new Regex("^([^\"{\\\\]|\\\\[\\\\\"0abfnrtv])*[\"{]", RegexOptions.Compiled);
-        protected static readonly Regex endOfStringWithoutDollar = new Regex("^([^\"\\\\]|\\\\[\\\\\"0abfnrtv])*[\"]", RegexOptions.Compiled);
-        protected static readonly Regex endOfStringWithDollarWithAt = new Regex("^[^\"{]*[\"{]", RegexOptions.Compiled);
-        protected static readonly Regex endOfStringWithoutDollarWithAt = new Regex("^[^\"]*[\"]", RegexOptions.Compiled);
-        protected static readonly Regex endOfStringInterpolationRegex = new Regex("^('\"'|[^}\"])*[}\"]", RegexOptions.Compiled);
-        protected static readonly Regex stringBeginningForEndBlockRegex = new Regex("[$]?[@]?[\"]$", RegexOptions.Compiled);
-        protected static readonly Regex lambdaExpressionRegex = new Regex($@"^(?>\s*)(?<args>((?>\s*)[(](?>\s*)([{ diactiticsKeywordsRegexPattern }](?>[{ diactiticsKeywordsRegexPattern }0-9]*)(?>\s*)([,](?>\s*)[{diactiticsKeywordsRegexPattern}][{ diactiticsKeywordsRegexPattern}0-9]*(?>\s*))*)?[)])|[{ diactiticsKeywordsRegexPattern}](?>[{ diactiticsKeywordsRegexPattern }0-9]*))(?>\s*)=>(?<expression>.*)$", RegexOptions.Singleline | RegexOptions.Compiled);
-        protected static readonly Regex lambdaArgRegex = new Regex($"[{ diactiticsKeywordsRegexPattern }](?>[{ diactiticsKeywordsRegexPattern }0-9]*)", RegexOptions.Compiled);
-        protected static readonly Regex initInNewBeginningRegex = new Regex(@"^(?>\s*){", RegexOptions.Compiled);
+        protected static readonly Regex endOfStringWithDollar = new("^([^\"{\\\\]|\\\\[\\\\\"0abfnrtv])*[\"{]", RegexOptions.Compiled);
+        protected static readonly Regex endOfStringWithoutDollar = new("^([^\"\\\\]|\\\\[\\\\\"0abfnrtv])*[\"]", RegexOptions.Compiled);
+        protected static readonly Regex endOfStringWithDollarWithAt = new("^[^\"{]*[\"{]", RegexOptions.Compiled);
+        protected static readonly Regex endOfStringWithoutDollarWithAt = new("^[^\"]*[\"]", RegexOptions.Compiled);
+        protected static readonly Regex endOfStringInterpolationRegex = new("^('\"'|[^}\"])*[}\"]", RegexOptions.Compiled);
+        protected static readonly Regex stringBeginningForEndBlockRegex = new("[$]?[@]?[\"]$", RegexOptions.Compiled);
+        protected static readonly Regex lambdaExpressionRegex = new($@"^(?>\s*)(?<args>((?>\s*)[(](?>\s*)([{ diactiticsKeywordsRegexPattern }](?>[{ diactiticsKeywordsRegexPattern }0-9]*)(?>\s*)([,](?>\s*)[{diactiticsKeywordsRegexPattern}][{ diactiticsKeywordsRegexPattern}0-9]*(?>\s*))*)?[)])|[{ diactiticsKeywordsRegexPattern}](?>[{ diactiticsKeywordsRegexPattern }0-9]*))(?>\s*)=>(?<expression>.*)$", RegexOptions.Singleline | RegexOptions.Compiled);
+        protected static readonly Regex lambdaArgRegex = new($"[{ diactiticsKeywordsRegexPattern }](?>[{ diactiticsKeywordsRegexPattern }0-9]*)", RegexOptions.Compiled);
+        protected static readonly Regex initInNewBeginningRegex = new(@"^(?>\s*){", RegexOptions.Compiled);
 
         // Depending on OptionInlineNamespacesEvaluationActive. Initialized in constructor
         protected string InstanceCreationWithNewKeywordRegexPattern { get { return $@"^new(?>\s*)((?<isAnonymous>[{{])|((?<name>[{ diactiticsKeywordsRegexPattern }][{ diactiticsKeywordsRegexPattern}0-9{ (OptionInlineNamespacesEvaluationActive ? @"\." : string.Empty) }]*)(?>\s*)(?<isgeneric>[<](?>[^<>]+|(?<gentag>[<])|(?<-gentag>[>]))*(?(gentag)(?!))[>])?(?>\s*)((?<isfunction>[(])|(?<isArray>\[)|(?<isInit>[{{]))?))"; } }
@@ -65,16 +65,16 @@ namespace RegexDialog
         protected const string lineComments = @"//[^\r\n]*";
         protected const string stringsIgnore = @"""((\\[^\n]|[^""\n])*)""";
         protected const string verbatimStringsIgnore = @"@(""[^""]*"")+";
-        protected static readonly Regex removeCommentsRegex = new Regex($"{blockComments}|{lineComments}|{stringsIgnore}|{verbatimStringsIgnore}", RegexOptions.Singleline | RegexOptions.Compiled);
-        protected static readonly Regex newLineCharsRegex = new Regex(@"\r\n|\r|\n", RegexOptions.Compiled);
+        protected static readonly Regex removeCommentsRegex = new($"{blockComments}|{lineComments}|{stringsIgnore}|{verbatimStringsIgnore}", RegexOptions.Singleline | RegexOptions.Compiled);
+        protected static readonly Regex newLineCharsRegex = new(@"\r\n|\r|\n", RegexOptions.Compiled);
 
         // For script only
-        protected static readonly Regex blockKeywordsBeginningRegex = new Regex(@"^(?>\s*)(?<keyword>while|for|foreach|if|else(?>\s*)if|catch)(?>\s*)[(]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        protected static readonly Regex foreachParenthisEvaluationRegex = new Regex(@"^(?>\s*)(?<variableName>[" + diactiticsKeywordsRegexPattern + "](?>[" + diactiticsKeywordsRegexPattern + @"0-9]*))(?>\s*)(?<in>in)(?>\s*)(?<collection>.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        protected static readonly Regex blockKeywordsWithoutParenthesesBeginningRegex = new Regex(@"^(?>\s*)(?<keyword>else|do|try|finally)(?![" + diactiticsKeywordsRegexPattern + "0-9])", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-        protected static readonly Regex blockBeginningRegex = new Regex(@"^(?>\s*)[{]", RegexOptions.Compiled);
-        protected static readonly Regex returnKeywordRegex = new Regex(@"^return((?>\s*)|\()", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
-        protected static readonly Regex nextIsEndOfExpressionRegex = new Regex(@"^(?>\s*)[;]", RegexOptions.Compiled);
+        protected static readonly Regex blockKeywordsBeginningRegex = new(@"^(?>\s*)(?<keyword>while|for|foreach|if|else(?>\s*)if|catch)(?>\s*)[(]", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        protected static readonly Regex foreachParenthisEvaluationRegex = new(@"^(?>\s*)(?<variableName>[" + diactiticsKeywordsRegexPattern + "](?>[" + diactiticsKeywordsRegexPattern + @"0-9]*))(?>\s*)(?<in>in)(?>\s*)(?<collection>.*)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        protected static readonly Regex blockKeywordsWithoutParenthesesBeginningRegex = new(@"^(?>\s*)(?<keyword>else|do|try|finally)(?![" + diactiticsKeywordsRegexPattern + "0-9])", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+        protected static readonly Regex blockBeginningRegex = new(@"^(?>\s*)[{]", RegexOptions.Compiled);
+        protected static readonly Regex returnKeywordRegex = new(@"^return((?>\s*)|\()", RegexOptions.IgnoreCase | RegexOptions.Singleline | RegexOptions.Compiled);
+        protected static readonly Regex nextIsEndOfExpressionRegex = new(@"^(?>\s*)[;]", RegexOptions.Compiled);
 
         #endregion
 
@@ -940,8 +940,8 @@ namespace RegexDialog
             int startOfExpression = 0;
             IfBlockEvaluatedState ifBlockEvaluatedState = IfBlockEvaluatedState.NoBlockEvaluated;
             TryBlockEvaluatedState tryBlockEvaluatedState = TryBlockEvaluatedState.NoBlockEvaluated;
-            List<List<string>> ifElseStatementsList = new List<List<string>>();
-            List<List<string>> tryStatementsList = new List<List<string>>();
+            List<List<string>> ifElseStatementsList = new();
+            List<List<string>> tryStatementsList = new();
 
             object ManageJumpStatementsOrExpressionEval(string expression)
             {
@@ -1412,7 +1412,7 @@ namespace RegexDialog
         {
             expression = expression.Trim();
 
-            Stack<object> stack = new Stack<object>();
+            Stack<object> stack = new();
 
             if (GetLambdaExpression(expression, stack))
                 return stack.Pop();
@@ -1751,7 +1751,7 @@ namespace RegexDialog
                                 }
                                 else
                                 {
-                                    FunctionPreEvaluationEventArg functionPreEvaluationEventArg = new FunctionPreEvaluationEventArg(varFuncName, Evaluate, funcArgs, this, obj, genericsTypes, GetConcreteTypes);
+                                    FunctionPreEvaluationEventArg functionPreEvaluationEventArg = new(varFuncName, Evaluate, funcArgs, this, obj, genericsTypes, GetConcreteTypes);
 
                                     PreEvaluateFunction?.Invoke(this, functionPreEvaluationEventArg);
 
@@ -1819,7 +1819,7 @@ namespace RegexDialog
                                             }
                                             else
                                             {
-                                                FunctionEvaluationEventArg functionEvaluationEventArg = new FunctionEvaluationEventArg(varFuncName, Evaluate, funcArgs, this, obj ?? keepObj, genericsTypes, GetConcreteTypes);
+                                                FunctionEvaluationEventArg functionEvaluationEventArg = new(varFuncName, Evaluate, funcArgs, this, obj ?? keepObj, genericsTypes, GetConcreteTypes);
 
                                                 EvaluateFunction?.Invoke(this, functionEvaluationEventArg);
 
@@ -1852,7 +1852,7 @@ namespace RegexDialog
                     }
                     else
                     {
-                        FunctionPreEvaluationEventArg functionPreEvaluationEventArg = new FunctionPreEvaluationEventArg(varFuncName, Evaluate, funcArgs, this, null, genericsTypes, GetConcreteTypes);
+                        FunctionPreEvaluationEventArg functionPreEvaluationEventArg = new(varFuncName, Evaluate, funcArgs, this, null, genericsTypes, GetConcreteTypes);
 
                         PreEvaluateFunction?.Invoke(this, functionPreEvaluationEventArg);
 
@@ -1878,7 +1878,7 @@ namespace RegexDialog
                         }
                         else
                         {
-                            FunctionEvaluationEventArg functionEvaluationEventArg = new FunctionEvaluationEventArg(varFuncName, Evaluate, funcArgs, this, genericTypes: genericsTypes, evaluateGenericTypes: GetConcreteTypes);
+                            FunctionEvaluationEventArg functionEvaluationEventArg = new(varFuncName, Evaluate, funcArgs, this, genericTypes: genericsTypes, evaluateGenericTypes: GetConcreteTypes);
 
                             EvaluateFunction?.Invoke(this, functionEvaluationEventArg);
 
@@ -1920,7 +1920,7 @@ namespace RegexDialog
                             }
                             else
                             {
-                                VariablePreEvaluationEventArg variablePreEvaluationEventArg = new VariablePreEvaluationEventArg(varFuncName, this, obj, genericsTypes, GetConcreteTypes);
+                                VariablePreEvaluationEventArg variablePreEvaluationEventArg = new(varFuncName, this, obj, genericsTypes, GetConcreteTypes);
 
                                 PreEvaluateVariable?.Invoke(this, variablePreEvaluationEventArg);
 
@@ -1963,7 +1963,7 @@ namespace RegexDialog
 
                                     if (member == null && pushVarValue)
                                     {
-                                        VariableEvaluationEventArg variableEvaluationEventArg = new VariableEvaluationEventArg(varFuncName, this, obj ?? keepObj, genericsTypes, GetConcreteTypes);
+                                        VariableEvaluationEventArg variableEvaluationEventArg = new(varFuncName, this, obj ?? keepObj, genericsTypes, GetConcreteTypes);
 
                                         EvaluateVariable?.Invoke(this, variableEvaluationEventArg);
 
@@ -2077,7 +2077,7 @@ namespace RegexDialog
                     }
                     else
                     {
-                        VariablePreEvaluationEventArg variablePreEvaluationEventArg = new VariablePreEvaluationEventArg(varFuncName, this, genericTypes: genericsTypes, evaluateGenericTypes: GetConcreteTypes);
+                        VariablePreEvaluationEventArg variablePreEvaluationEventArg = new(varFuncName, this, genericTypes: genericsTypes, evaluateGenericTypes: GetConcreteTypes);
 
                         PreEvaluateVariable?.Invoke(this, variablePreEvaluationEventArg);
 
@@ -2200,7 +2200,7 @@ namespace RegexDialog
                             }
                             else
                             {
-                                VariableEvaluationEventArg variableEvaluationEventArg = new VariableEvaluationEventArg(varFuncName, this, genericTypes: genericsTypes, evaluateGenericTypes: GetConcreteTypes);
+                                VariableEvaluationEventArg variableEvaluationEventArg = new(varFuncName, this, genericTypes: genericsTypes, evaluateGenericTypes: GetConcreteTypes);
 
                                 EvaluateVariable?.Invoke(this, variableEvaluationEventArg);
 
@@ -2405,7 +2405,7 @@ namespace RegexDialog
 
             if (indexingBeginningMatch.Success)
             {
-                StringBuilder innerExp = new StringBuilder();
+                StringBuilder innerExp = new();
                 i += indexingBeginningMatch.Length;
                 int bracketCount = 1;
                 for (; i < expression.Length; i++)
@@ -2526,11 +2526,11 @@ namespace RegexDialog
 
                 i += stringBeginningMatch.Length;
 
-                Regex stringRegexPattern = new Regex($"^[^{(isEscaped ? "" : @"\\")}{(isInterpolated ? "{}" : "")}\"]*");
+                Regex stringRegexPattern = new($"^[^{(isEscaped ? "" : @"\\")}{(isInterpolated ? "{}" : "")}\"]*");
 
                 bool endOfString = false;
 
-                StringBuilder resultString = new StringBuilder();
+                StringBuilder resultString = new();
 
                 while (!endOfString && i < expression.Length)
                 {
@@ -2555,7 +2555,7 @@ namespace RegexDialog
                         }
                         else
                         {
-                            StringBuilder innerExp = new StringBuilder();
+                            StringBuilder innerExp = new();
                             int bracketCount = 1;
                             for (; i < expression.Length; i++)
                             {
@@ -2751,14 +2751,14 @@ namespace RegexDialog
 
                 stack.Push(new InternalDelegate((object[] args) =>
                 {
-                    Dictionary<string, object> vars = new Dictionary<string, object>(Variables);
+                    Dictionary<string, object> vars = new(Variables);
 
                     for (int a = 0; a < argsNames.Count || a < args.Length; a++)
                     {
                         vars[argsNames[a]] = args[a];
                     }
 
-                    ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator(vars);
+                    ExpressionEvaluator expressionEvaluator = new(vars);
 
                     string lambdaBody = lambdaExpressionMatch.Groups["expression"].Value.Trim();
 
@@ -2779,7 +2779,7 @@ namespace RegexDialog
         protected virtual MethodInfo GetRealMethod(ref Type type, ref object obj, string func, BindingFlags flag, List<object> args, string genericsTypes = "")
         {
             MethodInfo methodInfo = null;
-            List<object> modifiedArgs = new List<object>(args);
+            List<object> modifiedArgs = new(args);
 
             if (OptionFluidPrefixingActive
                 && (func.StartsWith("Fluid", StringComparisonForCasing)
@@ -2844,7 +2844,7 @@ namespace RegexDialog
                             && modifiedArgs[a] is InternalDelegate)
                         {
                             InternalDelegate led = modifiedArgs[a] as InternalDelegate;
-                            DelegateEncaps de = new DelegateEncaps(led);
+                            DelegateEncaps de = new(led);
                             MethodInfo encapsMethod = de.GetType()
                                 .GetMethod($"Func{parameterType.GetGenericArguments().Length - 1}")
                                 .MakeGenericMethod(parameterType.GetGenericArguments());
@@ -2979,7 +2979,7 @@ namespace RegexDialog
 
         protected List<string> GetExpressionsBetweenParenthesesOrOtherImbricableBrackets(string expression, ref int i, bool checkSeparator, string separator = ",", string startChar = "(", string endChar = ")")
         {
-            List<string> expressionsList = new List<string>();
+            List<string> expressionsList = new();
 
             string s;
             string currentExpression = string.Empty;
@@ -3178,7 +3178,7 @@ namespace RegexDialog
                 {
                     return null;
                 }
-                NullableConverter nullableConverter = new NullableConverter(conversionType);
+                NullableConverter nullableConverter = new(conversionType);
                 conversionType = nullableConverter.UnderlyingType;
             }
             return Convert.ChangeType(value, conversionType);
@@ -3186,7 +3186,7 @@ namespace RegexDialog
 
         protected virtual string GetCodeUntilEndOfString(string subExpr, Match stringBeginningMatch)
         {
-            StringBuilder stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new();
 
             GetCodeUntilEndOfString(subExpr, stringBeginningMatch, ref stringBuilder);
 
@@ -3423,33 +3423,33 @@ namespace RegexDialog
 
         protected uint OperatorValue { get; }
 
-        public static readonly ExpressionOperator Plus = new ExpressionOperator();
-        public static readonly ExpressionOperator Minus = new ExpressionOperator();
-        public static readonly ExpressionOperator UnaryPlus = new ExpressionOperator();
-        public static readonly ExpressionOperator UnaryMinus = new ExpressionOperator();
-        public static readonly ExpressionOperator Multiply = new ExpressionOperator();
-        public static readonly ExpressionOperator Divide = new ExpressionOperator();
-        public static readonly ExpressionOperator Modulo = new ExpressionOperator();
-        public static readonly ExpressionOperator Lower = new ExpressionOperator();
-        public static readonly ExpressionOperator Greater = new ExpressionOperator();
-        public static readonly ExpressionOperator Equal = new ExpressionOperator();
-        public static readonly ExpressionOperator LowerOrEqual = new ExpressionOperator();
-        public static readonly ExpressionOperator GreaterOrEqual = new ExpressionOperator();
-        public static readonly ExpressionOperator Is = new ExpressionOperator();
-        public static readonly ExpressionOperator NotEqual = new ExpressionOperator();
-        public static readonly ExpressionOperator LogicalNegation = new ExpressionOperator();
-        public static readonly ExpressionOperator BitwiseComplement = new ExpressionOperator();
-        public static readonly ExpressionOperator ConditionalAnd = new ExpressionOperator();
-        public static readonly ExpressionOperator ConditionalOr = new ExpressionOperator();
-        public static readonly ExpressionOperator LogicalAnd = new ExpressionOperator();
-        public static readonly ExpressionOperator LogicalOr = new ExpressionOperator();
-        public static readonly ExpressionOperator LogicalXor = new ExpressionOperator();
-        public static readonly ExpressionOperator ShiftBitsLeft = new ExpressionOperator();
-        public static readonly ExpressionOperator ShiftBitsRight = new ExpressionOperator();
-        public static readonly ExpressionOperator NullCoalescing = new ExpressionOperator();
-        public static readonly ExpressionOperator Cast = new ExpressionOperator();
-        public static readonly ExpressionOperator Indexing = new ExpressionOperator();
-        public static readonly ExpressionOperator IndexingWithNullConditional = new ExpressionOperator();
+        public static readonly ExpressionOperator Plus = new();
+        public static readonly ExpressionOperator Minus = new();
+        public static readonly ExpressionOperator UnaryPlus = new();
+        public static readonly ExpressionOperator UnaryMinus = new();
+        public static readonly ExpressionOperator Multiply = new();
+        public static readonly ExpressionOperator Divide = new();
+        public static readonly ExpressionOperator Modulo = new();
+        public static readonly ExpressionOperator Lower = new();
+        public static readonly ExpressionOperator Greater = new();
+        public static readonly ExpressionOperator Equal = new();
+        public static readonly ExpressionOperator LowerOrEqual = new();
+        public static readonly ExpressionOperator GreaterOrEqual = new();
+        public static readonly ExpressionOperator Is = new();
+        public static readonly ExpressionOperator NotEqual = new();
+        public static readonly ExpressionOperator LogicalNegation = new();
+        public static readonly ExpressionOperator BitwiseComplement = new();
+        public static readonly ExpressionOperator ConditionalAnd = new();
+        public static readonly ExpressionOperator ConditionalOr = new();
+        public static readonly ExpressionOperator LogicalAnd = new();
+        public static readonly ExpressionOperator LogicalOr = new();
+        public static readonly ExpressionOperator LogicalXor = new();
+        public static readonly ExpressionOperator ShiftBitsLeft = new();
+        public static readonly ExpressionOperator ShiftBitsRight = new();
+        public static readonly ExpressionOperator NullCoalescing = new();
+        public static readonly ExpressionOperator Cast = new();
+        public static readonly ExpressionOperator Indexing = new();
+        public static readonly ExpressionOperator IndexingWithNullConditional = new();
 
         public override bool Equals(object obj)
         {

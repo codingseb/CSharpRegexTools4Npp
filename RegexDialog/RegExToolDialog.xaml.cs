@@ -29,18 +29,18 @@ namespace RegexDialog
     /// </summary>
     public partial class RegExToolDialog : Window
     {
-        private readonly List<RegExOptionViewModel> regExOptionViewModelsList = new List<RegExOptionViewModel>();
+        private readonly List<RegExOptionViewModel> regExOptionViewModelsList = new();
 
         private readonly List<Regex> bracketsRegexList = (new Regex[]
             {
-                new Regex(@"(?<!(?<![\\])([\\]{2})*[\\])[\(\)]", RegexOptions.Compiled),
-                new Regex(@"(?<!(?<![\\])([\\]{2})*[\\])[\[\]]", RegexOptions.Compiled),
-                new Regex(@"(?<!(?<![\\])([\\]{2})*[\\])[{}]", RegexOptions.Compiled),
-                new Regex(@"(?<!(?<![\\])([\\]{2})*[\\])[<>]", RegexOptions.Compiled)
+                new(@"(?<!(?<![\\])([\\]{2})*[\\])[\(\)]", RegexOptions.Compiled),
+                new(@"(?<!(?<![\\])([\\]{2})*[\\])[\[\]]", RegexOptions.Compiled),
+                new(@"(?<!(?<![\\])([\\]{2})*[\\])[{}]", RegexOptions.Compiled),
+                new(@"(?<!(?<![\\])([\\]{2})*[\\])[<>]", RegexOptions.Compiled)
             }).ToList();
 
-        private readonly ObservableCollection<string> regexHistory = new ObservableCollection<string>();
-        private readonly ObservableCollection<string> replaceHistory = new ObservableCollection<string>();
+        private readonly ObservableCollection<string> regexHistory = new();
+        private readonly ObservableCollection<string> replaceHistory = new();
 
         private readonly string[] openingBrackets = new string[] { "(", "[", "{", "<" };
 
@@ -52,15 +52,15 @@ namespace RegexDialog
 
         private readonly IEvaluator csEval = CSScript.MonoEvaluator;
 
-        private readonly BracketColorizer currentBracketColorizer = new BracketColorizer();
-        private readonly BracketColorizer matchingBracketColorizer = new BracketColorizer();
+        private readonly BracketColorizer currentBracketColorizer = new();
+        private readonly BracketColorizer matchingBracketColorizer = new();
 
-        private static readonly Regex cSharpReplaceSpecialZoneCleaningRegex = new Regex(@"(?<=^|\s)\#(?<name>\w+)(?=\s).*(?<=\s)\#end\k<name>(?=\s|$)\s*", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex cSharpReplaceUsingsPartRegex = new Regex(@"(?<=^|\s)\#usings(?=\s)(?<usings>.*)(?<=\s)\#endusings(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex cSharpReplaceGlobalPartRegex = new Regex(@"(?<=^|\s)\#global(?=\s)(?<global>.*)(?<=\s)\#endglobal(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex cSharpReplaceBeforePartRegex = new Regex(@"(?<=^|\s)\#before(?=\s)(?<before>.*)(?<=\s)\#endbefore(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex cSharpReplaceAfterPartRegex = new Regex(@"(?<=^|\s)\#after(?=\s)(?<after>.*)(?<=\s)\#endafter(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
-        private static readonly Regex cSharpScriptsStartOfLinesForAddingTabs = new Regex(@"(?<start>^)(?<notend>[^\r\n])", RegexOptions.Multiline | RegexOptions.Compiled);
+        private static readonly Regex cSharpReplaceSpecialZoneCleaningRegex = new(@"(?<=^|\s)\#(?<name>\w+)(?=\s).*(?<=\s)\#end\k<name>(?=\s|$)\s*", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpReplaceUsingsPartRegex = new(@"(?<=^|\s)\#usings(?=\s)(?<usings>.*)(?<=\s)\#endusings(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpReplaceGlobalPartRegex = new(@"(?<=^|\s)\#global(?=\s)(?<global>.*)(?<=\s)\#endglobal(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpReplaceBeforePartRegex = new(@"(?<=^|\s)\#before(?=\s)(?<before>.*)(?<=\s)\#endbefore(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpReplaceAfterPartRegex = new(@"(?<=^|\s)\#after(?=\s)(?<after>.*)(?<=\s)\#endafter(?=\s|$)", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex cSharpScriptsStartOfLinesForAddingTabs = new(@"(?<start>^)(?<notend>[^\r\n])", RegexOptions.Multiline | RegexOptions.Compiled);
 
         private List<RegexLanguageElementGroup> languageElementGroups;
 
@@ -220,7 +220,7 @@ namespace RegexDialog
 
             InitializeComponent();
 
-            Title += $" - {Assembly.GetCallingAssembly().GetName().Version}";
+            Title += $" - {Assembly.GetExecutingAssembly().GetName().Version}";
 
             Init();
         }
@@ -324,7 +324,7 @@ namespace RegexDialog
                 {
                     if (regexOption != RegexOptions.None)
                     {
-                        RegExOptionViewModel reovm = new RegExOptionViewModel
+                        RegExOptionViewModel reovm = new()
                         {
                             RegexOptions = regexOption
                         };
@@ -358,12 +358,12 @@ namespace RegexDialog
                 if (RegexEditor.TextArea.TextView.LineTransformers.Contains(matchingBracketColorizer))
                     RegexEditor.TextArea.TextView.LineTransformers.Remove(matchingBracketColorizer);
 
-                Dictionary<string, int> posStringToMatchingPosDict = new Dictionary<string, int>();
+                Dictionary<string, int> posStringToMatchingPosDict = new();
 
                 bracketsRegexList.ForEach(regex =>
                 {
                     List<Match> matches = regex.Matches(RegexEditor.Text).Cast<Match>().ToList();
-                    Stack<Match> stackMatches = new Stack<Match>();
+                    Stack<Match> stackMatches = new();
 
                     matches.ForEach(match =>
                     {
@@ -528,7 +528,7 @@ namespace RegexDialog
 
         private static TreeViewItem VisualUpwardSearch(DependencyObject source)
         {
-            while (source != null && !(source is TreeViewItem))
+            while (source != null && source is not TreeViewItem)
                 source = VisualTreeHelper.GetParent(source);
 
             return source as TreeViewItem;
@@ -567,7 +567,7 @@ namespace RegexDialog
                     int i = 0;
                     int countAllCaptures = 0;
 
-                    Regex regex = new Regex(RegexEditor.Text, GetRegexOptions());
+                    Regex regex = new(RegexEditor.Text, GetRegexOptions());
 
                     List<RegexResult> GetMatchesFor(string text, string fileName = "", int selectionIndex = 0)
                     {
@@ -618,7 +618,7 @@ namespace RegexDialog
                     }
                     else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
                     {
-                        using(XLWorkbook workbook = new XLWorkbook(Config.Instance.TextSourceExcelPath))
+                        using(XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath))
                         {
                             var elementNb = 0;
                             MatchResultsTreeView.ItemsSource = Config.Instance.ExcelSheets
@@ -704,7 +704,7 @@ namespace RegexDialog
                 int files = 0;
                 string text;
 
-                Regex regex = new Regex(RegexEditor.Text, GetRegexOptions());
+                Regex regex = new(RegexEditor.Text, GetRegexOptions());
 
                 int nbrOfElementToReplace = 0;
 
@@ -897,7 +897,7 @@ namespace RegexDialog
             try
             {
                 string text = GetCurrentText();
-                Regex regex = new Regex(RegexEditor.Text, GetRegexOptions());
+                Regex regex = new(RegexEditor.Text, GetRegexOptions());
                 List<Match> matches = regex.Matches(text)
                     .Cast<Match>()
                     .ToList();
@@ -949,9 +949,9 @@ namespace RegexDialog
         {
             try
             {
-                StringBuilder sb = new StringBuilder();
+                StringBuilder sb = new();
                 int globalIndex = 0;
-                Regex regex = new Regex(RegexEditor.Text, GetRegexOptions());
+                Regex regex = new(RegexEditor.Text, GetRegexOptions());
                 int fileIndex = 0;
                 dynamic script = null;
 
@@ -1008,7 +1008,7 @@ namespace RegexDialog
                 }
                 else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
                 {
-                    using (XLWorkbook workbook = new XLWorkbook(Config.Instance.TextSourceExcelPath))
+                    using (XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath))
                     {
                         Config.Instance.ExcelSheets
                           .FindAll(sheetSelection => sheetSelection.IsSelected)
@@ -1061,7 +1061,7 @@ namespace RegexDialog
             if (filter.Equals(string.Empty))
                 filter = "*";
 
-            List<string> result = new List<string>();
+            List<string> result = new();
 
             filter.Split(';', ',', '|')
                 .ToList()
@@ -1112,7 +1112,7 @@ namespace RegexDialog
                 }
                 else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
                 {
-                    using (XLWorkbook workbook = new XLWorkbook(Config.Instance.TextSourceExcelPath))
+                    using (XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath))
                     {
                         bool found = false;
                         string sheetName = string.Empty;
@@ -1160,7 +1160,7 @@ namespace RegexDialog
                 cmiReplaceGroupByNumber.Items.Clear();
                 cmiReplaceGroupByName.Items.Clear();
 
-                Regex regex = new Regex(RegexEditor.Text, GetRegexOptions());
+                Regex regex = new(RegexEditor.Text, GetRegexOptions());
 
                 regex.GetGroupNames().ToList()
                     .ForEach(groupName => cmiReplaceGroupByName.Items.Add("${" + groupName + "}"));
@@ -1195,7 +1195,7 @@ namespace RegexDialog
                     {
                         if (regexResult?.FileName.Length > 0)
                         {
-                            if ((TryOpen?.Invoke(regexResult.FileName, true) ?? false) && !(regexResult is RegexFileResult))
+                            if ((TryOpen?.Invoke(regexResult.FileName, true) ?? false) && regexResult is not RegexFileResult)
                                 SetPosition(regexResult.Index, regexResult.Length);
                         }
                         else if (regexResult != null && lastMatchesText.Equals(GetText()))
@@ -1235,7 +1235,7 @@ namespace RegexDialog
                     if (regexResult.FileName.Length > 0
                         && !GetCurrentFileName().Equals(regexResult.FileName, StringComparison.OrdinalIgnoreCase)
                         && (TryOpen?.Invoke(regexResult.FileName, false) ?? false)
-                        && !(regexResult is RegexFileResult))
+                        && regexResult is not RegexFileResult)
                     {
                         SetPosition?.Invoke(regexResult.Index, regexResult.Length);
                     }
@@ -1257,7 +1257,7 @@ namespace RegexDialog
                     && !GetCurrentFileName().Equals(regexResult.FileName, StringComparison.OrdinalIgnoreCase))
                 {
                     if ((TryOpen?.Invoke(regexResult.FileName, false) ?? false)
-                        && !(regexResult is RegexFileResult))
+                        && regexResult is not RegexFileResult)
                     {
                         SetPosition?.Invoke(regexResult.Index, regexResult.Length);
                     }
@@ -1892,7 +1892,7 @@ namespace RegexDialog
         {
             try
             {
-                OpenFileDialog dialog = new OpenFileDialog
+                OpenFileDialog dialog = new()
                 {
                     Title = "Open a Regex",
                     CheckFileExists = true,
@@ -1909,7 +1909,7 @@ namespace RegexDialog
                     {
                         SetToHistory();
 
-                        XmlDocument xmlDoc = new XmlDocument();
+                        XmlDocument xmlDoc = new();
                         string content = File.ReadAllText(dialog.FileName);
                         xmlDoc.LoadXml(content);
 
@@ -1950,7 +1950,7 @@ namespace RegexDialog
         {
             try
             {
-                SaveFileDialog dialog = new SaveFileDialog
+                SaveFileDialog dialog = new()
                 {
                     DefaultExt = "regex",
                     Filter = "Regex files|*.regex",
@@ -1963,7 +1963,7 @@ namespace RegexDialog
                 {
                     try
                     {
-                        XmlDocument xmlDoc = new XmlDocument();
+                        XmlDocument xmlDoc = new();
 
                         XmlDeclaration xmlDeclaration = xmlDoc.CreateXmlDeclaration("1.0", null, null);
 
@@ -2221,7 +2221,7 @@ namespace RegexDialog
         {
             try
             {
-                VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog()
+                VistaFolderBrowserDialog folderBrowserDialog = new()
                 {
                     Description = "Select source folder",
                     UseDescriptionForTitle = true
@@ -2241,7 +2241,7 @@ namespace RegexDialog
         {
             try
             {
-                OpenFileDialog openFileDialog = new OpenFileDialog()
+                OpenFileDialog openFileDialog = new()
                 {
                     DefaultExt = ".xlsx",
                     Filter = "Excel Files|*.xlsx"
@@ -2303,13 +2303,13 @@ namespace RegexDialog
 
         private void ExportToVisualStudio_Click(object sender, RoutedEventArgs e)
         {
-            VistaFolderBrowserDialog folderBrowserDialog = new VistaFolderBrowserDialog()
+            VistaFolderBrowserDialog folderBrowserDialog = new()
             {
                 ShowNewFolderButton = true,
                 SelectedPath = @"C:\Projets"
             };
 
-            Ookii.Dialogs.WinForms.InputDialog inputDialog = new Ookii.Dialogs.WinForms.InputDialog()
+            Ookii.Dialogs.WinForms.InputDialog inputDialog = new()
             {
                 Content = "give a name for your project/solution :",
                 Input = "TestRegexSol"

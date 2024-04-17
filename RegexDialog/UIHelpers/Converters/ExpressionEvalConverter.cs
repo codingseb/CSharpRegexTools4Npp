@@ -47,7 +47,7 @@ namespace RegexDialog.Converters
         {
             try
             {
-                ExpressionEvaluator evaluator = new ExpressionEvaluator();
+                ExpressionEvaluator evaluator = new();
 
                 evaluator.Namespaces.NamespacesListForWPFConverters();
 
@@ -81,7 +81,7 @@ namespace RegexDialog.Converters
         {
             try
             {
-                ExpressionEvaluator evaluator = new ExpressionEvaluator();
+                ExpressionEvaluator evaluator = new();
 
                 evaluator.Namespaces.NamespacesListForWPFConverters();
 

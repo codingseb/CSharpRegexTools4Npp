@@ -2,6 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
     <OutputType>Library</OutputType>
+		<AssemblyVersion>1.2.0.0</AssemblyVersion>
+		<FileVersion>1.2.0.0</FileVersion>
     <LangVersion>9.0</LangVersion>
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
@@ -10,9 +12,12 @@
 	  <Nullable>disable</Nullable>
 	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	  <Platforms>x64;x86</Platforms>
-		<Version>1.1.11.0</Version>
-		<AssemblyVersion>1.1.11.0</AssemblyVersion>
-		<FileVersion>1.1.11.0</FileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x86'">
+    <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xsd" />
@@ -91,7 +96,7 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="Ookii.Dialogs.WinForms" Version="4.0.0" />
     <PackageReference Include="Ookii.Dialogs.Wpf" Version="5.0.1" />
-    <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" PrivateAssets="all"/>
+    <PackageReference Include="PropertyChanged.Fody" Version="4.1.0" PrivateAssets="all" />
     <PackageReference Include="SixLabors.Fonts" Version="1.0.0" />
     <PackageReference Include="System.AppContext" Version="4.3.0" />
     <PackageReference Include="System.Buffers" Version="4.5.1" />

@@ -64,7 +64,7 @@ namespace RegexDialog.Converters
             }
             else if (Converter1 == null || Converter2 == null)
             {
-                List<IValueConverter> convertersReverseList = new List<IValueConverter>(Converters);
+                List<IValueConverter> convertersReverseList = new(Converters);
                 convertersReverseList.Reverse();
 
                 foreach (var converter in convertersReverseList)

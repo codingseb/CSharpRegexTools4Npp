@@ -81,7 +81,7 @@ namespace CSharpRegexTools4Npp
                 && int.TryParse(Npp.NotepadPP.NppBinVersion.Split('.')[0], out int majorVersion)
                 && majorVersion >= 8)
             {
-                toolbarIconsWithDarkMode tbIcons = new toolbarIconsWithDarkMode
+                toolbarIconsWithDarkMode tbIcons = new()
                 {
                     hToolbarBmp = tbBmp.GetHbitmap(),
                     hToolbarIcon = tbBmp.GetHicon(),
@@ -95,7 +95,7 @@ namespace CSharpRegexTools4Npp
             }
             else
             {
-                toolbarIcons tbIcons = new toolbarIcons
+                toolbarIcons tbIcons = new()
                 {
                     hToolbarBmp = tbBmp.GetHbitmap(),
                     hToolbarIcon = tbBmp.GetHicon(),
@@ -120,7 +120,7 @@ namespace CSharpRegexTools4Npp
 
                 try
                 {
-                    HttpClient client = new HttpClient();
+                    HttpClient client = new();
                     client.DefaultRequestHeaders.Add("Accept-Language", "en-US;q=0.5,en;q=0.3");
                     client.DefaultRequestHeaders.Add("User-Agent", "C# App");
 
@@ -131,7 +131,7 @@ namespace CSharpRegexTools4Npp
                     var jsonResult = JObject.Parse(responseText);
 
                     int[] latestVersion = jsonResult["name"].ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
-                    int[] currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
+                    int[] currentVersion = typeof(RegExToolDialog).Assembly.GetName().Version.ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
 
                     Debug.WriteLine($"{latestVersion} - {currentVersion}");
 

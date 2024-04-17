@@ -125,7 +125,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             IntPtr ptrPosItem = _nativePointer;
             for (int i = 0; i < _funcItems.Count; i++)
             {
-                FuncItem updatedItem = new FuncItem();
+                FuncItem updatedItem = new();
                 updatedItem._itemName = _funcItems[i]._itemName;
                 ptrPosItem = (IntPtr)(ptrPosItem.ToInt64() + 128);
                 updatedItem._pFunc = _funcItems[i]._pFunc;

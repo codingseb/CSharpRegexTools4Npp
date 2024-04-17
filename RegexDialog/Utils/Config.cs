@@ -69,7 +69,7 @@ namespace RegexDialog
 
         private void Init()
         {
-            List<ExcelCellTextSource> excelCellTextSources = new List<ExcelCellTextSource>()
+            List<ExcelCellTextSource> excelCellTextSources = new()
             {
                 new ExcelCellTextSource()
                 {
@@ -188,7 +188,7 @@ namespace RegexDialog
                 isInit = false;
                 try
                 {
-                    using (XLWorkbook workbook = new XLWorkbook(TextSourceExcelPath))
+                    using (XLWorkbook workbook = new(TextSourceExcelPath))
                     {
                         ExcelSheets.ForEach(sheetSelection => sheetSelection.PropertyChanged -= SubPropertyChanged_PropertyChanged);
 
