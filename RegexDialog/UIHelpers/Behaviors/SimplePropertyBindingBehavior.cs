@@ -6,7 +6,7 @@ namespace RegexDialog.Behaviors
 {
     public class SimplePropertyBindingBehavior : Behavior<DependencyObject>
     {
-        private readonly ExpressionEvaluator expressionEvaluator = new ExpressionEvaluator();
+        private readonly ExpressionEvaluator expressionEvaluator = new();
         private string oldEventName = string.Empty;
         private readonly EventHandler<EventArgs> eventHandler;
 

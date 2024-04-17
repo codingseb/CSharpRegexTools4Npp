@@ -129,7 +129,7 @@ namespace RegexDialog
         private void SelectFromStartToEnd()
         {
             ResetSelectionTextRange();
-            TextRange textRange = new TextRange(StartSelectPosition, EndSelectPosition);
+            TextRange textRange = new(StartSelectPosition, EndSelectPosition);
             textRange.ApplyPropertyValue(TextElement.ForegroundProperty, SystemColors.HighlightTextBrush);
             textRange.ApplyPropertyValue(TextElement.BackgroundProperty, SystemColors.HighlightBrush);
 
@@ -141,7 +141,7 @@ namespace RegexDialog
         {
             if (displayTextBlock != null)
             {
-                TextRange textRange = new TextRange(displayTextBlock.ContentStart, displayTextBlock.ContentEnd);
+                TextRange textRange = new(displayTextBlock.ContentStart, displayTextBlock.ContentEnd);
                 textRange.ApplyPropertyValue(TextElement.ForegroundProperty, Foreground);
                 textRange.ApplyPropertyValue(TextElement.BackgroundProperty, Background);
             }

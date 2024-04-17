@@ -19,8 +19,8 @@ namespace RegexDialog
         /// <returns></returns>
         public static string IndentRegexPattern(string pattern, bool charClassesOnOneLine, bool keepQuantifierOnSameLine)
         {
-            Regex groupComplement = new Regex(@"^[?](([<][=!])|[:=>]|([\-]?[imnsx][:])|([<][a-zA-Z][a-zA-Z0-9_]*[>]))");
-            Regex quantifiers = new Regex(@"^(([?+*][?]?)|([{]\d+([,])?)[}])");
+            Regex groupComplement = new(@"^[?](([<][=!])|[:=>]|([\-]?[imnsx][:])|([<][a-zA-Z][a-zA-Z0-9_]*[>]))");
+            Regex quantifiers = new(@"^(([?+*][?]?)|([{]\d+([,])?)[}])");
 
             int level = 0;
 

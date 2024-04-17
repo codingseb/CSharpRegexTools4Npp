@@ -8,7 +8,7 @@ namespace CSharpRegexTools4Npp
     {
         public static NotepadPPGateway NotepadPP { get; } = new NotepadPPGateway();
 
-        public static ScintillaGateway Scintilla => new ScintillaGateway(PluginBase.GetCurrentScintilla());
+        public static ScintillaGateway Scintilla => new(PluginBase.GetCurrentScintilla());
 
         /// <summary>
         /// Récupère les caractères de fin de lignes courant

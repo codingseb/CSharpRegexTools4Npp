@@ -6,7 +6,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     public class PluginBase
     {
         public static NppData nppData;
-        public static FuncItems _funcItems = new FuncItems();
+        public static FuncItems _funcItems = new();
 
         public static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer)
         {
@@ -25,7 +25,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public static void SetCommand(int index, string commandName, NppFuncItemDelegate functionPointer, ShortcutKey shortcut, bool checkOnInit)
         {
-            FuncItem funcItem = new FuncItem
+            FuncItem funcItem = new()
             {
                 _cmdID = index,
                 _itemName = commandName

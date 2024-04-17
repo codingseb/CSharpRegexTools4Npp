@@ -59,11 +59,11 @@ namespace RegexDialog.Converters
 
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
-            Dictionary<string, object> variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, object> variables = new(StringComparer.OrdinalIgnoreCase);
 
             try
             {
-                ExpressionEvaluator evaluator = new ExpressionEvaluator()
+                ExpressionEvaluator evaluator = new()
                 {
                     OptionCaseSensitiveEvaluationActive = OptionCaseSensitiveEvaluationActive
                 };
@@ -108,11 +108,11 @@ namespace RegexDialog.Converters
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
         {
-            Dictionary<string, object> variables = new Dictionary<string, object>(StringComparer.OrdinalIgnoreCase);
+            Dictionary<string, object> variables = new(StringComparer.OrdinalIgnoreCase);
 
             try
             {
-                ExpressionEvaluator evaluator = new ExpressionEvaluator()
+                ExpressionEvaluator evaluator = new()
                 {
                     OptionCaseSensitiveEvaluationActive = OptionCaseSensitiveEvaluationActive
                 };

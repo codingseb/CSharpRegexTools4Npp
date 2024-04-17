@@ -17,7 +17,7 @@ namespace RegexDialog
     /// </summary>
     public class IniFile
     {
-        private readonly object lockSave = new object();
+        private readonly object lockSave = new();
 
         /// <summary>
         /// Caractères de retour à la ligne.
@@ -27,22 +27,22 @@ namespace RegexDialog
         /// <summary>
         /// Dictionnaire des sections
         /// </summary>
-        protected Dictionary<string, Section> Sections = new Dictionary<string, Section>();
+        protected Dictionary<string, Section> Sections = new();
 
         /// <summary>
         /// Listes des noms de section pour pouvoir les ordrer (Et faire des Inserts)
         /// </summary>
-        protected List<string> ListSections = new List<string>();
+        protected List<string> ListSections = new();
 
         /// <summary>
         /// Dictionnaire des commentaires
         /// </summary>
-        protected Dictionary<string, string> linkedComments = new Dictionary<string, string>();
+        protected Dictionary<string, string> linkedComments = new();
 
         /// <summary>
         /// Dictionnaire des commentaires placer seul sur une ligne avant une section ou une clé.
         /// </summary>
-        protected Dictionary<string, string> beforeCodeCommentsOrEmptyLines = new Dictionary<string, string>();
+        protected Dictionary<string, string> beforeCodeCommentsOrEmptyLines = new();
 
         /// <summary>
         /// Commentaire d'entête de fichier
@@ -606,7 +606,7 @@ namespace RegexDialog
             if (this.SectionExist(section) && this.KeyExist(section, key))
                 oldValue = this[section][key];
 
-            ValueChangingEventArgs tmpArg = new ValueChangingEventArgs(section, key, oldValue, value);
+            ValueChangingEventArgs tmpArg = new(section, key, oldValue, value);
             OnValueChanging(tmpArg);
 
             if (!tmpArg.Cancel)
@@ -1387,7 +1387,7 @@ namespace RegexDialog
             }
             else
             {
-                IniFileSavingEventArgs tmpEventArg = new IniFileSavingEventArgs();
+                IniFileSavingEventArgs tmpEventArg = new();
 
                 // Génère l'évènement qui avertit que le fichier est sur le point d'être sauvé.
                 OnIniFileSaving(tmpEventArg);
@@ -1576,7 +1576,7 @@ namespace RegexDialog
         {
             string oldComment = GetComment(section, key);
 
-            CommentChangingEventArgs tmpArgs = new CommentChangingEventArgs(section, key, oldComment, comment, true);
+            CommentChangingEventArgs tmpArgs = new(section, key, oldComment, comment, true);
 
             OnCommentChanging(tmpArgs);
 
@@ -1597,7 +1597,7 @@ namespace RegexDialog
         {
             string oldComment = GetComment(section);
 
-            CommentChangingEventArgs tmpArgs = new CommentChangingEventArgs(section, "", oldComment, comment, true);
+            CommentChangingEventArgs tmpArgs = new(section, "", oldComment, comment, true);
 
             OnCommentChanging(tmpArgs);
 
@@ -1619,7 +1619,7 @@ namespace RegexDialog
         {
             string oldComment = GetComment(section, key);
 
-            CommentChangingEventArgs tmpArgs = new CommentChangingEventArgs(section, key, oldComment, comment, false);
+            CommentChangingEventArgs tmpArgs = new(section, key, oldComment, comment, false);
 
             OnCommentChanging(tmpArgs);
 
@@ -1640,7 +1640,7 @@ namespace RegexDialog
         {
             string oldComment = GetComment(section);
 
-            CommentChangingEventArgs tmpArgs = new CommentChangingEventArgs(section, "", oldComment, comment, false);
+            CommentChangingEventArgs tmpArgs = new(section, "", oldComment, comment, false);
 
             OnCommentChanging(tmpArgs);
 
@@ -1665,7 +1665,7 @@ namespace RegexDialog
 
             if (oldComment.Equals(""))
             {
-                CommentChangingEventArgs tmpArgs = new CommentChangingEventArgs(section, key, oldComment, comment, false);
+                CommentChangingEventArgs tmpArgs = new(section, key, oldComment, comment, false);
 
                 OnCommentChanging(tmpArgs);
 
@@ -1690,7 +1690,7 @@ namespace RegexDialog
 
             if (oldComment.Equals(""))
             {
-                CommentChangingEventArgs tmpArgs = new CommentChangingEventArgs(section, "", oldComment, comment, false);
+                CommentChangingEventArgs tmpArgs = new(section, "", oldComment, comment, false);
 
                 OnCommentChanging(tmpArgs);
 
@@ -2131,12 +2131,12 @@ namespace RegexDialog
             /// <summary>
             /// Dictionnaire des paires clefs valeurs de la section
             /// </summary>
-            private Dictionary<string, string> keys = new Dictionary<string, string>();
+            private Dictionary<string, string> keys = new();
 
             /// <summary>
             ///Dictionnaire des valeur en string true si la valeur est une string false sinon.
             /// </summary>
-            public Dictionary<string, bool> IsQuoted = new Dictionary<string, bool>();
+            public Dictionary<string, bool> IsQuoted = new();
 
             /// <summary>
             /// Retourne la référence au dictionnaire des clé de la section
