@@ -23,8 +23,9 @@
 	  <FileVersion>1.1.11.0</FileVersion>
   </PropertyGroup>
 	<UsingTask TaskName="NppPlugin.DllExport.MSBuild.DllExportTask"
-					 AssemblyFile="NppPlugin.DllExport.MSBuild.dll"/>
-	<Target Name="AfterBuild" DependsOnTargets="GetFrameworkPaths">
+					 AssemblyFile="PluginInfrastructure\DllExport\NppPlugin.DllExport.MSBuild.dll"/>
+	<Target Name="NppTasksPlugin" DependsOnTargets="GetFrameworkPaths" AfterTargets="PostBuildEvent">
+		<Message Text="NppTasksPlugin" />
 		<PropertyGroup>
 			<!-- LibToolPath is optional - it's needed to debug C++, but you can still debug the C# code without it
 			If you don't have the C++ toolchain installed this is missing, but then you can't' debug C++ anyway -->
