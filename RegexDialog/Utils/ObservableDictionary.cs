@@ -84,6 +84,7 @@ namespace RegexDialog
             get { return Dictionary.Values; }
         }
 
+        [SuppressPropertyChangedWarnings]
         public TValue this[TKey key]
         {
             get

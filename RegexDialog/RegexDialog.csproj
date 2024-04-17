@@ -21,19 +21,8 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xsd" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="FodyWeavers.xsd">
-      <SubType>Designer</SubType>
-    </None>
-    <None Update="Resources\ModeV2.xsd">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Update="Resources\Regex_syntax_color.xshd">
-      <SubType>Designer</SubType>
-    </None>
+		<None Update="Resources\ModeV2.xsd" />
+		<None Update="Resources\Regex_syntax_color.xshd" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\accept_button.png" />
@@ -61,11 +50,7 @@
 		<Resource Include="Resources\VSSolution.sln" />
 		<Resource Include="Resources\VSProject.csproj" />
 		<Resource Include="Resources\page_white_csharp.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="FodyWeavers.xml">
-      <SubType>Designer</SubType>
-    </Resource>
+		<Resource Include="FodyWeavers.xml"/>
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="AvalonEdit" Version="6.0.1" />
