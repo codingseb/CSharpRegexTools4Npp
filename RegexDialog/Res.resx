@@ -119,10 +119,10 @@
   </resheader>
   <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="CSharpReplaceCallingCode" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\csharpreplacecallingcode.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>Resources\CSharpReplaceCallingCode.cs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="CSharpReplaceContainer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\csharpreplacecontainer.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
+    <value>Resources\CSharpReplaceContainer.cs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="RegexLanguageElements" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\regexlanguageelements.json;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
@@ -140,16 +140,16 @@
     <value>resources\replace_syntax_color.xshd;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;iso-8859-1</value>
   </data>
   <data name="StandardReplaceCode" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\standardreplacecode.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>Resources\StandardReplaceCode.cs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="TextSourceAsResourceInCsProj" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\textsourceasresourceincsproj.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;Windows-1252</value>
   </data>
   <data name="TextSourceContainer" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\textsourcecontainer.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>Resources\TextSourceContainer.cs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="VSProgram" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>resources\vsprogram.cs;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
+    <value>Resources\VSProgram.cs.txt;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>
   </data>
   <data name="VSProject" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>resources\vsproject.csproj;System.String, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089;utf-8</value>

@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
-using System.Web.UI.WebControls;
 using System.Windows;
 
 namespace RegexDialog
