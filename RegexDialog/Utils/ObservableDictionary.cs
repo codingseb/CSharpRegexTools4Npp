@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PropertyChanged;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
@@ -212,6 +213,7 @@ namespace RegexDialog
             }
         }
 
+        [SuppressPropertyChangedWarnings]
         private void OnPropertyChanged()
         {
             OnPropertyChanged(CountString);
@@ -220,29 +222,34 @@ namespace RegexDialog
             OnPropertyChanged(ValuesName);
         }
 
+        [SuppressPropertyChangedWarnings]
         protected virtual void OnPropertyChanged(string propertyName)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
+        [SuppressPropertyChangedWarnings]
         private void OnCollectionChanged()
         {
             OnPropertyChanged();
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(NotifyCollectionChangedAction.Reset));
         }
 
+        [SuppressPropertyChangedWarnings]
         private void OnCollectionChanged(NotifyCollectionChangedAction action, KeyValuePair<TKey, TValue> changedItem)
         {
             OnPropertyChanged();
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, changedItem));
         }
 
+        [SuppressPropertyChangedWarnings]
         private void OnCollectionChanged(NotifyCollectionChangedAction action, KeyValuePair<TKey, TValue> newItem, KeyValuePair<TKey, TValue> oldItem)
         {
             OnPropertyChanged();
             CollectionChanged?.Invoke(this, new NotifyCollectionChangedEventArgs(action, newItem, oldItem));
         }
 
+        [SuppressPropertyChangedWarnings]
         private void OnCollectionChanged(NotifyCollectionChangedAction action, IList newItems)
         {
             OnPropertyChanged();
