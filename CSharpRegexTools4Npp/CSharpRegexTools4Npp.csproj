@@ -40,9 +40,6 @@
 		<Copy SourceFiles="@(ReleaseFiles)" DestinationFolder="$(ProgramW6432)\Notepad++\plugins\$(TargetName)\" Condition="Exists('$(ProgramW6432)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x64'" ContinueOnError="false" />
 	</Target>
   <ItemGroup>
-    <None Remove="NppPlugin.DllExport.targets" />
-  </ItemGroup>
-  <ItemGroup>
     <Reference Include="System.Configuration" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.ServiceModel" />
