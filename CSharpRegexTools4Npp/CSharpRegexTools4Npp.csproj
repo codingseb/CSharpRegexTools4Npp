@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<!--<Import Project="PluginInfrastructure\DllExport\NppPlugin.DllExport.targets" />-->
   <PropertyGroup>
+		<OutputType>Library</OutputType>
     <TargetFramework>net481</TargetFramework>
-    <OutputType>Library</OutputType>
     <LangVersion>9.0</LangVersion>
 		<AssemblyTitle>C# Regex Tools 4 Npp</AssemblyTitle>
 		<Product>C# Regex Tools 4 Npp</Product>
@@ -18,12 +17,8 @@
 	  <Nullable>disable</Nullable>
 	  <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
 	  <Platforms>x64;x86</Platforms>
-		<Version>1.1.11.0</Version>
-	  <AssemblyVersion>1.1.11.0</AssemblyVersion>
-	  <FileVersion>1.1.11.0</FileVersion>
   </PropertyGroup>
-	<UsingTask TaskName="NppPlugin.DllExport.MSBuild.DllExportTask"
-					 AssemblyFile="PluginInfrastructure\DllExport\NppPlugin.DllExport.MSBuild.dll"/>
+	<UsingTask TaskName="NppPlugin.DllExport.MSBuild.DllExportTask" AssemblyFile="PluginInfrastructure\DllExport\NppPlugin.DllExport.MSBuild.dll" />
 	<Target Name="NppTasksPlugin" DependsOnTargets="GetFrameworkPaths" AfterTargets="PostBuildEvent">
 		<Message Text="NppTasksPlugin" />
 		<PropertyGroup>
@@ -31,42 +26,20 @@
 			If you don't have the C++ toolchain installed this is missing, but then you can't' debug C++ anyway -->
 			<LibToolPath Condition="Exists('$(DevEnvDir)\..\..\VC\bin')">$(DevEnvDir)\..\..\VC\bin</LibToolPath>
 		</PropertyGroup>
-		<DllExportTask Platform="$(Platform)"
-									 PlatformTarget="$(PlatformTarget)"
-									 CpuType="$(CpuType)"
-									 EmitDebugSymbols="$(DebugSymbols)"
-									 DllExportAttributeAssemblyName="$(DllExportAttributeAssemblyName)"
-									 DllExportAttributeFullName="$(DllExportAttributeFullName)"
-									 Timeout="$(DllExportTimeout)"
-									 KeyContainer="$(KeyContainerName)$(AssemblyKeyContainerName)"
-									 KeyFile="$(KeyOriginatorFile)"
-									 ProjectDirectory="$(MSBuildProjectDirectory)"
-									 InputFileName="$(TargetPath)"
-									 FrameworkPath="$(TargetedFrameworkDir);$(TargetFrameworkDirectory)"
-									 LibToolPath="$(LibToolPath)"
-									 LibToolDllPath="$(DevEnvDir)"
-									 SdkPath="$(SDK40ToolsPath)"/>
+		<DllExportTask Platform="$(Platform)" PlatformTarget="$(PlatformTarget)" CpuType="$(CpuType)" EmitDebugSymbols="$(DebugSymbols)" DllExportAttributeAssemblyName="$(DllExportAttributeAssemblyName)" DllExportAttributeFullName="$(DllExportAttributeFullName)" Timeout="$(DllExportTimeout)" KeyContainer="$(KeyContainerName)$(AssemblyKeyContainerName)" KeyFile="$(KeyOriginatorFile)" ProjectDirectory="$(MSBuildProjectDirectory)" InputFileName="$(TargetPath)" FrameworkPath="$(TargetedFrameworkDir);$(TargetFrameworkDirectory)" LibToolPath="$(LibToolPath)" LibToolDllPath="$(DevEnvDir)" SdkPath="$(SDK40ToolsPath)" />
 
 		<ItemGroup>
-			<ReleaseFiles Include="$(TargetDir)*.dll"/>
-			<ReleaseFiles Include="$(TargetDir)*.pdb"/>
+			<ReleaseFiles Include="$(TargetDir)CSharpRegexTools4Npp.dll" />
+			<!--<ReleaseFiles Include="$(TargetDir)*.pdb" />-->
 		</ItemGroup>
 		<!-- $(MSBuildProgramFiles32) points to the 32 bit program files dir.
 		On 32 bit windows usually C:\Program Files\
 		On 64 bit windows usually C:\Program Files (x86)\
 		$(ProgramW6432) points to the 64bit Program Files (on 32 bit windows it is blank) -->
 		<MakeDir Directories="$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\" Condition="Exists('$(MSBuildProgramFiles32)\Notepad++\plugins\') AND !Exists('$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x86'" />
-		<Copy
-				SourceFiles="@(ReleaseFiles)"
-				DestinationFolder="$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\"
-				Condition="Exists('$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x86'"
-				ContinueOnError="false" />
+		<Copy SourceFiles="@(ReleaseFiles)" DestinationFolder="$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\" Condition="Exists('$(MSBuildProgramFiles32)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x86'" ContinueOnError="false" />
 		<MakeDir Directories="$(ProgramW6432)\Notepad++\plugins\$(TargetName)\" Condition="Exists('$(ProgramW6432)\Notepad++\plugins\') AND !Exists('$(ProgramW6432)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x64'" />
-		<Copy
-				SourceFiles="@(ReleaseFiles)"
-				DestinationFolder="$(ProgramW6432)\Notepad++\plugins\$(TargetName)\"
-				Condition="Exists('$(ProgramW6432)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x64'"
-				ContinueOnError="false" />
+		<Copy SourceFiles="@(ReleaseFiles)" DestinationFolder="$(ProgramW6432)\Notepad++\plugins\$(TargetName)\" Condition="Exists('$(ProgramW6432)\Notepad++\plugins\$(TargetName)\') AND '$(Platform)'=='x64'" ContinueOnError="false" />
 	</Target>
   <ItemGroup>
     <None Remove="NppPlugin.DllExport.targets" />
@@ -98,8 +71,14 @@
     <ProjectReference Include="..\RegexDialog\RegexDialog.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Costura.Fody" Version="5.7.0" PrivateAssets="all" />
-    <PackageReference Include="Fody" Version="6.8.0" PrivateAssets="all" />
+    <PackageReference Include="Costura.Fody" Version="5.7.0" PrivateAssets="all">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Fody" Version="6.8.0" PrivateAssets="all">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
   </ItemGroup>
 </Project>

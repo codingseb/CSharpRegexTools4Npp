@@ -220,7 +220,7 @@ namespace RegexDialog
 
             InitializeComponent();
 
-            Title += $" - {Assembly.GetCallingAssembly().GetName().Version}";
+            Title += $" - {Assembly.GetExecutingAssembly().GetName().Version}";
 
             Init();
         }

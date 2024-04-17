@@ -131,7 +131,7 @@ namespace CSharpRegexTools4Npp
                     var jsonResult = JObject.Parse(responseText);
 
                     int[] latestVersion = jsonResult["name"].ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
-                    int[] currentVersion = Assembly.GetExecutingAssembly().GetName().Version.ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
+                    int[] currentVersion = typeof(RegExToolDialog).Assembly.GetName().Version.ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
 
                     Debug.WriteLine($"{latestVersion} - {currentVersion}");
 
