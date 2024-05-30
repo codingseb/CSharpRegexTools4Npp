@@ -604,7 +604,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition Height="Auto" />
                                 </Grid.RowDefinitions>
-                                <Label Content="_Find..."
+                                <Label Content="_Search..."
                                        VerticalAlignment="Center"
                                        Margin="2,1"
                                        Padding="0"
