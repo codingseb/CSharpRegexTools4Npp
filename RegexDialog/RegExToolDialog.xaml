@@ -627,7 +627,8 @@
                                         Background="Transparent"
                                         HorizontalAlignment="Right"
                                         VerticalAlignment="Center"
-                                        Visibility="{Binding Text, ElementName=FindLanguageElementTextBox, Converter={converters:ExpressionEvalConverter Expression='binding.Length > 0 ? Visibility.Visible : Visibility.Collapsed'}}" Grid.Column="1" Margin="0,9">
+                                        Visibility="{Binding Text, ElementName=FindLanguageElementTextBox, Converter={converters:ExpressionEvalConverter Expression='binding.Length > 0 ? Visibility.Visible : Visibility.Collapsed'}}" 
+                                        Grid.Column="1" >
                                     <Path x:Name="ButtonPath"
                                         Margin="3"
                                         Stroke="Black"
