@@ -250,7 +250,8 @@ namespace CSharpRegexTools4Npp
 
                     dialog.Show();
 
-                    SetWindowLong(new WindowInteropHelper(dialog).Handle, (int)WindowLongFlags.GWLP_HWNDPARENT, PluginBase.nppData._nppHandle);
+                    Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.MODELESSDIALOGADD, (int)NppMsg.NPPM_MODELESSDIALOG, new WindowInteropHelper(dialog).Handle.ToInt32());
+                    //SetWindowLong(new WindowInteropHelper(dialog).Handle, (int)WindowLongFlags.GWLP_HWNDPARENT, PluginBase.nppData._nppHandle);
                     SetLayeredWindowAttributes(new WindowInteropHelper(dialog).Handle, 0, 128, LWA_ALPHA);
                 }
             }
