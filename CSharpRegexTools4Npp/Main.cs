@@ -1,25 +1,17 @@
 ﻿// NPP plugin platform for .Net v0.91.57 by Kasper B. Graversen etc.
-using CSharpRegexTools4Npp.Forms;
 using CSharpRegexTools4Npp.PluginInfrastructure;
 using CSharpRegexTools4Npp.Utils;
+using RegexDialog;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.InteropServices;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
-using static CSharpRegexTools4Npp.PluginInfrastructure.Win32;
-using PluginNetResources = CSharpRegexTools4Npp.Properties.Resources;
-using RegexDialog;
 
 namespace CSharpRegexTools4Npp
 {
