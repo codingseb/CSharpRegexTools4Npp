@@ -188,9 +188,6 @@
       <DEBUG32 Include="bin\Debug\*.*" />
       <NPP64BIT Include="$(NppPath64)\plugins\CSharpRegexTools4Npp" />
       <NPP32BIT Include="$(NppPath32)\plugins\CSharpRegexTools4Npp" />
-      <TRANSLATION_ORIGIN Include="..\translation\*.json5" />
-      <TRANSLATION32 Include="$(NppPath32)\plugins\CSharpRegexTools4Npp\translation" />
-      <TRANSLATION64 Include="$(NppPath64)\plugins\CSharpRegexTools4Npp\translation" />
     </ItemGroup>
     <MakeDir Directories="@(NPP64BIT)" Condition=" '$(Platform)' == 'x64' " />
     <MakeDir Directories="@(NPP32BIT)" Condition=" '$(Platform)' == 'x86' " />

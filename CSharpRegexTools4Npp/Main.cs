@@ -21,11 +21,6 @@ namespace CSharpRegexTools4Npp
         internal const string PluginName = "C# Regex Tools 4 Npp";
         public static readonly string PluginConfigDirectory = Path.Combine(Npp.Notepad.GetConfigDirectory(), PluginName);
         public const string PluginRepository = "https://github.com/codingseb/CSharpRegexTools4Npp";
-        // general stuff things
-        private static readonly Icon dockingFormIcon = null;
-        private static readonly string sessionFilePath = Path.Combine(PluginConfigDirectory, "savedNppSession.xml");
-        // indicator things
-        // Allowing translation to other languages
         /// <summary>
         ///  This listens to the message that Notepad++ sends when its UI language is changed.
         /// </summary>
