@@ -69,8 +69,8 @@ namespace RegexDialog
 
         private void Init()
         {
-            List<ExcelCellTextSource> excelCellTextSources = new()
-            {
+            List<ExcelCellTextSource> excelCellTextSources =
+            [
                 new ExcelCellTextSource()
                 {
                     Name = "Formatted content",
@@ -116,7 +116,7 @@ namespace RegexDialog
                     Name = "Cell address",
                     GetValue = cell => cell.Address.ToString()
                 },
-            };
+            ];
 
             excelCellTextSources.ForEach(s1 =>
             {
@@ -140,8 +140,8 @@ namespace RegexDialog
         public string ReplaceEditorText { get; set; }
         public string CSharpTextSourceEditorText { get; set; }
 
-        public ObservableCollection<string> RegexHistory { get; set; } = new ObservableCollection<string>();
-        public ObservableCollection<string> ReplaceHistory { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> RegexHistory { get; set; } = [];
+        public ObservableCollection<string> ReplaceHistory { get; set; } = [];
 
         public int HistoryToKeep { get; set; } = 100;
 
@@ -164,22 +164,22 @@ namespace RegexDialog
 
         public int MatchesShowLevel { get; set; } = 1;
 
-        public ObservableDictionary<string, bool> RegexOptionsSelection { get; set; } = new ObservableDictionary<string, bool>();
+        public ObservableDictionary<string, bool> RegexOptionsSelection { get; set; } = [];
 
         public RegexTextSource TextSourceOn { get; set; }
 
         public string TextSourceDirectoryPath { get; set; } = string.Empty;
-        public ObservableCollection<string> TextSourceDirectoryPathHistory { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> TextSourceDirectoryPathHistory { get; set; } = [];
 
         public string TextSourceDirectorySearchFilter { get; set; } = string.Empty;
-        public ObservableCollection<string> TextSourceDirectorySearchFilterHistory { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> TextSourceDirectorySearchFilterHistory { get; set; } = [];
 
         public bool TextSourceDirectorySearchSubDirectories { get; set; }
 
         public bool TextSourceDirectoryShowNotMatchedFiles { get; set; } = true;
 
         public string TextSourceExcelPath { get; set; } = string.Empty;
-        public ObservableCollection<string> TextSourceExcelPathHistory { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> TextSourceExcelPathHistory { get; set; } = [];
 
         public void OnTextSourceExcelPathChanged()
         {
@@ -192,10 +192,9 @@ namespace RegexDialog
                     {
                         ExcelSheets.ForEach(sheetSelection => sheetSelection.PropertyChanged -= SubPropertyChanged_PropertyChanged);
 
-                        ExcelSheets = workbook
+                        ExcelSheets = [.. workbook
                             .Worksheets
-                            .Select(sheet => ExcelSheets.Find(sheetSelection => sheet.Name.Equals(sheetSelection.Name)) ?? new ExcelSheetSelection { Name = sheet.Name})
-                            .ToList();
+                            .Select(sheet => ExcelSheets.Find(sheetSelection => sheet.Name.Equals(sheetSelection.Name)) ?? new ExcelSheetSelection { Name = sheet.Name})];
 
                         ExcelSheets.ForEach(sheetSelection => sheetSelection.PropertyChanged += SubPropertyChanged_PropertyChanged);
                     }
@@ -227,7 +226,7 @@ namespace RegexDialog
             }
         }
 
-        public List<ExcelSheetSelection> ExcelSheets { get; set; } = new List<ExcelSheetSelection>();
+        public List<ExcelSheetSelection> ExcelSheets { get; set; } = [];
 
         public string ExcelTextSourceSeparator { get; set; } = "|";
 
@@ -244,7 +243,7 @@ namespace RegexDialog
             }
         }
 
-        public List<ExcelCellTextSource> ExcelCellTextSources { get; set; } = new List<ExcelCellTextSource>();
+        public List<ExcelCellTextSource> ExcelCellTextSources { get; set; } = [];
 
         public bool PrintFileNameWhenExtract { get; set; }
 

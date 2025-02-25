@@ -7,17 +7,17 @@ namespace RegexDialog
     /// </summary>
     internal static class NamespacesForExpressionEvalConverters
     {
-        public static List<string> NamespaceToAdd { get; } = new List<string>()
-        {
+        public static List<string> NamespaceToAdd { get; } =
+        [
             "System.Windows",
             "System.Windows.Controls",
             "System.Windows.Media",
             "System.Windows.Shapes",
-        };
-        public static List<string> NamespaceToRemove { get; } = new List<string>()
-        {
+        ];
+        public static List<string> NamespaceToRemove { get; } =
+        [
             "System.IO",
-        };
+        ];
 
         public static void NamespacesListForWPFConverters(this IList<string> list)
         {

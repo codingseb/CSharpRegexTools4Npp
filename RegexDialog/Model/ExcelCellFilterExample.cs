@@ -13,8 +13,8 @@ namespace RegexDialog
             Value=value;
         }
 
-        public static List<ExcelCellFilterExample> ExamplesList { get; set; } = new()
-        {
+        public static List<ExcelCellFilterExample> ExamplesList { get; set; } =
+        [
             new("Only one cell", "C9"),
             new("Multiple cells","A2;C3;D1;D4;BD10"),
             new("Only the row 5", "5"),
@@ -31,6 +31,6 @@ namespace RegexDialog
             new("All rows without header row", "{FR + 1}:{LR}"),
             new("Half of rows", "{FR}:{(LR-FR)/ 2 + FR}"),
             new("All used cells without FR,LF,FC and LC", "{(FCN + 1).ToLetter()}{FR + 1}:{(LCN - 1).ToLetter()}{LR - 1}"),
-        };
+        ];
     }
 }

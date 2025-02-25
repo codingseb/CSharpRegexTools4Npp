@@ -20,7 +20,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         IDM_FILE_SAVE = (IDM_FILE + 6),
         IDM_FILE_SAVEALL = (IDM_FILE + 7),
         IDM_FILE_SAVEAS = (IDM_FILE + 8),
-        //IDM_FILE_ASIAN_LANG              = (IDM_FILE + 9), 
+        //IDM_FILE_ASIAN_LANG              = (IDM_FILE + 9),
         IDM_FILE_PRINT = (IDM_FILE + 10),
         IDM_FILE_PRINTNOW = 1001,
         IDM_FILE_EXIT = (IDM_FILE + 11),
@@ -31,7 +31,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         IDM_FILE_DELETE = (IDM_FILE + 16),
         IDM_FILE_RENAME = (IDM_FILE + 17),
 
-        // A mettre à jour si on ajoute nouveau menu item dans le menu "File"
+        // A mettre � jour si on ajoute nouveau menu item dans le menu "File"
         IDM_FILEMENU_LASTONE = IDM_FILE_RENAME,
 
         IDM_EDIT = (IDM + 2000),

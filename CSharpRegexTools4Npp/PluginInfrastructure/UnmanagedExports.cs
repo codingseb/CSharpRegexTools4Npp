@@ -1,15 +1,14 @@
 ﻿// NPP plugin platform for .Net v0.94.00 by Kasper B. Graversen etc.
-using CSharpRegexTools4Npp.PluginInfrastructure;
-using NppPlugin.DllExport;
 using System;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
+using CSharpRegexTools4Npp.PluginInfrastructure;
+using RGiesecke.DllExport;
 
 namespace CSharpRegexTools4Npp
 {
-    public class UnmanagedExports
+    class UnmanagedExports
     {
-        [DllExport(CallingConvention = CallingConvention.Cdecl)]
+        [DllExport(CallingConvention=CallingConvention.Cdecl)]
         static bool isUnicode()
         {
             return true;
@@ -18,15 +17,8 @@ namespace CSharpRegexTools4Npp
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
         static void setInfo(NppData notepadPlusData)
         {
-            try
-            {
-                PluginBase.nppData = notepadPlusData;
-                Main.CommandMenuInit();
-            }
-            catch (Exception exception)
-            {
-                MessageBox.Show($"{exception.Message}\r\n{exception.StackTrace}{(exception.InnerException == null ? string.Empty : $"\r\nInner Exception :\r\n{exception.InnerException.Message}\r\n{exception.InnerException.StackTrace}")}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
+            PluginBase.nppData = notepadPlusData;
+            Main.CommandMenuInit();
         }
 
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
@@ -54,26 +46,19 @@ namespace CSharpRegexTools4Npp
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
         static void beNotified(IntPtr notifyCode)
         {
-            try
+            ScNotification notification = (ScNotification)Marshal.PtrToStructure(notifyCode, typeof(ScNotification));
+            if (notification.Header.Code == (uint)NppMsg.NPPN_TBMODIFICATION)
             {
-                ScNotification notification = (ScNotification)Marshal.PtrToStructure(notifyCode, typeof(ScNotification));
-                if (notification.Header.Code == (uint)NppMsg.NPPN_TBMODIFICATION)
-                {
-                    PluginBase._funcItems.RefreshItems();
-                    Main.SetToolBarIcon();
-                }
-                else if (notification.Header.Code == (uint)NppMsg.NPPN_SHUTDOWN)
-                {
-                    Marshal.FreeHGlobal(_ptrPluginName);
-                }
-                else
-                {
-                    Main.OnNotification(notification);
-                }
+                PluginBase._funcItems.RefreshItems();
             }
-            catch (Exception exception)
+            else if (notification.Header.Code == (uint)NppMsg.NPPN_SHUTDOWN)
             {
-                MessageBox.Show($"{exception.Message}\r\n{exception.StackTrace}{(exception.InnerException == null ? string.Empty : $"\r\nInner Exception :\r\n{exception.InnerException.Message}\r\n{exception.InnerException.StackTrace}")}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Main.PluginCleanUp();
+                Marshal.FreeHGlobal(_ptrPluginName);
+            }
+            else
+            {
+	            Main.OnNotification(notification);
             }
         }
     }

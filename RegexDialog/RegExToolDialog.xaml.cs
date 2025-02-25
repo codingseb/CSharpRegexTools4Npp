@@ -29,20 +29,20 @@ namespace RegexDialog
     /// </summary>
     public partial class RegExToolDialog : Window
     {
-        private readonly List<RegExOptionViewModel> regExOptionViewModelsList = new();
+        private readonly List<RegExOptionViewModel> regExOptionViewModelsList = [];
 
-        private readonly List<Regex> bracketsRegexList = (new Regex[]
+        private readonly List<Regex> bracketsRegexList = [.. (new Regex[]
             {
                 new(@"(?<!(?<![\\])([\\]{2})*[\\])[\(\)]", RegexOptions.Compiled),
                 new(@"(?<!(?<![\\])([\\]{2})*[\\])[\[\]]", RegexOptions.Compiled),
                 new(@"(?<!(?<![\\])([\\]{2})*[\\])[{}]", RegexOptions.Compiled),
                 new(@"(?<!(?<![\\])([\\]{2})*[\\])[<>]", RegexOptions.Compiled)
-            }).ToList();
+            })];
 
-        private readonly ObservableCollection<string> regexHistory = new();
-        private readonly ObservableCollection<string> replaceHistory = new();
+        private readonly ObservableCollection<string> regexHistory = [];
+        private readonly ObservableCollection<string> replaceHistory = [];
 
-        private readonly string[] openingBrackets = new string[] { "(", "[", "{", "<" };
+        private readonly string[] openingBrackets = ["(", "[", "{", "<"];
 
         private string lastMatchesText = "";
         private int lastSelectionStart;
@@ -358,11 +358,11 @@ namespace RegexDialog
                 if (RegexEditor.TextArea.TextView.LineTransformers.Contains(matchingBracketColorizer))
                     RegexEditor.TextArea.TextView.LineTransformers.Remove(matchingBracketColorizer);
 
-                Dictionary<string, int> posStringToMatchingPosDict = new();
+                Dictionary<string, int> posStringToMatchingPosDict = [];
 
                 bracketsRegexList.ForEach(regex =>
                 {
-                    List<Match> matches = regex.Matches(RegexEditor.Text).Cast<Match>().ToList();
+                    List<Match> matches = [.. regex.Matches(RegexEditor.Text).Cast<Match>()];
                     Stack<Match> stackMatches = new();
 
                     matches.ForEach(match =>
@@ -629,7 +629,7 @@ namespace RegexDialog
 
                                   RegexExcelSheetResult excelSheetResult = new(regex, null, elementNb++, "", sheetSelection.Name);
 
-                                  List<RegexResult> results = new();
+                                  List<RegexResult> results = [];
 
                                   if (sheet != null)
                                   {
@@ -898,9 +898,7 @@ namespace RegexDialog
             {
                 string text = GetCurrentText();
                 Regex regex = new(RegexEditor.Text, GetRegexOptions());
-                List<Match> matches = regex.Matches(text)
-                    .Cast<Match>()
-                    .ToList();
+                List<Match> matches = [.. regex.Matches(text).Cast<Match>()];
 
                 if (Config.Instance.TextSourceOn == RegexTextSource.CurrentSelection)
                 {
@@ -962,9 +960,7 @@ namespace RegexDialog
 
                 void Extract(string text, string fileName = "")
                 {
-                    List<Match> matches = regex.Matches((string)script?.Before(text, fileName) ?? text)
-                        .Cast<Match>()
-                        .ToList();
+                    List<Match> matches = [.. regex.Matches((string)script?.Before(text, fileName) ?? text).Cast<Match>()];
 
                     if (matches.Count > 0 || Config.Instance.TextSourceDirectoryShowNotMatchedFiles)
                     {
@@ -1061,7 +1057,7 @@ namespace RegexDialog
             if (filter.Equals(string.Empty))
                 filter = "*";
 
-            List<string> result = new();
+            List<string> result = [];
 
             filter.Split(';', ',', '|')
                 .ToList()
@@ -2501,7 +2497,7 @@ namespace RegexDialog
 
                 replace = string.Join("\r\n",
                     replace
-                        .Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None)
+                        .Split(["\r\n", "\r", "\n"], StringSplitOptions.None)
                         .Select(line => "    " + line));
 
                 replace = " match =>\r\n{\r\n" + replace.TrimEnd() + "\r\n}";

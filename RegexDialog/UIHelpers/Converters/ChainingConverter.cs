@@ -31,7 +31,7 @@ namespace RegexDialog.Converters
         /// <summary>
         /// For a list of converters to chain (Use as content Property, Converter1 and Converter2 must be null)
         /// </summary>
-        public List<IValueConverter> Converters { get; } = new List<IValueConverter>();
+        public List<IValueConverter> Converters { get; } = [];
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -64,7 +64,7 @@ namespace RegexDialog.Converters
             }
             else if (Converter1 == null || Converter2 == null)
             {
-                List<IValueConverter> convertersReverseList = new(Converters);
+                List<IValueConverter> convertersReverseList = [.. Converters];
                 convertersReverseList.Reverse();
 
                 foreach (var converter in convertersReverseList)

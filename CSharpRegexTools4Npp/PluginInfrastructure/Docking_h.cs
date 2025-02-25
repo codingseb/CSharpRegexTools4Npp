@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
+
     [Flags]
     public enum NppTbMsg : uint
     {
@@ -66,4 +67,5 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         public int Right;
         public int Bottom;
     }
+
 }

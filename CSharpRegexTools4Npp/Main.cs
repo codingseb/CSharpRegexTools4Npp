@@ -1,26 +1,57 @@
-﻿using CSharpRegexTools4Npp.PluginInfrastructure;
-using Newtonsoft.Json.Linq;
-using RegexDialog;
+﻿// NPP plugin platform for .Net v0.91.57 by Kasper B. Graversen etc.
+using CSharpRegexTools4Npp.Forms;
+using CSharpRegexTools4Npp.PluginInfrastructure;
+using CSharpRegexTools4Npp.Utils;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
+using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Interop;
+using static CSharpRegexTools4Npp.PluginInfrastructure.Win32;
+using PluginNetResources = CSharpRegexTools4Npp.Properties.Resources;
+using RegexDialog;
 
 namespace CSharpRegexTools4Npp
 {
-    public static class Main
+    class Main
     {
+        internal const int UNDO_BUFFER_SIZE = 64;
         internal const string PluginName = "C# Regex Tools 4 Npp";
-        private static int idMyDlg = 0;
-        private static readonly Bitmap tbBmp = Resources.icon;
-        //static RegExToolDialog dialog = null;
+        public static readonly string PluginConfigDirectory = Path.Combine(Npp.Notepad.GetConfigDirectory(), PluginName);
+        public const string PluginRepository = "https://github.com/codingseb/CSharpRegexTools4Npp";
+        // general stuff things
+        private static readonly Icon dockingFormIcon = null;
+        private static readonly string sessionFilePath = Path.Combine(PluginConfigDirectory, "savedNppSession.xml");
+        // indicator things
+        // Allowing translation to other languages
+        /// <summary>
+        ///  This listens to the message that Notepad++ sends when its UI language is changed.
+        /// </summary>
+        private static NppListener nppListener = null;
+        /// <summary>
+        /// If the Notepad++ version is higher than 8.6.9, this boolean does not matter.<br></br>
+        /// If this is true, and the Notepad++ version is 8.6.9 or lower, <see cref="nppListener"/> will be initialized.<br></br>
+        /// <b>SETTING THIS TO <c>true</c> COMES AT A REAL PERFORMANCE COST <i>EVEN WHEN YOUR PLUGIN IS NOT IN USE</i></b> (possibly up to 10% of all CPU usage associated with Notepad++)<br></br>
+        /// <i>Do NOT</i> set this to true unless it is very important to you that your plugin's UI language can dynamically adjust to the Notepad++ UI language.<br></br>
+        /// Note that <b>translation will work even if this is <c>false</c></b>, so the only upside of this is that
+        /// the user doesn't need to close Notepad++ and restart it to see their new language preferences reflected in this plugin's UI.
+        /// </summary>
+        private const bool FOLLOW_NPP_UI_LANGUAGE = false;
+
+        public const int GWL_EXSTYLE = -20;
+        public const int WS_EX_LAYERED = 0x80000;
+        public const int LWA_ALPHA = 0x2;
+        public const int LWA_COLORKEY = 0x1;
 
         //Import the FindWindow API to find our window
         [DllImport("User32.dll", CharSet = CharSet.Auto)]
@@ -31,126 +62,23 @@ namespace CSharpRegexTools4Npp
         private static extern IntPtr SetForegroundWindow(IntPtr hWnd);
 
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
-        private static extern IntPtr SetWindowLong(IntPtr hWnd, int windowLongFlags, IntPtr dwNewLong);
-
-        [DllImport("user32.dll", SetLastError = true, CharSet = CharSet.Auto)]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
-        [DllImport("user32.dll", CharSet = CharSet.Auto)]
         private static extern long SetLayeredWindowAttributes(IntPtr hwnd, uint crKey, byte bAlpha, uint dwFlags);
 
-        public const int GWL_EXSTYLE = -20;
-        public const int WS_EX_LAYERED = 0x80000;
-        public const int LWA_ALPHA = 0x2;
-        public const int LWA_COLORKEY = 0x1;
-
-        private enum WindowLongFlags : int
+        static internal void CommandMenuInit()
         {
-            GWL_USERDATA = -21,
-            GWL_EXSTYLE = -20,
-            GWL_STYLE = -16,
-            GWL_ID = -12,
-            GWLP_HWNDPARENT = -8,
-            GWLP_HINSTANCE = -6,
-            GWL_WNDPROC = -4,
-            DWLP_MSGRESULT = 0x0,
-            DWLP_DLGPROC = 0x4,
-            DWLP_USER = 0x8,
-            WS_EX_LAYERED = 0x80000
-        }
+            // first make it so that all references to any third-party dependencies point to the correct location
+            // see https://github.com/oleg-shilo/cs-script.npp/issues/66#issuecomment-1086657272 for more info
+            AppDomain.CurrentDomain.AssemblyResolve += LoadDependency;
 
-        private enum LayeredWindowAttributesFlags : byte
-        {
-            LWA_COLORKEY = 0x1,
-            LWA_ALPHA = 0x2
-        }
-
-        public static void OnNotification(ScNotification notification)
-        {
-        }
-
-        internal static void CommandMenuInit()
-        {
             PluginBase.SetCommand(0, "C# Regex Tools", ShowTheDialog, new ShortcutKey(true, false, true, System.Windows.Forms.Keys.H));
-            idMyDlg = 0;
-        }
+            PluginBase.SetCommand(1, "&Documentation", Docs);
 
-        internal static void SetToolBarIcon()
-        {
-            if (!string.IsNullOrEmpty(Npp.NotepadPP.NppBinVersion)
-                && int.TryParse(Npp.NotepadPP.NppBinVersion.Split('.')[0], out int majorVersion)
-                && majorVersion >= 8)
+            
+            if (FOLLOW_NPP_UI_LANGUAGE && (Npp.nppVersion[0] < 8 || (Npp.nppVersion[0] == 8 && (Npp.nppVersion[1] < 6 || (Npp.nppVersion[1] == 6 && Npp.nppVersion[2] <= 9)))))
             {
-                toolbarIconsWithDarkMode tbIcons = new()
-                {
-                    hToolbarBmp = tbBmp.GetHbitmap(),
-                    hToolbarIcon = tbBmp.GetHicon(),
-                    hToolbarIconDarkMode = tbBmp.GetHicon()
-                };
-
-                IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
-                Marshal.StructureToPtr(tbIcons, pTbIcons, false);
-                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_ADDTOOLBARICON_FORDARKMODE, PluginBase._funcItems.Items[idMyDlg]._cmdID, pTbIcons);
-                Marshal.FreeHGlobal(pTbIcons);
-            }
-            else
-            {
-                toolbarIcons tbIcons = new()
-                {
-                    hToolbarBmp = tbBmp.GetHbitmap(),
-                    hToolbarIcon = tbBmp.GetHicon(),
-                };
-
-                IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
-                Marshal.StructureToPtr(tbIcons, pTbIcons, false);
-                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_ADDTOOLBARICON, PluginBase._funcItems.Items[idMyDlg]._cmdID, pTbIcons);
-                Marshal.FreeHGlobal(pTbIcons);
-            }
-        }
-
-        private static async void CheckUpdates(RegExToolDialog dialog)
-        {
-            double hoursFromLastCheck = Math.Abs((DateTime.Now - Config.Instance.LastUpdateCheck).TotalHours);
-
-            //if (hoursFromLastCheck > 8)
-            if (true)
-            {
-                ServicePointManager.ServerCertificateValidationCallback += (_, __, ___, ____) => true;
-                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
-
-                try
-                {
-                    HttpClient client = new();
-                    client.DefaultRequestHeaders.Add("Accept-Language", "en-US;q=0.5,en;q=0.3");
-                    client.DefaultRequestHeaders.Add("User-Agent", "C# App");
-
-                    var response = await client.GetAsync("https://api.github.com/repos/codingseb/CSharpRegexTools4Npp/releases/latest").ConfigureAwait(true);
-
-                    string responseText = await response.Content.ReadAsStringAsync();
-
-                    var jsonResult = JObject.Parse(responseText);
-
-                    int[] latestVersion = jsonResult["name"].ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
-                    int[] currentVersion = typeof(RegExToolDialog).Assembly.GetName().Version.ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
-
-                    Debug.WriteLine($"{latestVersion} - {currentVersion}");
-
-                    for(int i = 0; i < latestVersion.Length && i < currentVersion.Length;i++)
-                    {
-                        if(latestVersion[i] > currentVersion[i])
-                        {
-                            Config.Instance.UpdateAvailable = true;
-                            Config.Instance.UpdateURL = "https://github.com/codingseb/CSharpRegexTools4Npp/releases";
-                            break;
-                        }
-                        else if(latestVersion[i] < currentVersion[i])
-                        {
-                            break;
-                        }
-                    }
-                }
-                catch
-                { }
+                // start listening to messages that aren't broadcast by the plugin manager (for versions of Notepad++ 8.6.9 or earlier, because later versions have NPPN_NATIVELANGCHANGED)
+                nppListener = new NppListener();
+                nppListener.AssignHandle(PluginBase.nppData._nppHandle);
             }
         }
 
@@ -170,42 +98,46 @@ namespace CSharpRegexTools4Npp
                 {
                     RegExToolDialog dialog = null;
 
-                    RegExToolDialog.InitIsOK = () => CheckUpdates(dialog);
+                    //RegExToolDialog.InitIsOK = () => CheckUpdates(dialog);
 
                     dialog = new RegExToolDialog
                     {
-                        GetText = () => Npp.Text,
+                        GetText = () => Npp.Editor.GetText(),
 
                         SetText = text =>
                         {
                             if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
                             {
-                                Npp.NotepadPP.FileNew();
+                                Npp.Notepad.FileNew();
                             }
 
-                            Npp.Text = text;
+                            Npp.Editor.SetText(text);
                         },
 
                         SetTextInNew = text =>
                         {
-                            Npp.NotepadPP.FileNew();
+                            Npp.Notepad.FileNew();
 
-                            Npp.Text = text;
+                            Npp.Editor.SetText(text);
                         },
 
-                        GetSelectedText = () => Npp.SelectedText,
+                        GetSelectedText = () => "",
 
-                        SetPosition = (index, length) => Npp.SelectTextAndShow(index, index + length),
+                        SetPosition = (index, length) =>
+                        {
+                            Npp.Editor.SetSelectionStart(index);
+                            Npp.Editor.SetSelectionEnd(index + length);
+                        },
 
-                        SetSelection = (index, length) => Npp.AddSelection(index, index + length),
+                        SetSelection = (index, length) => Npp.Editor.AddSelection(index, index + length),
 
-                        GetSelectionStartIndex = () => Npp.SelectionStart,
+                        GetSelectionStartIndex = () => Npp.Editor.GetSelectionStart(),
 
-                        GetSelectionLength = () => Npp.SelectionLength,
+                        GetSelectionLength = () => Npp.Editor.GetSelectionLength(),
 
-                        SaveCurrentDocument = () => Npp.NotepadPP.SaveCurrentFile(),
+                        SaveCurrentDocument = () => Npp.Notepad.SaveCurrentFile(),
 
-                        SetCurrentTabInCSharpHighlighting = () => Npp.NotepadPP.SetCurrentLanguage(LangType.L_CS),
+                        SetCurrentTabInCSharpHighlighting = () => Npp.Notepad.SetCurrentLanguage(LangType.L_CS),
 
                         TryOpen = (fileName, onlyIfAlreadyOpen) =>
                         {
@@ -213,18 +145,18 @@ namespace CSharpRegexTools4Npp
                             {
                                 bool result = false;
 
-                                if (Npp.NotepadPP.CurrentFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
+                                if (Npp.Notepad.CurrentFileName.Equals(fileName, StringComparison.OrdinalIgnoreCase))
                                 {
                                     result = true;
                                 }
-                                else if (Npp.NotepadPP.GetAllOpenedDocuments.Any(s => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
+                                else if (Npp.Notepad.GetAllOpenedDocuments.Any(s => s.Equals(fileName, StringComparison.OrdinalIgnoreCase)))
                                 {
-                                    Npp.NotepadPP.ShowTab(fileName);
+                                    Npp.Notepad.ShowTab(fileName);
                                     result = true;
                                 }
                                 else if (!onlyIfAlreadyOpen)
                                 {
-                                    result = Npp.NotepadPP.OpenFile(fileName);
+                                    result = Npp.Notepad.OpenFile(fileName);
                                 }
                                 else
                                 {
@@ -245,7 +177,7 @@ namespace CSharpRegexTools4Npp
                             }
                         },
 
-                        GetCurrentFileName = () => Npp.NotepadPP.CurrentFileName
+                        GetCurrentFileName = () => Npp.Notepad.CurrentFileName
                     };
 
                     dialog.Show();
@@ -260,5 +192,50 @@ namespace CSharpRegexTools4Npp
                 MessageBox.Show(exception.Message + "\r\n" + exception.StackTrace, "Erreur", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
+
+        private static Assembly LoadDependency(object sender, ResolveEventArgs args)
+        {
+            string assemblyFile = Path.Combine(Npp.pluginDllDirectory, new AssemblyName(args.Name).Name) + ".dll";
+            if (File.Exists(assemblyFile))
+                return Assembly.LoadFrom(assemblyFile);
+            return null;
+        }
+
+        public static void OnNotification(ScNotification notification)
+        {
+            
+        }
+
+        static internal void PluginCleanUp()
+        {
+        }
+
+        /// <summary>
+        /// open GitHub repo with the web browser
+        /// </summary>
+        private static void Docs()
+        {
+            OpenUrlInWebBrowser(PluginRepository);
+        }
+
+        public static void OpenUrlInWebBrowser(string url)
+        {
+            try
+            {
+                var ps = new ProcessStartInfo(url)
+                {
+                    UseShellExecute = true,
+                    Verb = "open"
+                };
+                Process.Start(ps);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"While attempting to open URL {url} in web browser, got exception\r\n{ex}",
+                    "Could not open url in web browser",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
+        }
     }
-}
+}   

@@ -142,7 +142,7 @@ namespace RegexDialog.Converters
                 }
                 else
                 {
-                    return new object[] { ex.Message };
+                    return [ex.Message];
                 }
             }
         }

@@ -102,7 +102,7 @@ namespace RegexDialog.Behaviors
                     typeof(WeakEventManager<,>)
                         .MakeGenericType(AssociatedObject.GetType(), typeof(EventArgs))
                         .GetMethod("AddHandler")
-                        .Invoke(null, new object[] { AssociatedObject, PropertyChangedTriggerEventName, eventHandler });
+                        .Invoke(null, [AssociatedObject, PropertyChangedTriggerEventName, eventHandler]);
                 }
             }
         }
@@ -115,7 +115,7 @@ namespace RegexDialog.Behaviors
                 typeof(WeakEventManager<,>)
                     .MakeGenericType(AssociatedObject.GetType(), typeof(EventArgs))
                     .GetMethod("RemoveHandler")
-                    .Invoke(null, new object[] { AssociatedObject, oldEventName, eventHandler });
+                    .Invoke(null, [AssociatedObject, oldEventName, eventHandler]);
             }
         }
 

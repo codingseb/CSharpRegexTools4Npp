@@ -41,7 +41,7 @@ namespace RegexDialog
 
         public RegexResult Parent { get; set; }
 
-        public List<RegexResult> Children { get; set; } = new List<RegexResult>();
+        public List<RegexResult> Children { get; set; } = [];
 
         public Regex Regex { get; }
 

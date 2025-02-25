@@ -9,7 +9,7 @@ using System;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
-    public class Constants
+    class Constants
     {
         public const int WM_USER = 0x400;
         public const int NPPMSG = WM_USER + 1000;
@@ -24,14 +24,16 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         L_ASM, L_DIFF, L_PROPS, L_PS, L_RUBY, L_SMALLTALK, L_VHDL, L_KIX, L_AU3,
         L_CAML, L_ADA, L_VERILOG, L_MATLAB, L_HASKELL, L_INNO, L_SEARCHRESULT,
         L_CMAKE, L_YAML, L_COBOL, L_GUI4CLI, L_D, L_POWERSHELL, L_R, L_JSP,
-        L_COFFEESCRIPT, L_JSON, L_JAVASCRIPT, L_FORTRAN_77,
+        L_COFFEESCRIPT, L_JSON, L_JAVASCRIPT, L_FORTRAN_77, L_BAANC, L_SREC,
+        L_IHEX, L_TEHEX, L_SWIFT,
+        L_ASN1, L_AVS, L_BLITZBASIC, L_PUREBASIC, L_FREEBASIC,
+        L_CSOUND, L_ERLANG, L_ESCRIPT, L_FORTH, L_LATEX,
+        L_MMIXAL, L_NIM, L_NNCRONTAB, L_OSCRIPT, L_REBOL,
+        L_REGISTRY, L_RUST, L_SPICE, L_TXT2TAGS, L_VISUALPROLOG,
+        L_TYPESCRIPT, L_JSON5, L_MSSQL, L_GDSCRIPT, L_HOLLYWOOD,
         // Don't use L_JS, use L_JAVASCRIPT instead
         // The end of enumated language type, so it should be always at the end
-        L_EXTERNAL,
-        L_SRECORD, L_INTELHEX, L_TEKTRONIXEXTENDEDHEX, L_SWIFT, L_ASN1, L_AVISYNTH,
-        L_BLITZBASIC, L_PUREBASIC, L_FREEBASIC, L_CSOUND, L_ERLANG, L_ESCRIPT,
-        L_FORTH, L_LATEX, L_MMIXAL, L_NIMROD, L_NNCRONTAB, L_OSCRIPT, L_REBOL,
-        L_REGISTRY, L_RUST, L_SPICE, L_TXT2TAGS, L_VPROLOG,
+        L_EXTERNAL
     }
 
     [Flags]
@@ -49,7 +51,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         ALL_OPEN_FILES = 0,
         PRIMARY_VIEW = 1,
         SECOND_VIEW = 2,
-
         NPPM_GETOPENFILENAMES = Constants.NPPMSG + 8,
 
         NPPM_MODELESSDIALOG = Constants.NPPMSG + 12,
@@ -80,12 +81,12 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         STATUSBAR_UNICODE_TYPE = 4,
         STATUSBAR_TYPING_MODE = 5,
 
+        /// <summary>
+        /// INT NPPM_GETMENUHANDLE(INT menuChoice, 0)<br></br>
+        /// Return: menu handle (HMENU) of choice (plugin menu handle (<see cref="NPPPLUGINMENU"/>) or Notepad++ main menu handle (<see cref="NPPMAINMENU"/>))
+        /// </summary>
         NPPM_GETMENUHANDLE = Constants.NPPMSG + 25,
         NPPPLUGINMENU = 0,
-        /// <summary>
-        /// INT NPPM_GETMENUHANDLE(INT menuChoice, 0)
-        /// Return: menu handle (HMENU) of choice (plugin menu handle or Notepad++ main menu handle)
-        /// </summary>
         NPPMAINMENU = 1,
 
         /// <summary>
@@ -173,13 +174,6 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_ADDTOOLBARICON = Constants.NPPMSG + 41,
 
         /// <summary>
-        /// void NPPM_ADDTOOLBARICON_FORDARKMODE(UINT funcItem[X]._cmdID, toolbarIconsWithDarkMode iconHandles)
-        /// Use NPPM_ADDTOOLBARICON_FORDARKMODE instead obsolete NPPM_ADDTOOLBARICON which doesn't support the dark mode
-        /// 2 formats / 3 icons are needed:  1 * BMP + 2 * ICO 
-        /// </summary>
-        NPPM_ADDTOOLBARICON_FORDARKMODE = Constants.NPPMSG + 101,
-
-        /// <summary>
         ///winVer NPPM_GETWINDOWSVERSION(0, 0)
         /// </summary>
         NPPM_GETWINDOWSVERSION = Constants.NPPMSG + 42,
@@ -202,7 +196,11 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_GETENABLETHEMETEXTUREFUNC = Constants.NPPMSG + 45,
 
         /// <summary>
-        ///void NPPM_GETPLUGINSCONFIGDIR(int strLen, TCHAR *str)
+        ///INT NPPM_GETPLUGINSCONFIGDIR(int strLen, TCHAR *str)
+        /// Get user's plugin config directory path. It's useful if plugins want to save/load parameters for the current user
+        /// Returns the number of TCHAR copied/to copy.
+        /// Users should call it with "str" be NULL to get the required number of TCHAR (not including the terminating nul character),
+        /// allocate "str" buffer with the return value + 1, then call it again to get the path.
         /// </summary>
         NPPM_GETPLUGINSCONFIGDIR = Constants.NPPMSG + 46,
 
@@ -250,7 +248,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_ISTABBARHIDDEN = Constants.NPPMSG + 52,
 
         /// <summary>
-        /// INT NPPM_GETPOSFROMBUFFERID(INT bufferID, INT priorityView)
+        /// INT NPPM_GETPOSFROMBUFFERID(UINT_PTR bufferID, INT priorityView)
         /// Return VIEW|INDEX from a buffer ID. -1 if the bufferID non existing
         /// if priorityView set to SUB_VIEW, then SUB_VIEW will be search firstly
         ///
@@ -262,11 +260,11 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_GETPOSFROMBUFFERID = Constants.NPPMSG + 57,
 
         /// <summary>
-        /// INT NPPM_GETFULLPATHFROMBUFFERID(INT bufferID, TCHAR *fullFilePath)
+        /// INT NPPM_GETFULLPATHFROMBUFFERID(UINT_PTR bufferID, TCHAR *fullFilePath)
         /// Get full path file name from a bufferID.
         /// Return -1 if the bufferID non existing, otherwise the number of TCHAR copied/to copy
         /// User should call it with fullFilePath be NULL to get the number of TCHAR (not including the nul character),
-        /// allocate fullFilePath with the return values + 1, then call it again to get  full path file name
+        /// allocate fullFilePath with the return values + 1, then call it again to get full path file name
         /// </summary>
         NPPM_GETFULLPATHFROMBUFFERID = Constants.NPPMSG + 58,
 
@@ -285,7 +283,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_GETCURRENTBUFFERID = Constants.NPPMSG + 60,
 
         /// <summary>
-        /// VOID NPPM_RELOADBUFFERID(0, 0)
+        /// VOID NPPM_RELOADBUFFERID(UINT_PTR bufferID, BOOL alert)
         /// Reloads Buffer
         /// wParam: Buffer to reload
         /// lParam: 0 if no alert, else alert
@@ -293,7 +291,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_RELOADBUFFERID = Constants.NPPMSG + 61,
 
         /// <summary>
-        /// INT NPPM_GETBUFFERLANGTYPE(INT bufferID, 0)
+        /// INT NPPM_GETBUFFERLANGTYPE(UINT_PTR bufferID, 0)
         /// wParam: BufferID to get LangType from
         /// lParam: 0
         /// Returns as int, see LangType. -1 on error
@@ -301,7 +299,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_GETBUFFERLANGTYPE = Constants.NPPMSG + 64,
 
         /// <summary>
-        /// BOOL NPPM_SETBUFFERLANGTYPE(INT bufferID, INT langType)
+        /// BOOL NPPM_SETBUFFERLANGTYPE(UINT_PTR bufferID, INT langType)
         /// wParam: BufferID to set LangType of
         /// lParam: LangType
         /// Returns TRUE on success, FALSE otherwise
@@ -311,7 +309,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_SETBUFFERLANGTYPE = Constants.NPPMSG + 65,
 
         /// <summary>
-        /// INT NPPM_GETBUFFERENCODING(INT bufferID, 0)
+        /// INT NPPM_GETBUFFERENCODING(UINT_PTR bufferID, 0)
         /// wParam: BufferID to get encoding from
         /// lParam: 0
         /// returns as int, see UniMode. -1 on error
@@ -319,7 +317,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_GETBUFFERENCODING = Constants.NPPMSG + 66,
 
         /// <summary>
-        /// BOOL NPPM_SETBUFFERENCODING(INT bufferID, INT encoding)
+        /// BOOL NPPM_SETBUFFERENCODING(UINT_PTR bufferID, INT encoding)
         /// wParam: BufferID to set encoding of
         /// lParam: encoding
         /// Returns TRUE on success, FALSE otherwise
@@ -329,39 +327,21 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_SETBUFFERENCODING = Constants.NPPMSG + 67,
 
         /// <summary>
-        /// INT NPPM_GETBUFFERFORMAT(INT bufferID, 0)
-        /// wParam: BufferID to get format from
+        /// INT NPPM_GETBUFFERFORMAT(UINT_PTR bufferID, 0)
+        /// wParam: BufferID to get EolType format from
         /// lParam: 0
-        /// returns as int, see formatType. -1 on error
+        /// returns as int, see EolType format. -1 on error
         /// </summary>
         NPPM_GETBUFFERFORMAT = Constants.NPPMSG + 68,
 
         /// <summary>
-        /// BOOL NPPM_SETBUFFERFORMAT(INT bufferID, INT format)
-        /// wParam: BufferID to set format of
+        /// BOOL NPPM_SETBUFFERFORMAT(UINT_PTR bufferID, INT format)
+        /// wParam: BufferID to set EolType format of
         /// lParam: format
         /// Returns TRUE on success, FALSE otherwise
-        /// use int, see formatType
+        /// use int, see EolType format
         /// </summary>
         NPPM_SETBUFFERFORMAT = Constants.NPPMSG + 69,
-
-        /// <summary>
-        /// BOOL NPPM_ADDREBAR(0, REBARBANDINFO *)
-        /// Returns assigned ID in wID value of struct pointer
-        /// </summary>
-        NPPM_ADDREBAR = Constants.NPPMSG + 57,
-
-        /// <summary>
-        /// BOOL NPPM_ADDREBAR(INT ID, REBARBANDINFO *)
-        ///Use ID assigned with NPPM_ADDREBAR
-        /// </summary>
-        NPPM_UPDATEREBAR = Constants.NPPMSG + 58,
-
-        /// <summary>
-        /// BOOL NPPM_ADDREBAR(INT ID, 0)
-        ///Use ID assigned with NPPM_ADDREBAR
-        /// </summary>
-        NPPM_REMOVEREBAR = Constants.NPPMSG + 59,
 
         /// <summary>
         /// BOOL NPPM_HIDETOOLBAR(0, BOOL hideOrNot)
@@ -409,7 +389,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// BOOL NPPM_GETSHORTCUTBYCMDID(int cmdID, ShortcutKey *sk)
         /// get your plugin command current mapped shortcut into sk via cmdID
         /// You may need it after getting NPPN_READY notification
-        /// returned value : TRUE if this function call is successful and shorcut is enable, otherwise FALSE
+        /// returned value : TRUE if this function call is successful and shortcut is enable, otherwise FALSE
         /// </summary>
         NPPM_GETSHORTCUTBYCMDID = Constants.NPPMSG + 76,
 
@@ -427,7 +407,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         /// <summary>
         /// INT NPPM_GETCURRENTNATIVELANGENCODING(0, 0)
-        /// returned value : the current native language enconding
+        /// returned value : the current native language encoding
         /// </summary>
         NPPM_GETCURRENTNATIVELANGENCODING = Constants.NPPMSG + 79,
 
@@ -454,7 +434,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         /// <summary>
         /// INT NPPM_GETLANGUAGENAME(int langType, TCHAR *langName)
-        /// Get programing language name from the given language type (LangType)
+        /// Get programming language name from the given language type (LangType)
         /// Return value is the number of copied character / number of character to copy (\0 is not included)
         /// You should call this function 2 times - the first time you pass langName as NULL to get the number of characters to copy.
         /// You allocate a buffer of the length of (the number of characters + 1) then call NPPM_GETLANGUAGENAME function the 2nd time
@@ -464,7 +444,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         /// <summary>
         /// INT NPPM_GETLANGUAGEDESC(int langType, TCHAR *langDesc)
-        /// Get programing language short description from the given language type (LangType)
+        /// Get programming language short description from the given language type (LangType)
         /// Return value is the number of copied character / number of character to copy (\0 is not included)
         /// You should call this function 2 times - the first time you pass langDesc as NULL to get the number of characters to copy.
         /// You allocate a buffer of the length of (the number of characters + 1) then call NPPM_GETLANGUAGEDESC function the 2nd time
@@ -473,7 +453,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_GETLANGUAGEDESC = Constants.NPPMSG + 84,
 
         /// <summary>
-        /// VOID NPPM_ISDOCSWITCHERSHOWN(0, BOOL toShowOrNot)
+        /// VOID NPPM_SHOWDOCSWITCHER(0, BOOL toShowOrNot)
         /// Send this message to show or hide doc switcher.
         /// if toShowOrNot is TRUE then show doc switcher, otherwise hide it.
         /// </summary>
@@ -487,7 +467,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         /// <summary>
         /// BOOL NPPM_GETAPPDATAPLUGINSALLOWED(0, 0)
-        /// Check to see if loading plugins from "%APPDATA%\Notepad++\plugins" is allowed.
+        /// Check to see if loading plugins from "%APPDATA%\..\Local\Notepad++\plugins" is allowed.
         /// </summary>
         NPPM_GETAPPDATAPLUGINSALLOWED = Constants.NPPMSG + 87,
 
@@ -530,6 +510,88 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// </summary>
         NPPM_SAVEFILE = Constants.NPPMSG + 94,
 
+        /// <summary>
+        /// VOID NPPM_DISABLEAUTOUPDATE(0, 0)
+        /// </summary>
+        NPPM_DISABLEAUTOUPDATE = Constants.NPPMSG + 95,
+
+        /// <summary>
+        /// BOOL NPPM_REMOVESHORTCUTASSIGNMENT(int cmdID)
+        /// removes the assigned shortcut mapped to cmdID
+        /// returned value : TRUE if function call is successful, otherwise FALSE
+        /// </summary>
+        NPPM_REMOVESHORTCUTBYCMDID = Constants.NPPMSG + 96,
+
+        /// <summary>
+        /// INT NPPM_GETPLUGINHOMEPATH(size_t strLen, TCHAR *pluginRootPath)
+        /// Get plugin home root path. It's useful if plugins want to get its own path
+        /// by appending <pluginFolderName> which is the name of plugin without extension part.
+        /// Returns the number of TCHAR copied/to copy.
+        /// Users should call it with pluginRootPath be NULL to get the required number of TCHAR (not including the terminating nul character),
+        /// allocate pluginRootPath buffer with the return value + 1, then call it again to get the path.
+        /// </summary>
+        NPPM_GETPLUGINHOMEPATH = Constants.NPPMSG + 97,
+
+        /// <summary>
+        /// INT NPPM_GETSETTINGSCLOUDPATH(size_t strLen, TCHAR *settingsOnCloudPath)
+        /// Get settings on cloud path. It's useful if plugins want to store its settings on Cloud, if this path is set.
+        /// Returns the number of TCHAR copied/to copy. If the return value is 0, then this path is not set, or the "strLen" is not enough to copy the path.
+        /// Users should call it with settingsCloudPath be NULL to get the required number of TCHAR (not including the terminating nul character),
+        /// allocate settingsCloudPath buffer with the return value + 1, then call it again to get the path.
+        /// </summary>
+        NPPM_GETSETTINGSONCLOUDPATH = Constants.NPPMSG + 98,
+
+        /// <summary>
+        /// BOOL NPPM_SETLINENUMBERWIDTHMODE(0, INT widthMode)
+        /// Set line number margin width in dynamic width mode (LINENUMWIDTH_DYNAMIC) or constant width mode (LINENUMWIDTH_CONSTANT)
+        /// It may help some plugins to disable non-dynamic line number margins width to have a smoothly visual effect while vertical scrolling the content in Notepad++
+        /// If calling is successful return TRUE, otherwise return FALSE.
+        /// </summary>
+        NPPM_SETLINENUMBERWIDTHMODE = Constants.NPPMSG + 99,
+        LINENUMWIDTH_DYNAMIC = 0,
+        LINENUMWIDTH_CONSTANT = 1,
+
+        /// <summary>
+        /// INT NPPM_GETLINENUMBERWIDTHMODE(0, 0)
+        /// Get line number margin width in dynamic width mode (LINENUMWIDTH_DYNAMIC) or constant width mode (LINENUMWIDTH_CONSTANT)
+        /// </summary>
+        NPPM_GETLINENUMBERWIDTHMODE = Constants.NPPMSG + 100,
+
+        /// <summary>
+        /// VOID NPPM_ADDTOOLBARICON_FORDARKMODE(UINT funcItem[X]._cmdID, toolbarIconsWithDarkMode iconHandles)
+        /// Use NPPM_ADDTOOLBARICON_FORDARKMODE instead obsolete NPPM_ADDTOOLBARICON which doesn't support the dark mode
+        /// 2 formats / 3 icons are needed:  1 * BMP + 2 * ICO 
+        /// All 3 handles below should be set so the icon will be displayed correctly if toolbar icon sets are changed by users, also in dark mode
+        /// </summary>
+        NPPM_ADDTOOLBARICON_FORDARKMODE = Constants.NPPMSG + 101,
+
+        // BOOL NPPM_ALLOCATEINDICATOR(int numberRequested, int* startNumber)
+        // Allocates an indicator number to a plugin: if a plugin needs to add an indicator,
+        // it has to use this message to get the indicator number, in order to prevent a conflict with the other plugins.
+        // wParam[in]: numberRequested is the number of ID you request for the reservation
+        // lParam[out]: startNumber will be set to the initial command ID if successful
+        // Return TRUE if successful, FALSE otherwise. startNumber will also be set to 0 if unsuccessful
+        //
+        // Example: If a plugin needs 1 indicator ID, the following code can be used :
+        //
+        //    int idBegin;
+        //    BOOL isAllocatedSuccessful = ::SendMessage(nppData._nppHandle, NPPM_ALLOCATEINDICATOR, 1, &idBegin);
+        //
+        // if isAllocatedSuccessful is TRUE, and value of idBegin is 7
+        // then indicator ID 7 is preserved by Notepad++, and it is safe to be used by the plugin.
+        NPPM_ALLOCATEINDICATOR = Constants.NPPMSG + 113,
+
+        /// <summary>
+        /// int NPPM_GETNATIVELANGFILENAME(size_t strLen, char* nativeLangFileName)<br></br>
+        /// Get the Current native language file name string.<br></br>
+        /// Users should call it with nativeLangFileName as NULL to get the required number of char (not including the terminating nul character),<br></br>
+        /// allocate commandLineStr buffer with the return value + 1, then call it again to get the current native language file name string.<br></br>
+        /// wParam[in]: strLen is "commandLineStr" buffer length<br></br>
+        /// lParam[out]: commandLineStr recieves all copied native language file name string<br></br>
+        /// Return the number of char copied/to copy
+        /// </summary>
+        NPPM_GETNATIVELANGFILENAME = Constants.NPPMSG + 116,
+
         RUNCOMMAND_USER = Constants.WM_USER + 3000,
         NPPM_GETFULLCURRENTPATH = RUNCOMMAND_USER + FULL_CURRENT_PATH,
         NPPM_GETCURRENTDIRECTORY = RUNCOMMAND_USER + CURRENT_DIRECTORY,
@@ -537,6 +599,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPPM_GETNAMEPART = RUNCOMMAND_USER + NAME_PART,
         NPPM_GETEXTPART = RUNCOMMAND_USER + EXT_PART,
         NPPM_GETCURRENTWORD = RUNCOMMAND_USER + CURRENT_WORD,
+        NPPM_GETNPPDIRECTORY = RUNCOMMAND_USER + NPP_DIRECTORY,
         /// <summary>
         /// BOOL NPPM_GETXXXXXXXXXXXXXXXX(size_t strLen, TCHAR *str)
         /// where str is the allocated TCHAR array,
@@ -544,7 +607,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// The return value is TRUE when get generic_string operation success
         /// Otherwise (allocated array size is too small) FALSE
         /// </summary>
-        NPPM_GETNPPDIRECTORY = RUNCOMMAND_USER + NPP_DIRECTORY,
+        NPPM_GETFILENAMEATCURSOR = RUNCOMMAND_USER + GETFILENAMEATCURSOR,
 
         /// <summary>
         /// INT NPPM_GETCURRENTLINE(0, 0)
@@ -558,6 +621,8 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// </summary>
         NPPM_GETCURRENTCOLUMN = RUNCOMMAND_USER + CURRENT_COLUMN,
 
+        NPPM_GETNPPFULLFILEPATH = RUNCOMMAND_USER + NPP_FULL_FILE_PATH,
+
         VAR_NOT_RECOGNIZED = 0,
         FULL_CURRENT_PATH = 1,
         CURRENT_DIRECTORY = 2,
@@ -568,6 +633,8 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         NPP_DIRECTORY = 7,
         CURRENT_LINE = 8,
         CURRENT_COLUMN = 9,
+        NPP_FULL_FILE_PATH = 10,
+        GETFILENAMEATCURSOR = 11,
 
         /// <summary>
         /// To notify plugins that all the procedures of launchment of notepad++ are done.
@@ -693,12 +760,12 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         ///scnNotification->nmhdr.hwndFrom = bufferID;
         ///scnNotification->nmhdr.idFrom = docStatus;
         /// where bufferID is BufferID
-        ///       docStatus can be combined by DOCSTAUS_READONLY and DOCSTAUS_BUFFERDIRTY
+        ///       docStatus can be combined by DOCSTATUS_READONLY and DOCSTATUS_BUFFERDIRTY
         /// </summary>
         NPPN_READONLYCHANGED = NPPN_FIRST + 16,
 
-        DOCSTAUS_READONLY = 1,
-        DOCSTAUS_BUFFERDIRTY = 2,
+        DOCSTATUS_READONLY = 1,
+        DOCSTATUS_BUFFERDIRTY = 2,
 
         /// <summary>
         ///scnNotification->nmhdr.code = NPPN_DOCORDERCHANGED;
@@ -770,6 +837,62 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// </summary>
         NPPN_FILEDELETED = NPPN_FIRST + 26,
 
+        /// <summary>
+        /// To notify plugins that Dark Mode was enabled/disabled
+        /// scnNotification->nmhdr.code = NPPN_DARKMODECHANGED;
+        /// scnNotification->nmhdr.hwndFrom = hwndNpp;
+        /// scnNotification->nmhdr.idFrom = 0;
+        /// </summary>
+        NPPN_DARKMODECHANGED = NPPN_FIRST + 27,
+
+        /// <summary>
+        /// To notify plugins that the new argument for plugins (via '-pluginMessage="YOUR_PLUGIN_ARGUMENT"' in command line) is available
+        /// scnNotification->nmhdr.code = NPPN_CMDLINEPLUGINMSG;
+        /// scnNotification->nmhdr.hwndFrom = hwndNpp;
+        /// scnNotification->nmhdr.idFrom = pluginMessage; //where pluginMessage is pointer of type wchar_t
+        /// </summary>
+        NPPN_CMDLINEPLUGINMSG = NPPN_FIRST + 28, 
+
+        ///<summary>
+        /// To notify lexer plugins that the buffer (in idFrom) is just applied to a external lexer
+        /// scnNotification->nmhdr.code = NPPN_EXTERNALLEXERBUFFER;
+        /// scnNotification->nmhdr.hwndFrom = hwndNpp;
+        /// scnNotification->nmhdr.idFrom = BufferID; //where pluginMessage is pointer of type wchar_t
+        ///</summary>
+        NPPN_EXTERNALLEXERBUFFER = NPPN_FIRST + 29,
+
+        /// <summary>
+        /// To notify plugins that the current document is just modified by Replace All action.<br></br>
+        /// For solving the performance issue (from v8.6.4), Notepad++ doesn't trigger SCN_MODIFIED during Replace All action anymore.<br></br>
+        /// As a result, the plugins which monitor SCN_MODIFIED should also monitor NPPN_GLOBALMODIFIED.<br></br>
+        /// <strong>This notification is implemented in Notepad++ v8.6.5.</strong><br></br>
+        /// scnNotification->nmhdr.code = NPPN_GLOBALMODIFIED;<br></br>
+        /// scnNotification->nmhdr.hwndFrom = BufferID;<br></br>
+        /// scnNotifiNATIVELANGCHANGEDcation->nmhdr.idFrom = 0; // preserved for the future use, must be zero
+        /// </summary>
+        NPPN_GLOBALMODIFIED = NPPN_FIRST + 30,
+
+
+        ///<summary>
+        /// To notify plugins that the current native language is just changed to another one.<br></br>
+        /// Use NPPM_GETNATIVELANGFILENAME to get current native language file name.<br></br>
+        /// Use NPPM_GETMENUHANDLE(NPPPLUGINMENU, 0) to get submenu "Plugins" handle (HMENU)<br></br>
+        /// scnNotification->nmhdr.code = NPPN_NATIVELANGCHANGED;<br></br>
+        /// scnNotification->nmhdr.hwndFrom = hwndNpp<br></br>
+        /// scnNotification->nmhdr.idFrom = 0; // preserved for the future use, must be zero
+        ///</summary>
+        NPPN_NATIVELANGCHANGED = NPPN_FIRST + 31,
+
         /* --Autogenerated -- end of section automatically generated from notepad-plus-plus\PowerEditor\src\MISC\PluginsManager\Notepad_plus_msgs.h * */
+    }
+
+    public enum StatusBarSection
+    {
+        DocType,
+        DocSize,
+        CurPos,
+        EofFormat,
+        UnicodeType,
+        TypingMode,
     }
 }

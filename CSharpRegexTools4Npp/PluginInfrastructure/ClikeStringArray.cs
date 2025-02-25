@@ -1,7 +1,8 @@
-﻿// NPP plugin platform for .Net v0.94.00 by Kasper B. Graversen etc.
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using System;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
@@ -17,7 +18,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             _nativeItems = new List<IntPtr>();
             for (int i = 0; i < num; i++)
             {
-                IntPtr item = Marshal.AllocHGlobal(stringCapacity);
+                IntPtr item = Marshal.AllocHGlobal(stringCapacity * 2); // 2 bytes per character, because we're using wchar_t arrays
                 Marshal.WriteIntPtr(_nativeArray + (i * IntPtr.Size), item);
                 _nativeItems.Add(item);
             }
@@ -41,7 +42,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         public List<string> ManagedStringsUnicode { get { return _getManagedItems(true); } }
         List<string> _getManagedItems(bool unicode)
         {
-            List<string> _managedItems = new();
+            List<string> _managedItems = new List<string>();
             for (int i = 0; i < _nativeItems.Count; i++)
             {
                 if (unicode) _managedItems.Add(Marshal.PtrToStringUni(_nativeItems[i]));
@@ -52,16 +53,19 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
         public void Dispose()
         {
-            if (!_disposed)
+            try
             {
-                _disposed = true;
-                try
+                if (!_disposed)
                 {
                     for (int i = 0; i < _nativeItems.Count; i++)
                         if (_nativeItems[i] != IntPtr.Zero) Marshal.FreeHGlobal(_nativeItems[i]);
                     if (_nativeArray != IntPtr.Zero) Marshal.FreeHGlobal(_nativeArray);
+                    _disposed = true;
                 }
-                catch { }
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show(MethodBase.GetCurrentMethod().ToString() + ": " + e.Message, this.GetType().Name);
             }
         }
         ~ClikeStringArray()

@@ -198,23 +198,22 @@ namespace RegexDialog
             { "??", ExpressionOperator.NullCoalescing },
         };
 
-        protected static readonly IList<ExpressionOperator> leftOperandOnlyOperatorsEvaluationDictionary = new List<ExpressionOperator>();
+        protected static readonly IList<ExpressionOperator> leftOperandOnlyOperatorsEvaluationDictionary = [];
 
-        protected static readonly IList<ExpressionOperator> rightOperandOnlyOperatorsEvaluationDictionary = new List<ExpressionOperator>()
-        {
+        protected static readonly IList<ExpressionOperator> rightOperandOnlyOperatorsEvaluationDictionary =
+        [
             ExpressionOperator.LogicalNegation,
             ExpressionOperator.BitwiseComplement,
             ExpressionOperator.UnaryPlus,
             ExpressionOperator.UnaryMinus
-        };
+        ];
 
         protected virtual IList<ExpressionOperator> LeftOperandOnlyOperatorsEvaluationDictionary => leftOperandOnlyOperatorsEvaluationDictionary;
         protected virtual IList<ExpressionOperator> RightOperandOnlyOperatorsEvaluationDictionary => rightOperandOnlyOperatorsEvaluationDictionary;
         protected virtual IList<IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>> OperatorsEvaluations => operatorsEvaluations;
 
         protected static readonly IList<IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>> operatorsEvaluations =
-            new List<IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>>()
-        {
+            [
             new Dictionary<ExpressionOperator, Func<dynamic, dynamic, object>>()
             {
                 {ExpressionOperator.Indexing, (dynamic left, dynamic right) =>
@@ -225,7 +224,7 @@ namespace RegexDialog
                         {
                             return dictionaryLeft[right];
                         }
-                        else if(type.GetMethod("Item", new Type[] { ((object)right).GetType() }) is MethodInfo methodInfo)
+                        else if(type.GetMethod("Item", [((object)right).GetType()]) is MethodInfo methodInfo)
                         {
                             return methodInfo.Invoke(left, new object[] { right });
                         }
@@ -296,7 +295,7 @@ namespace RegexDialog
             {
                 {ExpressionOperator.NullCoalescing, (dynamic left, dynamic right) => left ?? right },
             },
-        };
+        ];
 
         protected IDictionary<string, object> defaultVariables = new Dictionary<string, object>(StringComparer.Ordinal)
         {
@@ -372,7 +371,7 @@ namespace RegexDialog
 
                     object list = Activator.CreateInstance(typeOfList);
 
-                    typeOfList.GetMethod("AddRange").Invoke(list, new object[]{ typedArray });
+                    typeOfList.GetMethod("AddRange").Invoke(list, [typedArray]);
 
                     return list;
                 }
@@ -382,7 +381,7 @@ namespace RegexDialog
             { "new", (self, args) =>
                 {
                     List<object> cArgs = args.ConvertAll(self.Evaluate);
-                    return Activator.CreateInstance((cArgs[0] as ClassOrEnumType).Type, cArgs.Skip(1).ToArray());
+                    return Activator.CreateInstance((cArgs[0] as ClassOrEnumType).Type, [.. cArgs.Skip(1)]);
                 }
             },
             { "Round", (self, args) =>
@@ -456,13 +455,13 @@ namespace RegexDialog
         /// All assemblies needed to resolves Types
         /// by default all Assemblies loaded in the current AppDomain
         /// </summary>
-        public virtual IList<Assembly> Assemblies { get; set; } = new List<Assembly>();
+        public virtual IList<Assembly> Assemblies { get; set; } = [];
 
         /// <summary>
         /// All Namespaces Where to find types
         /// </summary>
-        public virtual IList<string> Namespaces { get; set; } = new List<string>()
-        {
+        public virtual IList<string> Namespaces { get; set; } =
+        [
             "System",
             "System.Linq",
             "System.IO",
@@ -474,25 +473,25 @@ namespace RegexDialog
             "System.Collections.Generic",
             "System.Collections.Specialized",
             "System.Globalization"
-        };
+        ];
 
         /// <summary>
         /// To add or remove specific types to manage in expression.
         /// </summary>
-        public virtual IList<Type> Types { get; set; } = new List<Type>();
+        public virtual IList<Type> Types { get; set; } = [];
 
         /// <summary>
         /// A list of type to block an keep un usable in Expression Evaluation for security purpose
         /// </summary>
-        public virtual IList<Type> TypesToBlock { get; set; } = new List<Type>();
+        public virtual IList<Type> TypesToBlock { get; set; } = [];
 
         /// <summary>
         /// A list of statics types where to find extensions methods
         /// </summary>
-        public virtual IList<Type> StaticTypesForExtensionsMethods { get; set; } = new List<Type>()
-        {
+        public virtual IList<Type> StaticTypesForExtensionsMethods { get; set; } =
+        [
             typeof(Enumerable) // For Linq extension methods
-        };
+        ];
 
         #endregion
 
@@ -866,7 +865,7 @@ namespace RegexDialog
 
         protected virtual void AssembliesInit()
         {
-            Assemblies = AppDomain.CurrentDomain.GetAssemblies().ToList();
+            Assemblies = [.. AppDomain.CurrentDomain.GetAssemblies()];
         }
 
         protected virtual void DefaultDecimalSeparatorInit()
@@ -940,8 +939,8 @@ namespace RegexDialog
             int startOfExpression = 0;
             IfBlockEvaluatedState ifBlockEvaluatedState = IfBlockEvaluatedState.NoBlockEvaluated;
             TryBlockEvaluatedState tryBlockEvaluatedState = TryBlockEvaluatedState.NoBlockEvaluated;
-            List<List<string>> ifElseStatementsList = new();
-            List<List<string>> tryStatementsList = new();
+            List<List<string>> ifElseStatementsList = [];
+            List<List<string>> tryStatementsList = [];
 
             object ManageJumpStatementsOrExpressionEval(string expression)
             {
@@ -1052,7 +1051,7 @@ namespace RegexDialog
                         {
                             if (catchStatement[1] != null)
                             {
-                                string[] exceptionVariable = catchStatement[1].Trim().Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                                string[] exceptionVariable = catchStatement[1].Trim().Split([' '], StringSplitOptions.RemoveEmptyEntries);
 
                                 string exceptionName = exceptionVariable[0];
 
@@ -1158,7 +1157,7 @@ namespace RegexDialog
                         }
                         else
                         {
-                            ifElseStatementsList.Add(new List<string>() { keywordAttributes[0], subScript });
+                            ifElseStatementsList.Add([keywordAttributes[0], subScript]);
                             ifBlockEvaluatedState = IfBlockEvaluatedState.ElseIf;
                         }
                     }
@@ -1170,7 +1169,7 @@ namespace RegexDialog
                         }
                         else
                         {
-                            ifElseStatementsList.Add(new List<string>() { "true", subScript });
+                            ifElseStatementsList.Add(["true", subScript]);
                             ifBlockEvaluatedState = IfBlockEvaluatedState.NoBlockEvaluated;
                         }
                     }
@@ -1182,7 +1181,7 @@ namespace RegexDialog
                         }
                         else
                         {
-                            tryStatementsList.Add(new List<string>() { "catch", keywordAttributes.Count > 0 ? keywordAttributes[0] : null, subScript });
+                            tryStatementsList.Add(["catch", keywordAttributes.Count > 0 ? keywordAttributes[0] : null, subScript]);
                             tryBlockEvaluatedState = TryBlockEvaluatedState.Catch;
                         }
                     }
@@ -1194,7 +1193,7 @@ namespace RegexDialog
                         }
                         else
                         {
-                            tryStatementsList.Add(new List<string>() { "finally", subScript });
+                            tryStatementsList.Add(["finally", subScript]);
                             tryBlockEvaluatedState = TryBlockEvaluatedState.NoBlockEvaluated;
                         }
                     }
@@ -1204,13 +1203,13 @@ namespace RegexDialog
 
                         if (keyword.Equals("if", StringComparisonForCasing))
                         {
-                            ifElseStatementsList.Add(new List<string>() { keywordAttributes[0], subScript });
+                            ifElseStatementsList.Add([keywordAttributes[0], subScript]);
                             ifBlockEvaluatedState = IfBlockEvaluatedState.If;
                             tryBlockEvaluatedState = TryBlockEvaluatedState.NoBlockEvaluated;
                         }
                         else if (keyword.Equals("try", StringComparisonForCasing))
                         {
-                            tryStatementsList.Add(new List<string>() { subScript });
+                            tryStatementsList.Add([subScript]);
                             ifBlockEvaluatedState = IfBlockEvaluatedState.NoBlockEvaluated;
                             tryBlockEvaluatedState = TryBlockEvaluatedState.Try;
                         }
@@ -1389,8 +1388,8 @@ namespace RegexDialog
 
         private IList<ParsingMethodDelegate> parsingMethods;
 
-        protected virtual IList<ParsingMethodDelegate> ParsingMethods => parsingMethods ?? (parsingMethods = new List<ParsingMethodDelegate>()
-        {
+        protected virtual IList<ParsingMethodDelegate> ParsingMethods => parsingMethods ?? (parsingMethods =
+        [
             EvaluateCast,
             EvaluateNumber,
             EvaluateInstanceCreationWithNewKeyword,
@@ -1401,7 +1400,7 @@ namespace RegexDialog
             EvaluateIndexing,
             EvaluateString,
             EvaluateTernaryConditionalOperator,
-        });
+        ]);
 
         /// <summary>
         /// Evaluate the specified math or pseudo C# expression
@@ -1590,7 +1589,7 @@ namespace RegexDialog
                         {
                             MethodInfo methodInfo = type.GetMethod("Add", BindingFlags.Public | BindingFlags.Instance);
 
-                            initArgs.ForEach(subExpr => methodInfo.Invoke(element, new object[] { Evaluate(subExpr) }));
+                            initArgs.ForEach(subExpr => methodInfo.Invoke(element, [Evaluate(subExpr)]));
                         }
                         else if (typeof(IDictionary).IsAssignableFrom(type)
                             && initArgs.All(subExpr => subExpr.TrimStart().StartsWith("{"))
@@ -1629,7 +1628,7 @@ namespace RegexDialog
 
                         List<object> cArgs = constructorArgs.ConvertAll(Evaluate);
 
-                        object element = Activator.CreateInstance(type, cArgs.ToArray());
+                        object element = Activator.CreateInstance(type, [.. cArgs]);
 
                         Match blockBeginningMatch = blockBeginningRegex.Match(expression.Substring(i));
 
@@ -1650,7 +1649,7 @@ namespace RegexDialog
                     }
                     else if (instanceCreationMatch.Groups["isInit"].Success)
                     {
-                        object element = Activator.CreateInstance(type, new object[0]);
+                        object element = Activator.CreateInstance(type, []);
 
                         List<string> initArgs = GetExpressionsBetweenParenthesesOrOtherImbricableBrackets(expression, ref i, true, OptionInitializersSeparator, "{", "}");
 
@@ -1782,12 +1781,12 @@ namespace RegexDialog
                                             if (dictionaryObject[varFuncName] is InternalDelegate internalDelegate)
                                                 stack.Push(internalDelegate(oArgs.ToArray()));
                                             else
-                                                stack.Push((dictionaryObject[varFuncName] as Delegate).DynamicInvoke(oArgs.ToArray()));
+                                                stack.Push((dictionaryObject[varFuncName] as Delegate).DynamicInvoke([.. oArgs]));
                                         }
                                         else if (objType.GetProperty(varFuncName, InstanceBindingFlag) is PropertyInfo instancePropertyInfo
                                             && (instancePropertyInfo.PropertyType.IsSubclassOf(typeof(Delegate)) || instancePropertyInfo.PropertyType == typeof(Delegate)))
                                         {
-                                            stack.Push((instancePropertyInfo.GetValue(obj) as Delegate).DynamicInvoke(oArgs.ToArray()));
+                                            stack.Push((instancePropertyInfo.GetValue(obj) as Delegate).DynamicInvoke([.. oArgs]));
                                         }
                                         else
                                         {
@@ -1810,12 +1809,12 @@ namespace RegexDialog
 
                                             if (methodInfo != null)
                                             {
-                                                stack.Push(methodInfo.Invoke(isExtention ? null : obj, oArgs.ToArray()));
+                                                stack.Push(methodInfo.Invoke(isExtention ? null : obj, [.. oArgs]));
                                             }
                                             else if (objType.GetProperty(varFuncName, StaticBindingFlag) is PropertyInfo staticPropertyInfo
                                             && (staticPropertyInfo.PropertyType.IsSubclassOf(typeof(Delegate)) || staticPropertyInfo.PropertyType == typeof(Delegate)))
                                             {
-                                                stack.Push((staticPropertyInfo.GetValue(obj) as Delegate).DynamicInvoke(oArgs.ToArray()));
+                                                stack.Push((staticPropertyInfo.GetValue(obj) as Delegate).DynamicInvoke([.. oArgs]));
                                             }
                                             else
                                             {
@@ -1874,7 +1873,7 @@ namespace RegexDialog
                         }
                         else if (Variables.TryGetValue(varFuncName, out o) && o is Delegate delegateVar)
                         {
-                            stack.Push(delegateVar.DynamicInvoke(funcArgs.ConvertAll(e => Evaluate(e)).ToArray()));
+                            stack.Push(delegateVar.DynamicInvoke([.. funcArgs.ConvertAll(e => Evaluate(e))]));
                         }
                         else
                         {
@@ -2644,9 +2643,7 @@ namespace RegexDialog
 
         protected virtual object ProcessStack(Stack<object> stack)
         {
-            List<object> list = stack
-                .Select(e => e is ValueTypeNestingTrace valueTypeNestingTrace ? valueTypeNestingTrace.Value : e)
-                .ToList();
+            List<object> list = [.. stack.Select(e => e is ValueTypeNestingTrace valueTypeNestingTrace ? valueTypeNestingTrace.Value : e)];
 
             OperatorsEvaluations.ToList().ForEach((IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>> operatorEvalutationsDict) =>
             {
@@ -2779,7 +2776,7 @@ namespace RegexDialog
         protected virtual MethodInfo GetRealMethod(ref Type type, ref object obj, string func, BindingFlags flag, List<object> args, string genericsTypes = "")
         {
             MethodInfo methodInfo = null;
-            List<object> modifiedArgs = new(args);
+            List<object> modifiedArgs = [.. args];
 
             if (OptionFluidPrefixingActive
                 && (func.StartsWith("Fluid", StringComparisonForCasing)
@@ -2808,7 +2805,7 @@ namespace RegexDialog
             }
             else
             {
-                methodInfo = type.GetMethod(func, flag, null, args.ConvertAll(arg => arg.GetType()).ToArray(), null);
+                methodInfo = type.GetMethod(func, flag, null, [.. args.ConvertAll(arg => arg.GetType())], null);
             }
 
             if (methodInfo != null)
@@ -2817,9 +2814,7 @@ namespace RegexDialog
             }
             else
             {
-                List<MethodInfo> methodInfos = type.GetMethods(flag)
-                .Where(m => m.Name.Equals(func, StringComparisonForCasing) && m.GetParameters().Length == modifiedArgs.Count)
-                .ToList();
+                List<MethodInfo> methodInfos = [.. type.GetMethods(flag).Where(m => m.Name.Equals(func, StringComparisonForCasing) && m.GetParameters().Length == modifiedArgs.Count)];
 
                 for (int m = 0; m < methodInfos.Count && methodInfo == null; m++)
                 {
@@ -2827,7 +2822,7 @@ namespace RegexDialog
 
                     bool parametersCastOK = true;
 
-                    modifiedArgs = new List<object>(args);
+                    modifiedArgs = [.. args];
 
                     for (int a = 0; a < modifiedArgs.Count; a++)
                     {
@@ -2891,7 +2886,7 @@ namespace RegexDialog
             if (methodInfo.IsGenericMethod)
             {
                 if (genericsTypes.Equals(string.Empty))
-                    return methodInfo.MakeGenericMethod(Enumerable.Repeat(typeof(object), methodInfo.GetGenericArguments().Length).ToArray());
+                    return methodInfo.MakeGenericMethod([.. Enumerable.Repeat(typeof(object), methodInfo.GetGenericArguments().Length)]);
                 else
                     return methodInfo.MakeGenericMethod(GetConcreteTypes(genericsTypes));
             }
@@ -2901,11 +2896,10 @@ namespace RegexDialog
 
         protected virtual Type[] GetConcreteTypes(string genericsTypes)
         {
-            return genericsDecodeRegex
+            return [.. genericsDecodeRegex
                 .Matches(genericsEndOnlyOneTrim.Replace(genericsTypes.TrimStart(' ', '<'), ""))
                 .Cast<Match>()
-                .Select(match => GetTypeByFriendlyName(match.Groups["name"].Value, match.Groups["isgeneric"].Value, true))
-                .ToArray();
+                .Select(match => GetTypeByFriendlyName(match.Groups["name"].Value, match.Groups["isgeneric"].Value, true))];
         }
 
         protected virtual BindingFlags DetermineInstanceOrStatic(ref Type objType, ref object obj, ref ValueTypeNestingTrace valueTypeNestingTrace)
@@ -2979,7 +2973,7 @@ namespace RegexDialog
 
         protected List<string> GetExpressionsBetweenParenthesesOrOtherImbricableBrackets(string expression, ref int i, bool checkSeparator, string separator = ",", string startChar = "(", string endChar = ")")
         {
-            List<string> expressionsList = new();
+            List<string> expressionsList = [];
 
             string s;
             string currentExpression = string.Empty;
@@ -3474,9 +3468,7 @@ namespace RegexDialog
     {
         public static IList<IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>> Copy(this IList<IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>> operatorsEvaluations)
         {
-            return (IList<IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>>)operatorsEvaluations
-                .Select(dic => (IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>)new Dictionary<ExpressionOperator, Func<dynamic, dynamic, object>>(dic))
-                .ToList();
+            return (IList<IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>>)[.. operatorsEvaluations.Select(dic => (IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>)new Dictionary<ExpressionOperator, Func<dynamic, dynamic, object>>(dic))];
         }
 
         public static IList<IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>> AddOperatorEvaluationAtLevelOf(this IList<IDictionary<ExpressionOperator, Func<dynamic, dynamic, object>>> operatorsEvaluations, ExpressionOperator operatorToAdd, Func<dynamic, dynamic, object> evaluation, ExpressionOperator levelOfThisOperator)
@@ -3651,7 +3643,7 @@ namespace RegexDialog
         /// </summary>
         public Type[] EvaluateGenericTypes()
         {
-            return evaluateGenericTypes?.Invoke(genericTypes) ?? new Type[0];
+            return evaluateGenericTypes?.Invoke(genericTypes) ?? [];
         }
     }
 
@@ -3676,7 +3668,7 @@ namespace RegexDialog
         public FunctionEvaluationEventArg(string name, Func<string, object> evaluateFunc, List<string> args = null, ExpressionEvaluator evaluator = null, object onInstance = null, string genericTypes = null, Func<string, Type[]> evaluateGenericTypes = null)
         {
             Name = name;
-            Args = args ?? new List<string>();
+            Args = args ?? [];
             this.evaluateFunc = evaluateFunc;
             This = onInstance;
             Evaluator = evaluator;
@@ -3687,7 +3679,7 @@ namespace RegexDialog
         /// <summary>
         /// The not evaluated args of the function
         /// </summary>
-        public List<string> Args { get; } = new List<string>();
+        public List<string> Args { get; } = [];
 
         /// <summary>
         /// Get the values of the function's args.
@@ -3695,7 +3687,7 @@ namespace RegexDialog
         /// <returns></returns>
         public object[] EvaluateArgs()
         {
-            return Args.ConvertAll(arg => evaluateFunc(arg)).ToArray();
+            return [.. Args.ConvertAll(arg => evaluateFunc(arg))];
         }
 
         /// <summary>
@@ -3773,7 +3765,7 @@ namespace RegexDialog
         /// </summary>
         public Type[] EvaluateGenericTypes()
         {
-            return evaluateGenericTypes?.Invoke(genericTypes) ?? new Type[0];
+            return evaluateGenericTypes?.Invoke(genericTypes) ?? [];
         }
     }
 

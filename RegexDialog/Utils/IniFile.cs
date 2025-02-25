@@ -27,22 +27,22 @@ namespace RegexDialog
         /// <summary>
         /// Dictionnaire des sections
         /// </summary>
-        protected Dictionary<string, Section> Sections = new();
+        protected Dictionary<string, Section> Sections = [];
 
         /// <summary>
         /// Listes des noms de section pour pouvoir les ordrer (Et faire des Inserts)
         /// </summary>
-        protected List<string> ListSections = new();
+        protected List<string> ListSections = [];
 
         /// <summary>
         /// Dictionnaire des commentaires
         /// </summary>
-        protected Dictionary<string, string> linkedComments = new();
+        protected Dictionary<string, string> linkedComments = [];
 
         /// <summary>
         /// Dictionnaire des commentaires placer seul sur une ligne avant une section ou une clé.
         /// </summary>
-        protected Dictionary<string, string> beforeCodeCommentsOrEmptyLines = new();
+        protected Dictionary<string, string> beforeCodeCommentsOrEmptyLines = [];
 
         /// <summary>
         /// Commentaire d'entête de fichier
@@ -199,7 +199,7 @@ namespace RegexDialog
             set
             {
                 // Si la dernière ligne n'est pas une ligne vide, on en rajoute une.
-                if (!value.Split(new string[] { "\r\n", "\n", "\r" }, StringSplitOptions.None).Last().Replace(" ", "").Replace("\t", "").Equals(""))
+                if (!value.Split(["\r\n", "\n", "\r"], StringSplitOptions.None).Last().Replace(" ", "").Replace("\t", "").Equals(""))
                 {
                     fileHeaderCommentsOrEmptyLines = value + newline;
                 }
@@ -234,7 +234,7 @@ namespace RegexDialog
         {
             get
             {
-                return Sections.Select<KeyValuePair<string, Section>, string>(pair => pair.Key).ToList<string>();
+                return [.. Sections.Select<KeyValuePair<string, Section>, string>(pair => pair.Key)];
             }
         }
 
@@ -562,11 +562,11 @@ namespace RegexDialog
 
             try
             {
-                result = new List<string>(Sections[section].GetKeys().Keys);
+                result = [.. Sections[section].GetKeys().Keys];
             }
             catch
             {
-                result = new List<string>();
+                result = [];
             }
 
             return result;
@@ -583,11 +583,11 @@ namespace RegexDialog
 
             try
             {
-                result = new List<string>(Sections[section].GetKeys().Values);
+                result = [.. Sections[section].GetKeys().Values];
             }
             catch
             {
-                result = new List<string>();
+                result = [];
             }
 
             return result;
@@ -1142,7 +1142,7 @@ namespace RegexDialog
 
             try
             {
-                result = GetValue(section, key, defaut.Count == 0 ? "" : defaut.Aggregate<string, string, string>("", (total, next) => total + next + sep.ToString(), total => total.Substring(0, total.Length - 1))).Split(sep).ToList<string>();
+                result = [.. GetValue(section, key, defaut.Count == 0 ? "" : defaut.Aggregate<string, string, string>("", (total, next) => total + next + sep.ToString(), total => total.Substring(0, total.Length - 1))).Split(sep)];
             }
             catch
             {
@@ -1162,7 +1162,7 @@ namespace RegexDialog
         /// <returns>La liste de chaine de caractère</returns>
         public List<string> GetStringList(string section, string key, char sep)
         {
-            return GetStringList(section, key, sep, new List<string>());
+            return GetStringList(section, key, sep, []);
         }
 
         /// <summary>
@@ -1179,7 +1179,7 @@ namespace RegexDialog
 
             try
             {
-                result = GetValue(section, key, defaut).Split(sep).ToList<string>();
+                result = [.. GetValue(section, key, defaut).Split(sep)];
             }
             catch
             { }
@@ -1202,7 +1202,7 @@ namespace RegexDialog
 
             try
             {
-                result = GetValueWithoutCreating(section, key, defaut.Count == 0 ? "" : defaut.Aggregate<string, string, string>("", (total, next) => total + next + sep.ToString(), total => total.Substring(0, total.Length - 1))).Split(sep).ToList<string>();
+                result = [.. GetValueWithoutCreating(section, key, defaut.Count == 0 ? "" : defaut.Aggregate<string, string, string>("", (total, next) => total + next + sep.ToString(), total => total.Substring(0, total.Length - 1))).Split(sep)];
             }
             catch
             {
@@ -1223,7 +1223,7 @@ namespace RegexDialog
         /// <returns>La liste de chaine de caractère</returns>
         public List<string> GetStringListWithoutCreating(string section, string key, char sep)
         {
-            return GetStringListWithoutCreating(section, key, sep, new List<string>());
+            return GetStringListWithoutCreating(section, key, sep, []);
         }
 
         /// <summary>
@@ -1240,7 +1240,7 @@ namespace RegexDialog
 
             try
             {
-                result = GetValueWithoutCreating(section, key, defaut).Split(sep).ToList<string>();
+                result = [.. GetValueWithoutCreating(section, key, defaut).Split(sep)];
             }
             catch
             { }
@@ -1489,7 +1489,7 @@ namespace RegexDialog
             fichier += fileFooterCommentsOrEmptyLines;
 
             // Pour que la fin du fichier ne soit pas de plus en plus de retour à la ligne
-            char[] removeList = { '\n', '\r', '\t', ' ' };
+            char[] removeList = ['\n', '\r', '\t', ' '];
 
             fichier = fichier.TrimEnd(removeList);
 
@@ -1886,7 +1886,7 @@ namespace RegexDialog
                 string fichier = str.ReadToEnd();
 
                 // split le texte du fichier en tableau de ligne
-                string[] lignes = fichier.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                string[] lignes = fichier.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
 
                 bool fileHeaderPossible = true;
                 string currentCommentOrEmptyLines = "";
@@ -1923,7 +1923,7 @@ namespace RegexDialog
                     else if (ligne != "" && !currentSection.Equals(""))
                     {
                         // split la ligne en tableau clé/valeur
-                        char[] ca = new char[1] { '=' };
+                        char[] ca = ['='];
                         string[] scts = ligne.Split(ca, 2);
 
                         currentKey = scts[0];
@@ -1987,7 +1987,7 @@ namespace RegexDialog
                 string fichier = iniString;
 
                 // split le texte du fichier en tableau de ligne
-                string[] lignes = fichier.Split(new string[] { "\r\n", "\r", "\n" }, StringSplitOptions.None);
+                string[] lignes = fichier.Split(["\r\n", "\r", "\n"], StringSplitOptions.None);
 
                 bool fileHeaderPossible = true;
                 string currentCommentOrEmptyLines = "";
@@ -2024,7 +2024,7 @@ namespace RegexDialog
                     else if (ligne != "" && !currentSection.Equals(""))
                     {
                         // split la ligne en tableau clé/valeur
-                        char[] ca = new char[1] { '=' };
+                        char[] ca = ['='];
                         string[] scts = ligne.Split(ca, 2);
 
                         currentKey = scts[0];
@@ -2096,11 +2096,11 @@ namespace RegexDialog
 
             if (commentCaractPos > -1)
             {
-                return new string[] { textLine.Substring(0, commentCaractPos), textLine.Substring(commentCaractPos + 1, textLine.Length - (commentCaractPos + 1)) };
+                return [textLine.Substring(0, commentCaractPos), textLine.Substring(commentCaractPos + 1, textLine.Length - (commentCaractPos + 1))];
             }
             else
             {
-                return new string[] { textLine };
+                return [textLine];
             }
         }
 
@@ -2113,7 +2113,7 @@ namespace RegexDialog
         {
             Dictionary<string, string> resultDict;
             if (!Sections.ContainsKey(section))
-                resultDict = new Dictionary<string, string>();
+                resultDict = [];
             else
             {
                 Section currentSection = Sections[section] as Section;
@@ -2131,12 +2131,12 @@ namespace RegexDialog
             /// <summary>
             /// Dictionnaire des paires clefs valeurs de la section
             /// </summary>
-            private Dictionary<string, string> keys = new();
+            private Dictionary<string, string> keys = [];
 
             /// <summary>
             ///Dictionnaire des valeur en string true si la valeur est une string false sinon.
             /// </summary>
-            public Dictionary<string, bool> IsQuoted = new();
+            public Dictionary<string, bool> IsQuoted = [];
 
             /// <summary>
             /// Retourne la référence au dictionnaire des clé de la section
@@ -2241,7 +2241,7 @@ namespace RegexDialog
             {
                 if (keys.ContainsKey(key))
                 {
-                    List<KeyValuePair<string, string>> list = keys.ToList();
+                    List<KeyValuePair<string, string>> list = [.. keys];
                     KeyValuePair<string, string> keyValuePair = list.Find(e => e.Key.Equals(key));
                     list.Remove(keyValuePair);
                     list.Insert(0, keyValuePair);
@@ -2253,7 +2253,7 @@ namespace RegexDialog
             {
                 if (keys.ContainsKey(key))
                 {
-                    List<KeyValuePair<string, string>> list = keys.ToList();
+                    List<KeyValuePair<string, string>> list = [.. keys];
                     KeyValuePair<string, string> keyValuePair = list.Find(e => e.Key.Equals(key));
                     list.Remove(keyValuePair);
                     list.Add(keyValuePair);
