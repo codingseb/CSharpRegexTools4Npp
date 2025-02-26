@@ -350,7 +350,7 @@
                             <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button" />
                             <Style BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" TargetType="ToggleButton" />
                         </StackPanel.Resources>
-                        <Label Target="{Binding ElementName=ReplaceEditor}">Re_place</Label>
+                        <Label Target="{Binding ElementName=ReplaceEditor}">R_eplace</Label>
                         <Button Name="ReplaceHistoryButton" Margin="0,2" Click="ReplaceHistoryButton_Click">
                             <Image Source="{StaticResource DownArrow}"/>
                         </Button>
