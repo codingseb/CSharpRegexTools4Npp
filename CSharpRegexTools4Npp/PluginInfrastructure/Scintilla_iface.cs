@@ -68,7 +68,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         /// <summary>
         /// SCN_STYLENEEDED, SCN_DOUBLECLICK, SCN_MODIFIED, SCN_MARGINCLICK, SCN_NEEDSHOWN, SCN_DWELLSTART, SCN_DWELLEND, SCN_CALLTIPCLICK, SCN_HOTSPOTCLICK, SCN_HOTSPOTDOUBLECLICK, SCN_HOTSPOTRELEASECLICK, SCN_INDICATORCLICK, SCN_INDICATORRELEASE, SCN_USERLISTSELECTION, SCN_AUTOCSELECTION
         /// </summary>
-        public Position Position { get { return new Position(position); } }
+        public TextPosition Position { get { return new TextPosition(position.ToInt32()); } }
 
         /// <summary>
         /// Character of the notification - eg keydown

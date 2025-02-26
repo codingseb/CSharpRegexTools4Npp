@@ -11,87 +11,11 @@ using CSharpRegexTools4Npp.Utils;
 
 namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
-	public interface INotepadPPGateway
-	{
-        INotepadPPGateway FileNew();
-
-        bool OpenFile(string fileName);
-
-        List<string> GetAllOpenedDocuments { get; }
-
-        string CurrentFileName { get; }
-
-        INotepadPPGateway ShowTab(string tabPath, bool smart);
-        INotepadPPGateway ShowTab(string tabPath);
-        INotepadPPGateway ShowTab(int index);
-
-        void AddToolbarIcon(int funcItemsIndex, toolbarIcons icon);
-		void AddToolbarIcon(int funcItemsIndex, Bitmap icon);
-		string GetNppPath();
-		string GetPluginConfigPath();
-		string GetCurrentFilePath();
-		unsafe string GetFilePath(IntPtr bufferId);
-        INotepadPPGateway SetCurrentLanguage(LangType language);
-        INotepadPPGateway SetCurrentLanguage(string language);
-        INotepadPPGateway SetCurrentLanguage(int language);
-
-        INotepadPPGateway SaveCurrentFile();
-        INotepadPPGateway FileExit();
-        INotepadPPGateway SaveAllOpenedDocuments();
-        INotepadPPGateway ReloadFile(string file, bool showAlert);
-
-        void ShowDockingForm(System.Windows.Forms.Form form);
-		void HideDockingForm(System.Windows.Forms.Form form);
-		Color GetDefaultForegroundColor();
-		Color GetDefaultBackgroundColor();
-		string GetConfigDirectory();
-		int[] GetNppVersion();
-		string[] GetOpenFileNames();
-		void SetStatusBarSection(string message, StatusBarSection section);
-		/// <summary>
-		/// Register a modeless form (i.e., a form that doesn't block the parent application until closed)<br></br>
-		/// with Notepad++ using NPPM_MODELESSDIALOG<br></br>
-		/// If you don't do this, Notepad++ may intercept some keystrokes in unintended ways.
-		/// </summary>
-		/// <param name="formHandle">the Handle attribute of a Windows form</param>
-		void AddModelessDialog(IntPtr formHandle);
-		/// <summary>
-		/// unregister a modelesss form that was registered with AddModelessDialog.<br></br>
-		/// This MUST be called in the Dispose method of the form, BEFORE the components of the form are disposed.
-		/// </summary>
-		/// <param name="formHandle">the Handle attribute of a Windows form</param>
-		void RemoveModelessDialog(IntPtr formHandle);
-        /// <summary>
-		/// Introduced in Notepad++ 8.5.6.<br></br>
-        /// NPPM_ALLOCATEINDICATOR: allocate one or more unused indicator IDs,
-        /// which can then be assigned styles and used to style regions of text.<br></br>
-        /// returns false and sets indicators to null if numberOfIndicators is less than 1, or if the requested number of indicators could not be allocated.<br></br>
-        /// Otherwise, returns true, and sets indicators to an array of numberOfIndicators indicator IDs.<br></br>
-        /// See https://www.scintilla.org/ScintillaDoc.html#Indicators for more info on the indicator API.
-        /// </summary>
-        /// <param name="numberOfIndicators">number of consecutive indicator IDs to allocate</param>
-        /// <returns></returns>
-        bool AllocateIndicators(int numberOfIndicators, out int[] indicators);
-
-        /// <summary>
-        /// get the English name of the Notepad++ UI language.<br></br>
-		/// a return value of false indicates that something went wrong and fname should not be used
-        /// </summary>
-        bool TryGetNativeLangName(out string langName);
-
-		/// <summary>
-		/// returns [0] if only the mainView is open, [0, 1] if both the mainView and subView are open, and [1] if only the subView is open.<br></br>
-		/// Thus, GetVisibleViews().Count will return 2 if the Notepad++ window is split into two views, and 1 otherwise.
-		/// </summary>
-		List<int> GetVisibleViews();
-
-    }
-
     /// <summary>
     /// This class holds helpers for sending messages defined in the Msgs_h.cs file. It is at the moment
     /// incomplete. Please help fill in the blanks.
     /// </summary>
-    public class NotepadPPGateway : INotepadPPGateway
+    public class NotepadPPGateway
 	{
         public IntPtr Handle { get { return PluginBase.nppData._nppHandle; } }
 
@@ -118,31 +42,31 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return this;
         }
 
-        public INotepadPPGateway FileNew()
+        public NotepadPPGateway FileNew()
         {
             Send(NppMsg.NPPM_MENUCOMMAND, Unused, NppMenuCmd.IDM_FILE_NEW);
             return this;
         }
 
-        public INotepadPPGateway ReloadFile(string file, bool showAlert)
+        public NotepadPPGateway ReloadFile(string file, bool showAlert)
         {
             Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_RELOADFILE, showAlert ? 1 : 0, file);
             return this;
         }
 
-        public INotepadPPGateway SaveCurrentFile()
+        public NotepadPPGateway SaveCurrentFile()
         {
             Send(NppMsg.NPPM_SAVECURRENTFILE, Unused, Unused);
             return this;
         }
 
-        public INotepadPPGateway SaveAllOpenedDocuments()
+        public NotepadPPGateway SaveAllOpenedDocuments()
         {
             Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_SAVEALLFILES, Unused, Unused);
             return this;
         }
 
-        public INotepadPPGateway FileExit()
+        public NotepadPPGateway FileExit()
         {
             Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_MENUCOMMAND, Unused, NppMenuCmd.IDM_FILE_EXIT);
             return this;
@@ -276,13 +200,13 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return path.ToString();
         }
 
-        public INotepadPPGateway SetCurrentLanguage(LangType language)
+        public NotepadPPGateway SetCurrentLanguage(LangType language)
         {
             SetCurrentLanguage((int)language);
             return this;
         }
 
-        public unsafe INotepadPPGateway SetCurrentLanguage(string language)
+        public unsafe NotepadPPGateway SetCurrentLanguage(string language)
         {
             fixed (byte* languagePtr = Encoding.UTF8.GetBytes(language))
             {
@@ -291,7 +215,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return this;
         }
 
-        public INotepadPPGateway SetCurrentLanguage(int language)
+        public NotepadPPGateway SetCurrentLanguage(int language)
         {
             Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_SETCURRENTLANGTYPE, Unused, language);
             return this;
@@ -313,7 +237,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return GetTabIndex(tabPath, false);
         }
 
-        public INotepadPPGateway ShowTab(string tabPath, bool smart)
+        public NotepadPPGateway ShowTab(string tabPath, bool smart)
         {
             try
             {
@@ -325,7 +249,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         }
 
 
-        public INotepadPPGateway ShowTab(string tabPath)
+        public NotepadPPGateway ShowTab(string tabPath)
         {
             try
             {
@@ -336,7 +260,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return this;
         }
 
-        public INotepadPPGateway ShowTab(int index)
+        public NotepadPPGateway ShowTab(int index)
         {
             try
             {

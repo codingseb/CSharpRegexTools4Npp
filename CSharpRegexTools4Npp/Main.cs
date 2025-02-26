@@ -4,7 +4,6 @@ using CSharpRegexTools4Npp.Utils;
 using RegexDialog;
 using System;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -89,7 +88,7 @@ namespace CSharpRegexTools4Npp
 
                     dialog = new RegExToolDialog
                     {
-                        GetText = () => Npp.Editor.GetText(),
+                        GetText = () => Npp.Text,
 
                         SetText = text =>
                         {
@@ -98,29 +97,25 @@ namespace CSharpRegexTools4Npp
                                 Npp.Notepad.FileNew();
                             }
 
-                            Npp.Editor.SetText(text);
+                            Npp.Text = text;
                         },
 
                         SetTextInNew = text =>
                         {
                             Npp.Notepad.FileNew();
 
-                            Npp.Editor.SetText(text);
+                            Npp.Text = text;
                         },
 
-                        GetSelectedText = () => "",
+                        GetSelectedText = () => Npp.SelectedText,
 
-                        SetPosition = (index, length) =>
-                        {
-                            Npp.Editor.SetSelectionStart(index);
-                            Npp.Editor.SetSelectionEnd(index + length);
-                        },
+                        SetPosition = (index, length) => Npp.SelectTextAndShow(index, index + length),
 
-                        SetSelection = (index, length) => Npp.Editor.AddSelection(index, index + length),
+                        SetSelection = (index, length) => Npp.AddSelection(index, index + length),
 
-                        GetSelectionStartIndex = () => Npp.Editor.GetSelectionStart(),
+                        GetSelectionStartIndex = () => Npp.SelectionStart,
 
-                        GetSelectionLength = () => Npp.Editor.GetSelectionLength(),
+                        GetSelectionLength = () => Npp.SelectionLength,
 
                         SaveCurrentDocument = () => Npp.Notepad.SaveCurrentFile(),
 

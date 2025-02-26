@@ -12,7 +12,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     ///
     /// See http://www.scintilla.org/ScintillaDoc.html for further details.
     /// </summary>
-    public class ScintillaGateway : IScintillaGateway
+    public class ScintillaGateway
     {
         private const int Unused = 0;
 
@@ -1515,7 +1515,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         }
 
         /// <summary>Sets the position that starts the selection - this becomes the anchor. (Scintilla feature 2142)</summary>
-        public void SetSelectionStart(int anchor)
+        public void SetSelectionStart(Int64 anchor)
         {
             Win32.SendMessage(scintilla, SciMsg.SCI_SETSELECTIONSTART, (IntPtr) anchor, (IntPtr) Unused);
         }

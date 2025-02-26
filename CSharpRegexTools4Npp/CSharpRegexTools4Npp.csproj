@@ -10,9 +10,10 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CSharpRegexTools4Npp</RootNamespace>
     <AssemblyName>CSharpRegexTools4Npp</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8.1</TargetFrameworkVersion>
     <OldToolsVersion>3.5</OldToolsVersion>
     <ProjectGuid>{EB8FC3A3-93E8-457B-B281-FAFA5119611A}</ProjectGuid>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <DebugSymbols>true</DebugSymbols>
@@ -87,7 +88,6 @@
     <Compile Include="PluginInfrastructure\DllExport\DllExportAttribute.cs" />
     <Compile Include="PluginInfrastructure\Docking_h.cs" />
     <Compile Include="PluginInfrastructure\GatewayDomain.cs" />
-    <Compile Include="PluginInfrastructure\IScintillaGateway.cs" />
     <Compile Include="PluginInfrastructure\MenuCmdID_h.cs" />
     <Compile Include="PluginInfrastructure\Msgs_h.cs" />
     <Compile Include="PluginInfrastructure\NotepadPPGateway.cs" />
@@ -96,6 +96,7 @@
     <Compile Include="PluginInfrastructure\Preference_h.cs" />
     <Compile Include="PluginInfrastructure\ScintillaGateway.cs" />
     <Compile Include="PluginInfrastructure\Scintilla_iface.cs" />
+    <Compile Include="PluginInfrastructure\TextPosition.cs" />
     <Compile Include="PluginInfrastructure\UnmanagedExports.cs" />
     <Compile Include="PluginInfrastructure\Win32.cs" />
     <Compile Include="PluginInfrastructure\resource_h.cs" />
@@ -111,6 +112,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utils\BEncoding.cs" />
     <!-- tests -->
     <!-- other utilities -->
     <Compile Include="Utils\FormStyle.cs" />
@@ -130,7 +132,6 @@
     </When>
     <Otherwise>
       <ItemGroup>
-        <DEPENDENCY_DIR Include="Dependencies\x64" />
         <DEPENDENCY_DLLS Include="Dependencies\$(Platform)\*.dll" />
       </ItemGroup>
     </Otherwise>
@@ -156,16 +157,6 @@
   <ItemGroup>
     <!-- icons and such -->
     <Content Include="Properties\star_bmp.bmp" />
-    <None Include="Resources\close html tag toolbar darkmode.ico" />
-    <None Include="Resources\close html tag toolbar.ico" />
-    <None Include="Resources\close html tag toolbar bmp.bmp" />
-    <None Include="Resources\about form toolbar darkmode.ico" />
-    <None Include="Resources\selection remembering form toolbar darkmode.ico" />
-    <None Include="Resources\about form toolbar.ico" />
-    <None Include="Resources\selection remembering form toolbar.ico" />
-    <None Include="Resources\about form toolbar bmp.bmp" />
-    <None Include="Resources\selection remembering form toolbar bmp.bmp" />
-    <None Include="Resources\about form icon.PNG" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RegexDialog\RegexDialog.csproj">
@@ -173,6 +164,7 @@
       <Name>RegexDialog</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Condition="Exists($(PkgUnmanagedExports_Repack_Upgrade))" Project="$(PkgUnmanagedExports_Repack_Upgrade)\build\UnmanagedExports.Repack.Upgrade.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

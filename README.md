@@ -61,7 +61,7 @@ To Launch the tools use one of these 3 methods :
 ![Text-sources](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Text-Sources.png) 
 
 ## Credits
-Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) ([Apache-2.0 license](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net/blob/master/LICENSE.md)) Merged manually with a part of the version used in [CS-Script.Npp](https://github.com/oleg-shilo/cs-script.npp) (under MIT license) for better x64 support and remodified for the way I use it.  
+Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) and from version 1.3.0.0 on [NppCSharpPluginPack](https://github.com/molsonkiko/NppCSharpPluginPack) ([Apache-2.0 license](https://github.com/molsonkiko/NppCSharpPluginPack?tab=Apache-2.0-1-ov-file#readme)) Merged manually with a part of the version used in [CS-Script.Npp](https://github.com/oleg-shilo/cs-script.npp) (under MIT license) for better x64 support and remodified for the way I use it.  
 use :  
 [AvalonEdit](https://github.com/icsharpcode/AvalonEdit) For Regex edition and syntax Highlighting  (MIT license)  
 [CS-Script](https://github.com/oleg-shilo/cs-script/) For C# Match replace (MIT license)  

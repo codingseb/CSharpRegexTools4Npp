@@ -12,7 +12,7 @@ namespace CSharpRegexTools4Npp.Utils
         /// the NPPM_INTERNAL_RELOADNATIVELANG message is fired twice every time we change the native language preference.
         /// I don't know why, but we should ignore every other one of those messages.
         /// </summary>
-        private static bool reloadNativeLangToggle = false;
+        //private static bool reloadNativeLangToggle = false;
 
         protected override void WndProc(ref Message m)
         {
