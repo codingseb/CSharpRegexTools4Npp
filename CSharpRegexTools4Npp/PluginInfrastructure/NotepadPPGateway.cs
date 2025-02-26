@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Windows.Interop;
 using CSharpRegexTools4Npp.PluginInfrastructure;
 using CSharpRegexTools4Npp.Utils;
 
@@ -280,7 +281,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
         }
 
 
-        public void AddToolbarIcon(int funcItemsIndex, toolbarIcons icon)
+        public void AddToolbarIcon(int funcItemsIndex, ToolbarIcons icon)
 		{
 			IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(icon));
 			try {
@@ -297,7 +298,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 
 		public void AddToolbarIcon(int funcItemsIndex, Bitmap icon)
 		{
-            toolbarIcons tbi = new toolbarIcons
+            ToolbarIcons tbi = new ToolbarIcons
             {
                 hToolbarBmp = icon.GetHbitmap()
             };
@@ -364,6 +365,13 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 			Win32.SendMessage(PluginBase.nppData._nppHandle,
 					(uint)(NppMsg.NPPM_DMMSHOW),
 					0, form.Handle);
+		}
+
+		public void ShowDockingForm(System.Windows.Window window)
+		{
+			Win32.SendMessage(PluginBase.nppData._nppHandle,
+					(uint)(NppMsg.NPPM_DMMSHOW),
+					0, new WindowInteropHelper(window).Handle);
 		}
 
 		public Color GetDefaultForegroundColor()

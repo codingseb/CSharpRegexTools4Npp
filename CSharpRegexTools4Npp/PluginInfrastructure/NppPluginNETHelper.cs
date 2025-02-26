@@ -192,7 +192,7 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
     }
 
     [StructLayout(LayoutKind.Sequential)]
-    public struct toolbarIcons
+    public struct ToolbarIcons
     {
         public IntPtr hToolbarBmp;			// standard icon (color)
         public IntPtr hToolbarIcon;			// Fluent UI icon (black)

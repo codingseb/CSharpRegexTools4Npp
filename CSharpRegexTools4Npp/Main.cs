@@ -4,6 +4,7 @@ using CSharpRegexTools4Npp.Utils;
 using RegexDialog;
 using System;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -17,9 +18,13 @@ namespace CSharpRegexTools4Npp
     class Main
     {
         internal const int UNDO_BUFFER_SIZE = 64;
+        private static int idMyDlg = 0;
         internal const string PluginName = "C# Regex Tools 4 Npp";
         public static readonly string PluginConfigDirectory = Path.Combine(Npp.Notepad.GetConfigDirectory(), PluginName);
         public const string PluginRepository = "https://github.com/codingseb/CSharpRegexTools4Npp";
+
+        private static readonly Bitmap tbBmp = Res.Icon;// Resources;
+
         /// <summary>
         ///  This listens to the message that Notepad++ sends when its UI language is changed.
         /// </summary>
@@ -72,9 +77,11 @@ namespace CSharpRegexTools4Npp
         {
             try
             {
+                string dialogTitle = $"C# Regex Tools - {Assembly.GetExecutingAssembly().GetName().Version}";
+
                 AppDomain.CurrentDomain.SetupInformation.PrivateBinPath = @"plugins\CSharpRegexTools4Npp";
 
-                IntPtr hWnd = FindWindow(null, $"C# Regex Tools - {Assembly.GetExecutingAssembly().GetName().Version}");
+                IntPtr hWnd = FindWindow(null, dialogTitle);
 
                 if (hWnd.ToInt64() > 0)
                 {
@@ -145,7 +152,7 @@ namespace CSharpRegexTools4Npp
                                     result = false;
                                 }
 
-                                hWnd = FindWindow(null, $"C# Regex Tool - {Assembly.GetExecutingAssembly().GetName().Version}");
+                                hWnd = FindWindow(null, dialogTitle);
                                 if (hWnd.ToInt64() > 0)
                                 {
                                     SetForegroundWindow(hWnd);
@@ -161,10 +168,10 @@ namespace CSharpRegexTools4Npp
 
                         GetCurrentFileName = () => Npp.Notepad.CurrentFileName
                     };
-
+                    
                     dialog.Show();
 
-                    Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.MODELESSDIALOGADD, (int)NppMsg.NPPM_MODELESSDIALOG, new WindowInteropHelper(dialog).Handle.ToInt32());
+                    Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.MODELESSDIALOGADD, (int)NppMsg.NPPM_MODELESSDIALOG, new WindowInteropHelper(dialog).Handle);
                     //SetWindowLong(new WindowInteropHelper(dialog).Handle, (int)WindowLongFlags.GWLP_HWNDPARENT, PluginBase.nppData._nppHandle);
                     SetLayeredWindowAttributes(new WindowInteropHelper(dialog).Handle, 0, 128, LWA_ALPHA);
                 }
@@ -190,6 +197,26 @@ namespace CSharpRegexTools4Npp
 
         static internal void PluginCleanUp()
         {
+        }
+
+        internal static void SetToolBarIcon()
+        {
+            if (!string.IsNullOrEmpty(Npp.Notepad.NppBinVersion)
+                && int.TryParse(Npp.Notepad.NppBinVersion.Split('.')[0], out int majorVersion)
+                && majorVersion >= 8)
+            {
+                ToolbarIcons tbIcons = new()
+                {
+                    hToolbarBmp = tbBmp.GetHbitmap(),
+                    hToolbarIcon = tbBmp.GetHicon(),
+                    hToolbarIconDarkMode = tbBmp.GetHicon()
+                };
+
+                IntPtr pTbIcons = Marshal.AllocHGlobal(Marshal.SizeOf(tbIcons));
+                Marshal.StructureToPtr(tbIcons, pTbIcons, false);
+                Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_ADDTOOLBARICON_FORDARKMODE, PluginBase._funcItems.Items[idMyDlg]._cmdID, pTbIcons);
+                Marshal.FreeHGlobal(pTbIcons);
+            }
         }
 
         /// <summary>
