@@ -1,6 +1,5 @@
 using ClosedXML.Excel;
 using CSScriptLibrary;
-using DocumentFormat.OpenXml.Spreadsheet;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Win32;
@@ -15,6 +14,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -223,6 +223,84 @@ namespace RegexDialog
             Title += $" - {Assembly.GetExecutingAssembly().GetName().Version}";
 
             Init();
+
+            KeyboardHookManager.Initialize(this);
+
+            KeyboardHookManager.KeyPressed += KeyboardHookManager_KeyPressed;
+        }
+
+        private string ConvertToInputGestureText(KeyPressedEventArgs e) =>
+            $"{(e.Control ? "Ctrl+" : "")}{(e.Alt ? "Alt+" : "")}{(e.Shift ? "Shift+" : "")}{e.Key}";
+
+        private Dictionary<string, RoutedUICommand> hotkeyToCommand = new()
+        {
+            ["Ctrl+X"] = ApplicationCommands.Cut,
+            ["Ctrl+C"] = ApplicationCommands.Copy,
+            ["Ctrl+V"] = ApplicationCommands.Paste,
+        };
+
+        private void DelayAction(Action action, int milliseconds = 10)
+        {
+            Task.Run(async () =>
+            {
+                await Task.Delay(milliseconds);
+                Dispatcher.Invoke(action);
+            });
+        }
+
+        private void KeyboardHookManager_KeyPressed(object sender, KeyPressedEventArgs e)
+        {
+            try
+            {
+                string hotkey = ConvertToInputGestureText(e);
+
+                if (hotkeyToCommand.ContainsKey(hotkey))
+                {
+                    e.Handled = true;
+                    var focusedElement = Keyboard.FocusedElement;
+                    RoutedUICommand command = hotkeyToCommand[hotkey];
+                    if (command.CanExecute(null, focusedElement))
+                    {
+                        command.Execute(null, focusedElement);
+                    }
+                }
+                else if (hotkey.Equals($"Ctrl+{Key.Enter}"))
+                {
+                    e.Handled = true;
+                    DelayAction(ShowMatches);
+                }
+                else if (hotkey.Equals($"Ctrl+{Key.Space}"))
+                {
+                    e.Handled = true;
+                    DelayAction(IsMatch);
+                }
+                else if (hotkey.Equals("Ctrl+O"))
+                {
+                    e.Handled = true;
+                    DelayAction(OpenRegex);
+                }
+                else if (hotkey.Equals("Ctrl+S"))
+                {
+                    e.Handled = true;
+                    DelayAction(SaveAs);
+                }
+                else if(hotkey.Equals("Ctrl+Shift+S"))
+                {
+                    e.Handled = true;
+                    DelayAction(SelectAllMatches);
+                }
+                else if (hotkey.Equals("Ctrl+E") || hotkey.Equals("Ctrl+Shift+E"))
+                {
+                    e.Handled = true;
+                    DelayAction(ExtractAll);
+                }
+                else if (hotkey.Equals("Ctrl+R") || hotkey.Equals("Ctrl+Shift+R"))
+                {
+                    e.Handled = true;
+                    DelayAction(ReplaceAll);
+                }
+            }
+            catch { }
         }
 
         /// <summary>
@@ -618,7 +696,7 @@ namespace RegexDialog
                     }
                     else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
                     {
-                        using(XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath))
+                        using (XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath))
                         {
                             var elementNb = 0;
                             MatchResultsTreeView.ItemsSource = Config.Instance.ExcelSheets
@@ -695,7 +773,7 @@ namespace RegexDialog
             }
         }
 
-        private void ReplaceAllButton_Click(object sender, RoutedEventArgs e)
+        private void ReplaceAll()
         {
             try
             {
@@ -777,12 +855,23 @@ namespace RegexDialog
                             nbrOfElementToReplace = regex.Matches(text).Count;
                             lastSelectionStart = GetSelectionStartIndex?.Invoke() ?? 0;
                             lastSelectionLength = GetSelectionLength?.Invoke() ?? 0;
-
-                            SetSelectedText(script.After(regex.Replace(text, match =>
+                            text = regex.Replace(text, match =>
                             {
                                 index++;
                                 return script.Replace(match, index, currentFileName, index, 0);
-                            }), currentFileName, null));
+                            });
+                            
+                            text = script.After(text, currentFileName, null);
+
+                            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.LeftShift))
+                            {
+                                SetTextInNew(text);
+                            }
+                            else
+                            {
+                                SetSelectedText(text);
+                            }
+
                             break;
                         case RegexTextSource.CSharpScript:
                             dynamic scriptSource = csEval.LoadCode(CSharpTextSourceScript);
@@ -800,11 +889,24 @@ namespace RegexDialog
                             currentFileName = GetCurrentFileName?.Invoke() ?? string.Empty;
                             text = script.Before(GetCurrentText(), currentFileName);
                             nbrOfElementToReplace = regex.Matches(text).Count;
-                            SetText(script.After(regex.Replace(text, match =>
+                            
+                            text = regex.Replace(text, match =>
                             {
                                 index++;
                                 return script.Replace(match, index, currentFileName, index, 0);
-                            }), currentFileName, null));
+                            });
+
+                            text = script.After(text, currentFileName, null);
+
+                            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.LeftShift))
+                            {
+                                SetTextInNew(text);
+                            }
+                            else
+                            {
+                                SetText(text);
+                            }
+
                             break;
                     }
 
@@ -862,7 +964,17 @@ namespace RegexDialog
                         case RegexTextSource.CurrentSelection:
                             text = GetCurrentText();
                             nbrOfElementToReplace = regex.Matches(text).Count;
-                            SetSelectedText(regex.Replace(text, ReplaceEditor.Text));
+
+                            text = regex.Replace(text, ReplaceEditor.Text);
+
+                            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.LeftShift))
+                            {
+                                SetTextInNew(text);
+                            }
+                            else
+                            {
+                                SetSelectedText(text);
+                            }
                             break;
                         case RegexTextSource.CSharpScript:
                             dynamic script = csEval.LoadCode(CSharpTextSourceScript);
@@ -874,7 +986,16 @@ namespace RegexDialog
                         default:
                             text = GetCurrentText();
                             nbrOfElementToReplace = regex.Matches(text).Count;
-                            SetText(regex.Replace(text, ReplaceEditor.Text));
+                            text = regex.Replace(text, ReplaceEditor.Text);
+                            if (Keyboard.IsKeyDown(Key.LeftShift) || Keyboard.IsKeyDown(Key.LeftShift))
+                            {
+                                SetTextInNew(text);
+                            }
+                            else
+                            {
+                                SetText(text);
+                            }
+
                             break;
                     }
                 }
@@ -892,7 +1013,12 @@ namespace RegexDialog
             }
         }
 
-        private void SelectAllButton_Click(object sender, RoutedEventArgs e)
+        private void ReplaceAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            ReplaceAll();
+        }
+
+        private void SelectAllMatches()
         {
             try
             {
@@ -931,6 +1057,11 @@ namespace RegexDialog
             }
         }
 
+        private void SelectAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            SelectAllMatches();
+        }
+
         private string GetCellText(IXLCell cell)
         {
             return string.Join(Config.Instance
@@ -943,7 +1074,8 @@ namespace RegexDialog
                     .Select(source => source.GetValue?.Invoke(cell) ?? ""));
         }
 
-        private void ExtractMatchesButton_Click(object sender, RoutedEventArgs e)
+
+        private void ExtractAll()
         {
             try
             {
@@ -1050,6 +1182,11 @@ namespace RegexDialog
             }
         }
 
+        private void ExtractMatchesButton_Click(object sender, RoutedEventArgs e)
+        {
+            ExtractAll();
+        }
+
         private List<string> GetFiles()
         {
             string filter = Config.Instance.TextSourceDirectorySearchFilter.Trim();
@@ -1082,6 +1219,11 @@ namespace RegexDialog
         }
 
         private void IsMatchButton_Click(object sender, RoutedEventArgs e)
+        {
+            IsMatch();
+        }
+
+        private void IsMatch()
         {
             try
             {
@@ -1120,7 +1262,7 @@ namespace RegexDialog
                             {
                                 var sheet = workbook.Worksheet(sheetSelection.Name);
 
-                                foreach(var cell in sheetSelection.GetCells(sheet))
+                                foreach (var cell in sheetSelection.GetCells(sheet))
                                 {
                                     found = Regex.IsMatch(GetCellText(cell), RegexEditor.Text, GetRegexOptions());
 
@@ -1177,6 +1319,8 @@ namespace RegexDialog
             SaveWindowPosition();
 
             RegexEditor.TextArea.Caret.PositionChanged -= Caret_PositionChanged;
+
+            KeyboardHookManager.KeyPressed -= KeyboardHookManager_KeyPressed;
         }
 
         private void MatchResultsTreeView_SelectedItemChanged(object sender, RoutedPropertyChangedEventArgs<object> e)
@@ -1877,11 +2021,7 @@ namespace RegexDialog
 
         private void Open_MenuItem_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                OpenRegex();
-            }
-            catch { }
+            OpenRegex();
         }
 
         private void OpenRegex()
@@ -1942,7 +2082,7 @@ namespace RegexDialog
             catch { }
         }
 
-        private void Save_as_MenuItem_Click(object sender, RoutedEventArgs e)
+        private void SaveAs()
         {
             try
             {
@@ -2006,24 +2146,16 @@ namespace RegexDialog
             catch { }
         }
 
+        private void Save_as_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            SaveAs();
+        }
+
         private void Exit_MenuItem_Click(object sender, RoutedEventArgs e)
         {
             try
             {
                 Close();
-            }
-            catch { }
-        }
-
-        private void Root_PreviewKeyDown(object sender, KeyEventArgs e)
-        {
-            try
-            {
-                if (e.Key == Key.F5)
-                {
-                    ShowMatches();
-                    e.Handled = true;
-                }
             }
             catch { }
         }

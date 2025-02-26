@@ -99,11 +99,6 @@ namespace CSharpRegexTools4Npp
 
                         SetText = text =>
                         {
-                            if (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl))
-                            {
-                                Npp.Notepad.FileNew();
-                            }
-
                             Npp.Text = text;
                         },
 
@@ -113,6 +108,8 @@ namespace CSharpRegexTools4Npp
 
                             Npp.Text = text;
                         },
+
+                        SetSelectedText = text => Npp.SelectedText = text,
 
                         GetSelectedText = () => Npp.SelectedText,
 

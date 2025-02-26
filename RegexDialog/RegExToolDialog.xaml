@@ -15,7 +15,6 @@
         Loaded="Root_Loaded"
         SizeChanged="Root_SizeChanged"
         LocationChanged="Root_LocationChanged"
-        PreviewKeyDown="Root_PreviewKeyDown"
         DataContext="{x:Static local:Config.Instance}"
         local:WindowHelper.CloseOnKey="Esc"
         x:Name="Root">
@@ -87,12 +86,12 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator/>
-                <MenuItem Header="_Open" Click="Open_MenuItem_Click">
+                <MenuItem Header="_Open" Click="Open_MenuItem_Click" InputGestureText="Ctrl+O">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource OpenPicture}" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="Save _As..." Click="Save_as_MenuItem_Click" >
+                <MenuItem Header="Save _As..." Click="Save_as_MenuItem_Click" InputGestureText="Ctrl+S">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource SavePicture}" />
                     </MenuItem.Icon>
@@ -111,29 +110,32 @@
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Actions" >
-                <MenuItem Header="_Is Match ?" Click="IsMatchButton_Click">
+                <MenuItem Header="_Is Match ?" Click="IsMatchButton_Click" InputGestureText="Ctrl+Space">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource IsMatchPicture}" Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Matches" Click="ShowMatchesButton_Click">
+                <MenuItem Header="_Matches" Click="ShowMatchesButton_Click" InputGestureText="Ctrl+Enter">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource MatchPicture}" Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Select All Matches" Click="SelectAllButton_Click" IsEnabled="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter InverseBool=True}, ConverterParameter='Directory'}">
+                <MenuItem Header="_Select All Matches" 
+                          Click="SelectAllButton_Click" 
+                          IsEnabled="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter InverseBool=True}, ConverterParameter='Directory'}"
+                          InputGestureText="Ctrl+Shift+S">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource SelectPicture}" 
                                Width="16" 
                                Height="16"/>
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Extract All Matches" Click="ExtractMatchesButton_Click">
+                <MenuItem Header="_Extract All Matches" Click="ExtractMatchesButton_Click" InputGestureText="Ctrl+(Shift)+E" ToolTip="Maintain [Shift] Key down to apply the replacement in the extraction">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource ExtractPicture}" Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Replace All" Click="ReplaceAllButton_Click">
+                <MenuItem Header="_Replace All" Click="ReplaceAllButton_Click" InputGestureText="Ctrl+(Shift)+R" ToolTip="Maintain [Shift] Key down to put the result in a new tab">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource ReplacePicture}" Width="16" Height="16" />
                     </MenuItem.Icon>
@@ -189,18 +191,16 @@
                     <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button" />
                     <Style BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" TargetType="ToggleButton" />
                 </WrapPanel.Resources>
-                <Button x:Name="IsMatchButton" Click="IsMatchButton_Click" >
+                <Button x:Name="IsMatchButton" Click="IsMatchButton_Click" ToolTip="Is Match ? [Ctrl+Space]" >
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource IsMatchPicture}" Width="16" Height="16" ToolTip="Is Match ?"/>
+                        <Image Source="{StaticResource IsMatchPicture}" Width="16" Height="16" />
                     </StackPanel>
                 </Button>
-                <Button x:Name="ShowMatchesButton" Click="ShowMatchesButton_Click" >
+                <Button x:Name="ShowMatchesButton" Click="ShowMatchesButton_Click" ToolTip="Matches [Ctrl+Enter]">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource MatchPicture}" 
                                    Width="16" 
-                                   Height="16" 
-                                   ToolTip="Matches"
-                                   />
+                                   Height="16"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="SelectAllButton" Click="SelectAllButton_Click" IsEnabled="{Binding TextSourceOn, Converter={converters:ExpressionEvalConverter Expression='binding == RegexTextSource.CurrentTab || binding == RegexTextSource.CurrentSelection'}}">
@@ -213,12 +213,15 @@
                 </Button>
                 <Button x:Name="ExtractMatchesButton" Click="ExtractMatchesButton_Click">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ExtractPicture}" Width="16" Height="16" ToolTip="Extract All Matches (Maintain [Shift] Key down to apply the replacement in the extraction)"/>
+                        <Image Source="{StaticResource ExtractPicture}" Width="16" Height="16" ToolTip="Extract All Matches [Ctrl+E] (Maintain [Shift] Key down to apply the replacement in the extraction)"/>
                     </StackPanel>
                 </Button>
-                <Button x:Name="ReplaceAllButton" Click="ReplaceAllButton_Click" IsEnabled="{Binding TextSourceOn, Converter={converters:ExpressionEvalConverter Expression='binding != RegexTextSource.Excel'}}">
+                <Button x:Name="ReplaceAllButton" 
+                        Click="ReplaceAllButton_Click" 
+                        ToolTip="Replace All [Ctrl+R] (Maintain [Shift] Key down to put the result in a new tab)"
+                        IsEnabled="{Binding TextSourceOn, Converter={converters:ExpressionEvalConverter Expression='binding != RegexTextSource.Excel'}}">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ReplacePicture}" Width="16" Height="16" ToolTip="Replace All (Maintain [Ctrl] Key down to put the result in a new tab)"/>
+                        <Image Source="{StaticResource ReplacePicture}" Width="16" Height="16" />
                     </StackPanel>
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
