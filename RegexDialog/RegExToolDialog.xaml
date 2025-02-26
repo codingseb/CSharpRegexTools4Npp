@@ -141,7 +141,7 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator  />
-                <MenuItem Header="Show the regex in _C#" Click="ShowInCSharpButton_Click">
+                <MenuItem Header="Show the regex in _C#" Click="ShowInCSharpButton_Click" InputGestureText="Ctrl+Shift+C">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource ShowInCSharp}" Width="16" Height="16" />
                     </MenuItem.Icon>
@@ -225,9 +225,9 @@
                     </StackPanel>
                 </Button>
                 <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" />
-                <Button x:Name="ShowInCSharpButton" Click="ShowInCSharpButton_Click">
+                <Button x:Name="ShowInCSharpButton" Click="ShowInCSharpButton_Click" ToolTip="Show the regex in C# [Ctrl+Shift+C]">
                     <StackPanel Orientation="Horizontal">
-                        <Image Source="{StaticResource ShowInCSharp}" Width="16" Height="16" ToolTip="Show the regex in C#"/>
+                        <Image Source="{StaticResource ShowInCSharp}" Width="16" Height="16" />
                     </StackPanel>
                 </Button>
             </WrapPanel>

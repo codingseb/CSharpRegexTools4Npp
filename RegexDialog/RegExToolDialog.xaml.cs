@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -239,6 +240,8 @@ namespace RegexDialog
             ["Ctrl+V"] = ApplicationCommands.Paste,
         };
 
+        private Dictionary<string, Action> hotkeyToAction;
+
         private void DelayAction(Action action, int milliseconds = 10)
         {
             Task.Run(async () =>
@@ -250,6 +253,23 @@ namespace RegexDialog
 
         private void KeyboardHookManager_KeyPressed(object sender, KeyPressedEventArgs e)
         {
+            if(hotkeyToAction == null)
+            {
+                hotkeyToAction = new()
+                {
+                    [$"Ctrl+{Key.Enter}"] = ShowMatches,
+                    [$"Ctrl+{Key.Space}"] = IsMatch,
+                    ["Ctrl+O"] = OpenRegex,
+                    ["Ctrl+S"] = SaveAs,
+                    ["Ctrl+Shift+S"] = SelectAllMatches,
+                    ["Ctrl+E"] = ExtractAll,
+                    ["Ctrl+Shift+E"] = ExtractAll,
+                    ["Ctrl+R"] = ReplaceAll,
+                    ["Ctrl+Shift+R"] = ReplaceAll,
+                    ["Ctrl+Shift+C"] = ShowInCSharp
+                };
+            }
+
             try
             {
                 string hotkey = ConvertToInputGestureText(e);
@@ -264,41 +284,11 @@ namespace RegexDialog
                         command.Execute(null, focusedElement);
                     }
                 }
-                else if (hotkey.Equals($"Ctrl+{Key.Enter}"))
+                else if(hotkeyToAction.ContainsKey(hotkey))
                 {
                     e.Handled = true;
-                    DelayAction(ShowMatches);
-                }
-                else if (hotkey.Equals($"Ctrl+{Key.Space}"))
-                {
-                    e.Handled = true;
-                    DelayAction(IsMatch);
-                }
-                else if (hotkey.Equals("Ctrl+O"))
-                {
-                    e.Handled = true;
-                    DelayAction(OpenRegex);
-                }
-                else if (hotkey.Equals("Ctrl+S"))
-                {
-                    e.Handled = true;
-                    DelayAction(SaveAs);
-                }
-                else if(hotkey.Equals("Ctrl+Shift+S"))
-                {
-                    e.Handled = true;
-                    DelayAction(SelectAllMatches);
-                }
-                else if (hotkey.Equals("Ctrl+E") || hotkey.Equals("Ctrl+Shift+E"))
-                {
-                    e.Handled = true;
-                    DelayAction(ExtractAll);
-                }
-                else if (hotkey.Equals("Ctrl+R") || hotkey.Equals("Ctrl+Shift+R"))
-                {
-                    e.Handled = true;
-                    DelayAction(ReplaceAll);
-                }
+                    DelayAction(hotkeyToAction[hotkey]);
+                }        
             }
             catch { }
         }
@@ -2596,7 +2586,7 @@ namespace RegexDialog
             }
         }
 
-        private void Help_MenuItem_Click(object sender, RoutedEventArgs e)
+        private void ShowHelp()
         {
             try
             {
@@ -2605,7 +2595,12 @@ namespace RegexDialog
             catch { }
         }
 
-        private void ShowInCSharpButton_Click(object sender, RoutedEventArgs e)
+        private void Help_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            ShowHelp();
+        }
+
+        private void ShowInCSharp()
         {
             SetToHistory(0);
 
@@ -2698,6 +2693,11 @@ namespace RegexDialog
             SetTextInNew(cSharpCode);
 
             SetCurrentTabInCSharpHighlighting();
+        }
+
+        private void ShowInCSharpButton_Click(object sender, RoutedEventArgs e)
+        {
+            ShowInCSharp();
         }
 
         private void Hyperlink_RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
