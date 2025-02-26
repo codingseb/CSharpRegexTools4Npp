@@ -1,12 +1,15 @@
 ﻿// NPP plugin platform for .Net v0.91.57 by Kasper B. Graversen etc.
 using CSharpRegexTools4Npp.PluginInfrastructure;
 using CSharpRegexTools4Npp.Utils;
+using Newtonsoft.Json.Linq;
 using RegexDialog;
 using System;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Net;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Windows;
@@ -90,7 +93,7 @@ namespace CSharpRegexTools4Npp
                 {
                     RegExToolDialog dialog = null;
 
-                    //RegExToolDialog.InitIsOK = () => CheckUpdates(dialog);
+                    RegExToolDialog.InitIsOK = () => CheckUpdates(dialog);
 
                     dialog = new RegExToolDialog
                     {
@@ -212,6 +215,52 @@ namespace CSharpRegexTools4Npp
                 Marshal.StructureToPtr(tbIcons, pTbIcons, false);
                 Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)NppMsg.NPPM_ADDTOOLBARICON_FORDARKMODE, PluginBase._funcItems.Items[idMyDlg]._cmdID, pTbIcons);
                 Marshal.FreeHGlobal(pTbIcons);
+            }
+        }
+
+        private static async void CheckUpdates(RegExToolDialog dialog)
+        {
+            double hoursFromLastCheck = Math.Abs((DateTime.Now - Config.Instance.LastUpdateCheck).TotalHours);
+
+            //if (hoursFromLastCheck > 8)
+            if (true)
+            {
+                ServicePointManager.ServerCertificateValidationCallback += (_, __, ___, ____) => true;
+                ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12 | SecurityProtocolType.Tls11 | SecurityProtocolType.Tls;
+
+                try
+                {
+                    HttpClient client = new();
+                    client.DefaultRequestHeaders.Add("Accept-Language", "en-US;q=0.5,en;q=0.3");
+                    client.DefaultRequestHeaders.Add("User-Agent", "C# App");
+
+                    var response = await client.GetAsync("https://api.github.com/repos/codingseb/CSharpRegexTools4Npp/releases/latest").ConfigureAwait(true);
+
+                    string responseText = await response.Content.ReadAsStringAsync();
+
+                    var jsonResult = JObject.Parse(responseText);
+
+                    int[] latestVersion = jsonResult["name"].ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
+                    int[] currentVersion = typeof(RegExToolDialog).Assembly.GetName().Version.ToString().Split('.').Select(digit => int.Parse(digit.Trim())).ToArray();
+
+                    Debug.WriteLine($"{string.Join(".", latestVersion)} - {string.Join(".", currentVersion)}");
+
+                    for (int i = 0; i < latestVersion.Length && i < currentVersion.Length; i++)
+                    {
+                        if (latestVersion[i] > currentVersion[i])
+                        {
+                            Config.Instance.UpdateAvailable = true;
+                            Config.Instance.UpdateURL = "https://github.com/codingseb/CSharpRegexTools4Npp/releases";
+                            break;
+                        }
+                        else if (latestVersion[i] < currentVersion[i])
+                        {
+                            break;
+                        }
+                    }
+                }
+                catch
+                { }
             }
         }
 
