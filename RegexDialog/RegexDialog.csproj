@@ -2,8 +2,8 @@
   <PropertyGroup>
     <TargetFramework>net481</TargetFramework>
     <OutputType>Library</OutputType>
-		<AssemblyVersion>1.3.0.0</AssemblyVersion>
-		<FileVersion>1.3.0.0</FileVersion>
+		<AssemblyVersion>2.0.0.0</AssemblyVersion>
+		<FileVersion>2.0.0.0</FileVersion>
     <!--<LangVersion>9.0</LangVersion>-->
     <UseWindowsForms>true</UseWindowsForms>
     <UseWPF>true</UseWPF>
