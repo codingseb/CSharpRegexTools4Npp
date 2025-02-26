@@ -82,7 +82,6 @@
   </ItemGroup>
   <ItemGroup>
     <!-- forms -->
-    <Compile Include="Forms\NppFormHelper.cs" />
     <!-- infrastructure -->
     <Compile Include="PluginInfrastructure\CLikeStringArray.cs" />
     <Compile Include="PluginInfrastructure\DllExport\DllExportAttribute.cs" />
