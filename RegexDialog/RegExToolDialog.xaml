@@ -208,7 +208,7 @@
                         <Image Source="{StaticResource SelectPicture}" 
                                    Width="16" 
                                    Height="16" 
-                                   ToolTip="Select All Matches"/>
+                                   ToolTip="Select All Matches [Ctrl+Shift+S]"/>
                     </StackPanel>
                 </Button>
                 <Button x:Name="ExtractMatchesButton" Click="ExtractMatchesButton_Click">
