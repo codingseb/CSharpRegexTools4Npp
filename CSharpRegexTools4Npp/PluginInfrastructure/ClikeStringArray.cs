@@ -8,8 +8,8 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
 {
     public class ClikeStringArray : IDisposable
     {
-        IntPtr _nativeArray;
-        List<IntPtr> _nativeItems;
+        private readonly IntPtr _nativeArray;
+        private readonly List<IntPtr> _nativeItems;
         bool _disposed = false;
 
         public ClikeStringArray(int num, int stringCapacity)

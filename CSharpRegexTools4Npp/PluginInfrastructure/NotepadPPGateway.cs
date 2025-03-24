@@ -27,12 +27,12 @@ namespace CSharpRegexTools4Npp.PluginInfrastructure
             return Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)command, wParam, lParam);
         }
 
-        IntPtr Send(NppMsg command, int wParam, int lParam)
+        private IntPtr Send(NppMsg command, int wParam, int lParam)
         {
             return Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)command, wParam, lParam);
         }
 
-        IntPtr Send(NppMsg command, IntPtr wParam, IntPtr lParam)
+        private IntPtr Send(NppMsg command, IntPtr wParam, IntPtr lParam)
         {
             return Win32.SendMessage(PluginBase.nppData._nppHandle, (uint)command, wParam, lParam);
         }

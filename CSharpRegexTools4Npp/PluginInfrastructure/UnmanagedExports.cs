@@ -29,7 +29,7 @@ namespace CSharpRegexTools4Npp
         }
 
         [DllExport(CallingConvention = CallingConvention.Cdecl)]
-        static uint messageProc(uint Message, IntPtr wParam, IntPtr lParam)
+        static uint messageProc(uint message, IntPtr wParam, IntPtr lParam)
         {
             return 1;
         }

@@ -84,6 +84,7 @@
   <ItemGroup>
     <!-- forms -->
     <!-- infrastructure -->
+    <Compile Include="GlobalSuppressions.cs" />
     <Compile Include="PluginInfrastructure\CLikeStringArray.cs" />
     <Compile Include="PluginInfrastructure\DllExport\DllExportAttribute.cs" />
     <Compile Include="PluginInfrastructure\Docking_h.cs" />
