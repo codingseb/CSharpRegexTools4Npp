@@ -20,14 +20,73 @@
     <Optimize>False</Optimize>
   </PropertyGroup>
   <ItemGroup>
+    <None Remove="img\Class.png" />
+    <None Remove="img\Constant.png" />
+    <None Remove="img\Enum.png" />
+    <None Remove="img\EnumMember.png" />
+    <None Remove="img\Event.png" />
+    <None Remove="img\Extension.png" />
+    <None Remove="img\Field.png" />
+    <None Remove="img\Interface.png" />
+    <None Remove="img\Keyword.png" />
+    <None Remove="img\Method.png" />
+    <None Remove="img\Namespace.png" />
+    <None Remove="img\Other.png" />
+    <None Remove="img\Property.png" />
+    <None Remove="img\Struct.png" />
+    <None Remove="img\symbol-class.svg" />
+    <None Remove="img\symbol-constant.svg" />
+    <None Remove="img\symbol-enum.svg" />
+    <None Remove="img\symbol-event.svg" />
+    <None Remove="img\symbol-field.svg" />
+    <None Remove="img\symbol-interface.svg" />
+    <None Remove="img\symbol-key.svg" />
+    <None Remove="img\symbol-keyword.svg" />
+    <None Remove="img\symbol-method.svg" />
+    <None Remove="img\symbol-namespace.svg" />
+    <None Remove="img\symbol-property.svg" />
+    <None Remove="img\symbol-structure.svg" />
+    <None Remove="img\symbol-variable.svg" />
+    <None Remove="img\Variable.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="FodyWeavers.xsd" />
 		<None Update="Resources\ModeV2.xsd" />
 		<None Update="Resources\Regex_syntax_color.xshd" />
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="img\Class.png" />
+    <Resource Include="img\Constant.png" />
+    <Resource Include="img\Enum.png" />
+    <Resource Include="img\EnumMember.png" />
+    <Resource Include="img\Event.png" />
+    <Resource Include="img\Extension.png" />
+    <Resource Include="img\Field.png" />
+    <Resource Include="img\Interface.png" />
+    <Resource Include="img\Keyword.png" />
+    <Resource Include="img\Method.png" />
+    <Resource Include="img\Namespace.png" />
+    <Resource Include="img\Other.png" />
+    <Resource Include="img\Property.png" />
+    <Resource Include="img\Struct.png" />
+    <Resource Include="img\symbol-class.svg" />
+    <Resource Include="img\symbol-constant.svg" />
+    <Resource Include="img\symbol-enum.svg" />
+    <Resource Include="img\symbol-event.svg" />
+    <Resource Include="img\symbol-field.svg" />
+    <Resource Include="img\symbol-interface.svg" />
+    <Resource Include="img\symbol-key.svg" />
+    <Resource Include="img\symbol-keyword.svg" />
+    <Resource Include="img\symbol-method.svg" />
+    <Resource Include="img\symbol-namespace.svg" />
+    <Resource Include="img\symbol-property.svg" />
+    <Resource Include="img\symbol-structure.svg" />
+    <Resource Include="img\symbol-variable.svg" />
+    <Resource Include="img\Variable.png" />
     <Resource Include="Resources\accept_button.png" />
     <Resource Include="Resources\bullet_code.png" />
     <Resource Include="Resources\bullet_code_red.png" />
+    <Resource Include="Resources\CSharpReplaceAutoCompleteTemplate.txt" />
     <Resource Include="Resources\textfield_rename.png" />
     <Resource Include="Resources\folder_page.png" />
     <Resource Include="Resources\page_go.png" />
@@ -59,24 +118,27 @@
     <PackageReference Include="CodingSeb.ExpressionEvaluator" Version="1.4.40" />
     <PackageReference Include="CodingSeb.Layouts" Version="1.0.4" />
     <PackageReference Include="CodingSeb.Mvvm" Version="1.2.4" />
-    <PackageReference Include="Costura.Fody" Version="5.7.0" PrivateAssets="all" />
+    <PackageReference Include="Costura.Fody" Version="6.0.0" PrivateAssets="all" />
     <PackageReference Include="CS-Script.bin" Version="3.30.5.1" />
     <PackageReference Include="CS-Script.lib" Version="3.30.5.1" />
     <PackageReference Include="CS-Script.RoslynProvider" Version="3.30.3" />
     <PackageReference Include="DocumentFormat.OpenXml" Version="3.2.0" />
     <PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
-    <PackageReference Include="Fody" Version="6.8.1" PrivateAssets="all" />
+    <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all" />
     <PackageReference Include="Irony.NetCore" Version="1.1.11" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.10.0" />
-    <PackageReference Include="Microsoft.CodeAnalysis.Scripting.Common" Version="4.10.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.13.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Features" Version="4.13.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Scripting" Version="4.13.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Features" Version="4.13.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Scripting.Common" Version="4.13.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.13.0" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.10.0">
+    <PackageReference Include="Microsoft.Net.Compilers.Toolset" Version="4.13.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -154,5 +216,18 @@
     <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
     <PackageReference Include="System.Xml.XPath.XDocument" Version="4.3.0" />
     <PackageReference Include="XLParser" Version="1.7.2" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Res.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Res.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Res.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Res.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

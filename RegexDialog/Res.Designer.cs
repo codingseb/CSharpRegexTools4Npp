@@ -22,7 +22,7 @@ namespace RegexDialog {
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Resources.Tools.StronglyTypedResourceBuilder", "17.0.0.0")]
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    internal class Res {
+    public class Res {
         
         private static global::System.Resources.ResourceManager resourceMan;
         
@@ -36,7 +36,7 @@ namespace RegexDialog {
         ///   Returns the cached ResourceManager instance used by this class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Resources.ResourceManager ResourceManager {
+        public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
                     global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("RegexDialog.Res", typeof(Res).Assembly);
@@ -51,12 +51,44 @@ namespace RegexDialog {
         ///   resource lookups using this strongly typed resource class.
         /// </summary>
         [global::System.ComponentModel.EditorBrowsableAttribute(global::System.ComponentModel.EditorBrowsableState.Advanced)]
-        internal static global::System.Globalization.CultureInfo Culture {
+        public static global::System.Globalization.CultureInfo Culture {
             get {
                 return resourceCulture;
             }
             set {
                 resourceCulture = value;
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to using System.Collections;
+        ///using System.Collections.Generic;
+        ///using System.Collections.ObjectModel;
+        ///using System.ComponentModel;
+        ///using System.Globalization;
+        ///using System.Linq;
+        ///using System.Text;
+        ///using System.Text.RegularExpressions;
+        ///using RegexDialog;
+        /////usings
+        ///
+        ///public class CSharpReplaceContainer
+        ///{
+        ///    //global
+        ///
+        ///    //match
+        ///    public string Replace(Match match, int matchIndex, string fileName, int globalIndex, int fileIndex)
+        ///    {
+        ///        //code
+        ///    }
+        ///    //endmatch
+        ///
+        ///    //group
+        ///    pu [rest of string was truncated]&quot;;.
+        /// </summary>
+        public static string CSharpReplaceAutoCompleteTemplate {
+            get {
+                return ResourceManager.GetString("CSharpReplaceAutoCompleteTemplate", resourceCulture);
             }
         }
         
@@ -79,7 +111,7 @@ namespace RegexDialog {
         ///
         ///            Con [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string CSharpReplaceCallingCode {
+        public static string CSharpReplaceCallingCode {
             get {
                 return ResourceManager.GetString("CSharpReplaceCallingCode", resourceCulture);
             }
@@ -111,7 +143,7 @@ namespace RegexDialog {
         ///    //group
         ///    pu [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string CSharpReplaceContainer {
+        public static string CSharpReplaceContainer {
             get {
                 return ResourceManager.GetString("CSharpReplaceContainer", resourceCulture);
             }
@@ -127,7 +159,7 @@ namespace RegexDialog {
         ///    &lt;Color name=&quot;CharEscape&quot; foreground=&quot;Gray&quot; fontWeight=&quot;normal&quot;/&gt;
         ///    &lt;Color name=&quot;Comment [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string Regex_syntax_color {
+        public static string Regex_syntax_color {
             get {
                 return ResourceManager.GetString("Regex_syntax_color", resourceCulture);
             }
@@ -153,7 +185,7 @@ namespace RegexDialog {
         ///        &quot;Name&quot;: &quot;Tab &quot;,
         ///        &quot;Description&quot;: &quot;Matches  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string RegexLanguageElements {
+        public static string RegexLanguageElements {
             get {
                 return ResourceManager.GetString("RegexLanguageElements", resourceCulture);
             }
@@ -165,7 +197,7 @@ namespace RegexDialog {
         ///  &quot;CultureInvariant&quot;: &quot;Specifies that cultural differences in language is ignored.&quot;,
         ///  &quot;ECMAScript&quot;: &quot;Enables ECMAScript-compliant behavior for the expression.\r\nThis value can be used only in conjunction with the IgnoreC [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string RegexOptionsDescriptions {
+        public static string RegexOptionsDescriptions {
             get {
                 return ResourceManager.GetString("RegexOptionsDescriptions", resourceCulture);
             }
@@ -183,7 +215,7 @@ namespace RegexDialog {
         ///    &lt;/RuleSet&gt;
         ///&lt;/SyntaxDefinition&gt;.
         /// </summary>
-        internal static string Replace_syntax_color {
+        public static string Replace_syntax_color {
             get {
                 return ResourceManager.GetString("Replace_syntax_color", resourceCulture);
             }
@@ -208,7 +240,7 @@ namespace RegexDialog {
         ///      &quot;Value&quot;: &quot;$$&quot;
         ///  [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string ReplaceLanguageElements {
+        public static string ReplaceLanguageElements {
             get {
                 return ResourceManager.GetString("ReplaceLanguageElements", resourceCulture);
             }
@@ -223,7 +255,7 @@ namespace RegexDialog {
         ///            MatchCollection matches = regex.Matches(input);
         ///            Console.WriteLine(string.Join(&quot;\r\n&quot;, matches.Cast&lt;Match&gt;().Select(match =&gt; match.Value)));.
         /// </summary>
-        internal static string StandardReplaceCode {
+        public static string StandardReplaceCode {
             get {
                 return ResourceManager.GetString("StandardReplaceCode", resourceCulture);
             }
@@ -235,7 +267,7 @@ namespace RegexDialog {
         ///  &lt;/ItemGroup&gt;
         ///.
         /// </summary>
-        internal static string TextSourceAsResourceInCsProj {
+        public static string TextSourceAsResourceInCsProj {
             get {
                 return ResourceManager.GetString("TextSourceAsResourceInCsProj", resourceCulture);
             }
@@ -262,7 +294,7 @@ namespace RegexDialog {
         ///}
         ///.
         /// </summary>
-        internal static string TextSourceContainer {
+        public static string TextSourceContainer {
             get {
                 return ResourceManager.GetString("TextSourceContainer", resourceCulture);
             }
@@ -286,7 +318,7 @@ namespace RegexDialog {
         ///
         ///        static v [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string VSProgram {
+        public static string VSProgram {
             get {
                 return ResourceManager.GetString("VSProgram", resourceCulture);
             }
@@ -304,7 +336,7 @@ namespace RegexDialog {
         ///&lt;/Project&gt;
         ///.
         /// </summary>
-        internal static string VSProject {
+        public static string VSProject {
             get {
                 return ResourceManager.GetString("VSProject", resourceCulture);
             }
@@ -324,7 +356,7 @@ namespace RegexDialog {
         ///		{$guid1$}.Debug|Any CPU.Build.0 = Debug|Any CPU
         ///		{$guid1$}.Release|Any [rest of string was truncated]&quot;;.
         /// </summary>
-        internal static string VSSolution {
+        public static string VSSolution {
             get {
                 return ResourceManager.GetString("VSSolution", resourceCulture);
             }

@@ -16,7 +16,6 @@
         SizeChanged="Root_SizeChanged"
         LocationChanged="Root_LocationChanged"
         DataContext="{x:Static local:Config.Instance}"
-        local:WindowHelper.CloseOnKey="Esc"
         x:Name="Root">
     <Window.Resources>
         <BitmapImage x:Key="NewPicture" UriSource="Resources/page_white.png" />
@@ -80,7 +79,7 @@
     <DockPanel Background="WhiteSmoke" >
         <Menu DockPanel.Dock="Top" BorderBrush="Silver" BorderThickness="0,0,0,1">
             <MenuItem Header="_File" >
-                <MenuItem Header="_New" Click="New_MenuItem_Click" >
+                <MenuItem Header="_New" Click="New_MenuItem_Click" InputGestureText="Ctrl+N" >
                     <MenuItem.Icon>
                         <Image Source="{StaticResource NewPicture}" />
                     </MenuItem.Icon>
@@ -103,19 +102,19 @@
                     </MenuItem.Icon>
                 </MenuItem>
                 <Separator />-->
-                <MenuItem Header="_Exit" Click="Exit_MenuItem_Click" >
+                <MenuItem Header="_Exit" Click="Exit_MenuItem_Click" InputGestureText="Ctrl+F4" >
                     <MenuItem.Icon>
                         <Image Source="{StaticResource ExitPicture}" />
                     </MenuItem.Icon>
                 </MenuItem>
             </MenuItem>
             <MenuItem Header="_Actions" >
-                <MenuItem Header="_Is Match ?" Click="IsMatchButton_Click" InputGestureText="Ctrl+Space">
+                <MenuItem Header="_Is Match ?" Click="IsMatchButton_Click" InputGestureText="Ctrl+Enter">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource IsMatchPicture}" Width="16" Height="16" />
                     </MenuItem.Icon>
                 </MenuItem>
-                <MenuItem Header="_Matches" Click="ShowMatchesButton_Click" InputGestureText="Ctrl+Enter">
+                <MenuItem Header="_Matches" Click="ShowMatchesButton_Click" InputGestureText="Ctrl+Shift+Enter">
                     <MenuItem.Icon>
                         <Image Source="{StaticResource MatchPicture}" Width="16" Height="16" />
                     </MenuItem.Icon>
@@ -191,12 +190,12 @@
                     <Style BasedOn="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" TargetType="Button" />
                     <Style BasedOn="{StaticResource {x:Static ToolBar.ToggleButtonStyleKey}}" TargetType="ToggleButton" />
                 </WrapPanel.Resources>
-                <Button x:Name="IsMatchButton" Click="IsMatchButton_Click" ToolTip="Is Match ? [Ctrl+Space]" >
+                <Button x:Name="IsMatchButton" Click="IsMatchButton_Click" ToolTip="Is Match ? [Ctrl+Enter]" >
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource IsMatchPicture}" Width="16" Height="16" />
                     </StackPanel>
                 </Button>
-                <Button x:Name="ShowMatchesButton" Click="ShowMatchesButton_Click" ToolTip="Matches [Ctrl+Enter]">
+                <Button x:Name="ShowMatchesButton" Click="ShowMatchesButton_Click" ToolTip="Matches [Ctrl+Shift+Enter]">
                     <StackPanel Orientation="Horizontal">
                         <Image Source="{StaticResource MatchPicture}" 
                                    Width="16" 
@@ -425,7 +424,9 @@
                             FontSize="12"
                             ScrollViewer.HorizontalScrollBarVisibility="Auto" 
                             Margin="-1,-1,1,1"
-                            ShowLineNumbers="{Binding ShowLinesNumbersReplaceEditorOption}">
+                            ShowLineNumbers="{Binding ShowLinesNumbersReplaceEditorOption}"
+                            behaviors:RoslynCompletionBehaviorExtension.EnableCompletion="{Binding IsChecked ,ElementName=CSharpReplaceCheckbox}"
+                            behaviors:RoslynCompletionBehaviorExtension.TemplateCode="{Binding Source={x:Static local:Res.CSharpReplaceAutoCompleteTemplate}}" >
                             <i:Interaction.Behaviors>
                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Text" Value="{Binding ReplaceEditorText}" PropertyChangedTriggerEventName="TextChanged" />
                                 <behaviors:SimplePropertyBindingBehavior PropertyName="Options.ShowSpaces" Value="{Binding ShowSpaceCharsReplaceEditorOption}" />

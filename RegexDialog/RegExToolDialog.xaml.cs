@@ -1,10 +1,13 @@
 using ClosedXML.Excel;
 using CSScriptLibrary;
+using ICSharpCode.AvalonEdit;
+using ICSharpCode.AvalonEdit.Editing;
 using ICSharpCode.AvalonEdit.Highlighting;
 using ICSharpCode.AvalonEdit.Highlighting.Xshd;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using Ookii.Dialogs.Wpf;
+using RegexDialog.Behaviors;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -69,7 +72,7 @@ namespace RegexDialog
         {
             Match beforeMatch = cSharpReplaceBeforePartRegex.Match(ReplaceEditor.Text);
             Match afterMatch = cSharpReplaceAfterPartRegex.Match(ReplaceEditor.Text);
-
+            
             return replaceScript
                 .Replace("//usings", cSharpReplaceUsingsPartRegex.Match(ReplaceEditor.Text).Groups["usings"].Value.Trim())
                 .Replace("//global", cSharpReplaceGlobalPartRegex.Match(ReplaceEditor.Text).Groups["global"].Value)
@@ -233,7 +236,7 @@ namespace RegexDialog
         private string ConvertToInputGestureText(KeyPressedEventArgs e) =>
             $"{(e.Control ? "Ctrl+" : "")}{(e.Alt ? "Alt+" : "")}{(e.Shift ? "Shift+" : "")}{e.Key}";
 
-        private Dictionary<string, RoutedUICommand> hotkeyToCommand = new()
+        private readonly Dictionary<string, RoutedUICommand> hotkeyToCommand = new()
         {
             ["Ctrl+X"] = ApplicationCommands.Cut,
             ["Ctrl+C"] = ApplicationCommands.Copy,
@@ -251,24 +254,23 @@ namespace RegexDialog
             });
         }
 
-        private void KeyboardHookManager_KeyPressed(object sender, KeyPressedEventArgs e)
+        private async void KeyboardHookManager_KeyPressed(object sender, KeyPressedEventArgs e)
         {
-            if(hotkeyToAction == null)
+            hotkeyToAction ??= new()
             {
-                hotkeyToAction = new()
-                {
-                    [$"Ctrl+{Key.Enter}"] = ShowMatches,
-                    [$"Ctrl+{Key.Space}"] = IsMatch,
-                    ["Ctrl+O"] = OpenRegex,
-                    ["Ctrl+S"] = SaveAs,
-                    ["Ctrl+Shift+S"] = SelectAllMatches,
-                    ["Ctrl+E"] = ExtractAll,
-                    ["Ctrl+Shift+E"] = ExtractAll,
-                    ["Ctrl+R"] = ReplaceAll,
-                    ["Ctrl+Shift+R"] = ReplaceAll,
-                    ["Ctrl+Shift+C"] = ShowInCSharp
-                };
-            }
+                [$"Ctrl+{Key.Enter}"] = IsMatch,
+                [$"Ctrl+Shift+{Key.Enter}"] = ShowMatches,
+                ["Ctrl+N"] = NewRegex,
+                ["Ctrl+O"] = OpenRegex,
+                ["Ctrl+S"] = SaveAs,
+                ["Ctrl+Shift+S"] = SelectAllMatches,
+                ["Ctrl+E"] = ExtractAll,
+                ["Ctrl+Shift+E"] = ExtractAll,
+                ["Ctrl+R"] = ReplaceAll,
+                ["Ctrl+Shift+R"] = ReplaceAll,
+                ["Ctrl+Shift+C"] = ShowInCSharp,
+                ["Ctrl+F4"] = Close
+            };
 
             try
             {
@@ -288,7 +290,22 @@ namespace RegexDialog
                 {
                     e.Handled = true;
                     DelayAction(hotkeyToAction[hotkey]);
-                }        
+                }
+                else if(hotkey.Equals("Ctrl+Space") && Keyboard.FocusedElement is TextArea textArea)
+                {
+                    var editor = textArea.FindVisualParent<TextEditor>();
+
+                    RoslynCompletionBehavior behavior = RoslynCompletionBehaviorExtension.GetBehaviorForEditor(editor);
+
+                    if (behavior != null)
+                    {
+                        e.Handled = true;
+                        Dispatcher.Invoke(() =>
+                        {
+                            behavior?.ShowCompletionWindowAsync().RunSynchronously();
+                        });
+                    }
+                }
             }
             catch { }
         }
@@ -1995,6 +2012,11 @@ namespace RegexDialog
         }
 
         private void New_MenuItem_Click(object sender, RoutedEventArgs e)
+        {
+            NewRegex();
+        }
+
+        public void NewRegex()
         {
             try
             {
