@@ -72,4 +72,6 @@ use :
 
 And for icons :
 
-[FatCow](https://www.fatcow.com/free-icons) ([Creative Commons 3.0](https://creativecommons.org/licenses/by/3.0/us/))
+GUI : [FatCow](https://www.fatcow.com/free-icons) ([Creative Commons 3.0](https://creativecommons.org/licenses/by/3.0/us/))
+C# Autocomplete : [vscode-icons](https://github.com/microsoft/vscode-icons) : ([Creative Commons Attribution 4.0 International](https://github.com/microsoft/vscode-icons/blob/main/LICENSE)
+
