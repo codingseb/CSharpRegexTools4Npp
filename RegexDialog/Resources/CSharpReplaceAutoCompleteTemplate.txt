@@ -13,13 +13,6 @@ public class CSharpReplaceContainer
 {
     //global
 
-    //match
-    public string Replace(Match match, int matchIndex, string fileName, int globalIndex, int fileIndex)
-    {
-        //code
-    }
-    //endmatch
-
     public string Before(string text, string fileName)
     {
         //before
@@ -29,4 +22,11 @@ public class CSharpReplaceContainer
     {
         //after
     }
+
+    //match
+    public string Replace(Match match, int matchIndex, string fileName, int globalIndex, int fileIndex)
+    {
+        //code
+    }
+    //endmatch
 }
