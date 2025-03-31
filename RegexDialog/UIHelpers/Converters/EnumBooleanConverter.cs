@@ -24,7 +24,7 @@ namespace RegexDialog.Converters
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (!(parameter is string parameterString))
+            if (!(parameter is string parameterString) || !(bool)value)
                 return DependencyProperty.UnsetValue;
 
             return Enum.Parse(targetType, parameterString);
