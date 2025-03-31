@@ -1,4 +1,4 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Completion;
 using Microsoft.CodeAnalysis.Text;
@@ -37,8 +37,8 @@ namespace RegexDialog.Services
         public RoslynService()
         {
             // Charger toutes les références nécessaires
-            _references = new[]
-            {
+            _references =
+            [
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(File).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
@@ -51,7 +51,7 @@ namespace RegexDialog.Services
                 MetadataReference.CreateFromFile(typeof(IEnumerable<>).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(CultureInfo).Assembly.Location),
                 MetadataReference.CreateFromFile(Assembly.Load("System.Runtime").Location)
-            };
+            ];
 
             _compilationOptions = new CSharpCompilationOptions(
                 OutputKind.DynamicallyLinkedLibrary,
@@ -212,7 +212,7 @@ namespace RegexDialog.Services
                 return CodeRegion.AfterMethod;
             }
 
-            positionInBloc = position - Math.Max(0,removeAllRegionRegex.Matches(editorContent).Cast<Match>().Max(m => m.Index + m.Length));
+            positionInBloc = position - Math.Max(0,removeAllRegionRegex.Matches(editorContent).Cast<Match>().DefaultIfEmpty().Max(m => m == null ? 0 : m.Index + m.Length));
             // Par défaut, on est dans la méthode Replace
             return CodeRegion.ReplaceMethod;
         }
