@@ -24,6 +24,13 @@ namespace RegexDialog.Services
         private readonly MetadataReference[] _references;
         private readonly CSharpCompilationOptions _compilationOptions;
 
+        // Regex patterns to identify template regions
+        private static readonly Regex usingsRegex = new(@"#usings\r?\n(.*?)\r?\n#endusings", RegexOptions.Singleline);
+        private static readonly Regex globalRegex = new(@"#global\r?\n(.*?)\r?\n#endglobal", RegexOptions.Singleline);
+        private static readonly Regex beforeRegex = new(@"#before\r?\n(.*?)\r?\n#endbefore", RegexOptions.Singleline);
+        private static readonly Regex afterRegex = new(@"#after\r?\n(.*?)\r?\n#endafter", RegexOptions.Singleline);
+        private static readonly Regex removeAllRegionRegex = new(@"#(?<region>\w+)\r?\n(.*?)\r?\n#end\k<region>", RegexOptions.Singleline);
+
         // Pour le debugging
         private bool _isDebugMode = true;
 
@@ -33,6 +40,7 @@ namespace RegexDialog.Services
             _references = new[]
             {
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(typeof(File).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Regex).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Match).Assembly.Location),
@@ -53,6 +61,12 @@ namespace RegexDialog.Services
             LogDebug("RoslynService initialized");
         }
 
+        private string ExtractRegionContent(string editorContent, Regex regionRegex)
+        {
+            Match match = regionRegex.Match(editorContent);
+            return match.Success ? match.Groups[1].Value : "";
+        }
+
         public async Task<IEnumerable<Model.CompletionData>> GetCompletionItemsAsync(
             string editorContent, int position, string templateCode)
         {
@@ -60,14 +74,39 @@ namespace RegexDialog.Services
             {
                 LogDebug($"GetCompletionItemsAsync called with position {position}");
 
-                // Utiliser le template fourni et injecter le code de l'utilisateur
-                string codeToAnalyze = templateCode.Replace("//code", editorContent);
+                string codeToAnalyze;
+                int adjustedPosition;
+                int positionInBloc;
+
+                // Déterminer la région actuelle
+                var currentRegion = DetermineRegion(editorContent, position, out positionInBloc);
+                LogDebug($"Current region: {currentRegion}");
+
+                // Extraire les parties du code de l'utilisateur selon les régions
+                string usingsCode = ExtractRegionContent(editorContent, usingsRegex);
+                string globalCode = ExtractRegionContent(editorContent, globalRegex);
+                string beforeCode = ExtractRegionContent(editorContent, beforeRegex);
+                string afterCode = ExtractRegionContent(editorContent, afterRegex);
+
+                // Le code principal est ce qui n'est pas dans une région spéciale
+                string mainCode = removeAllRegionRegex.Replace(editorContent, "");
+
+                // Injecter le code dans le template
+                codeToAnalyze = templateCode
+                    .Replace("//usings", usingsCode)
+                    .Replace("//global", globalCode)
+                    .Replace("//code", mainCode)
+                    .Replace("//before", beforeCode)
+                    .Replace("//after", afterCode);
+
+                LogDebug("Code to analyze created");
 
                 // Calculer la position ajustée
-                int codeMarkerPosition = templateCode.IndexOf("//code");
-                int adjustedPosition = codeMarkerPosition + position;
+                adjustedPosition = CalculateAdjustedPosition(templateCode, currentRegion, positionInBloc,
+                                                          usingsCode, globalCode, beforeCode, afterCode, mainCode);
 
-                LogDebug($"Code marker position: {codeMarkerPosition}");
+                LogDebug($"Adjusted position: {adjustedPosition}");
+
                 LogDebug($"Adjusted position: {adjustedPosition}");
                 LogDebug($"Code to analyze: {codeToAnalyze}");
 
@@ -131,6 +170,100 @@ namespace RegexDialog.Services
                 LogDebug(ex.StackTrace);
                 return Enumerable.Empty<Model.CompletionData>();
             }
+        }
+
+        private enum CodeRegion
+        {
+            Usings,
+            Global,
+            ReplaceMethod,
+            BeforeMethod,
+            AfterMethod
+        }
+
+        private CodeRegion DetermineRegion(string editorContent, int position, out int positionInBloc)
+        {
+            // Vérifier si la position est dans une région spéciale
+            var usingsMatch = usingsRegex.Match(editorContent);
+            if (usingsMatch.Success && IsPositionInMatch(position, usingsMatch))
+            {
+                positionInBloc = position - usingsMatch.Groups[1].Index;
+                return CodeRegion.Usings;
+            }
+
+            var globalMatch = globalRegex.Match(editorContent);
+            if (globalMatch.Success && IsPositionInMatch(position, globalMatch))
+            {
+                positionInBloc = position - globalMatch.Groups[1].Index;
+                return CodeRegion.Global;
+            }
+
+            var beforeMatch = beforeRegex.Match(editorContent);
+            if (beforeMatch.Success && IsPositionInMatch(position, beforeMatch))
+            {
+                positionInBloc = position - beforeMatch.Groups[1].Index;
+                return CodeRegion.BeforeMethod;
+            }
+
+            var afterMatch = afterRegex.Match(editorContent);
+            if (afterMatch.Success && IsPositionInMatch(position, afterMatch))
+            {
+                positionInBloc = position - afterMatch.Groups[1].Index;
+                return CodeRegion.AfterMethod;
+            }
+
+            positionInBloc = position - Math.Max(0,removeAllRegionRegex.Matches(editorContent).Cast<Match>().Max(m => m.Index + m.Length));
+            // Par défaut, on est dans la méthode Replace
+            return CodeRegion.ReplaceMethod;
+        }
+
+        private bool IsPositionInMatch(int position, Match match)
+        {
+            return position >= match.Groups[1].Index &&
+                   position <= match.Groups[1].Index + match.Groups[1].Length;
+        }
+
+        private int CalculateAdjustedPosition(string template, CodeRegion region, int positionInBlock,
+                                            string usingsCode, string globalCode,
+                                            string beforeCode, string afterCode, string mainCode)
+        {
+            int adjustedPosition = 0;
+
+            // Selon la région, trouver la position du placeholder dans le template
+            switch (region)
+            {
+                case CodeRegion.Usings:
+                    adjustedPosition = template.IndexOf("//usings") + positionInBlock;
+                    break;
+                case CodeRegion.Global:
+                    adjustedPosition = template
+                        .Replace("//usings", usingsCode)
+                        .IndexOf("//global") + positionInBlock;
+                    break;
+                case CodeRegion.BeforeMethod:
+                    adjustedPosition = template
+                        .Replace("//usings", usingsCode)
+                        .Replace("//global", globalCode)
+                        .IndexOf("//before") + positionInBlock;
+                    break;
+                case CodeRegion.AfterMethod:
+                    adjustedPosition = template
+                        .Replace("//usings", usingsCode)
+                        .Replace("//global", globalCode)
+                        .Replace("//before", beforeCode)
+                        .IndexOf("//after") + positionInBlock;
+                    break;
+                case CodeRegion.ReplaceMethod:
+                    adjustedPosition = template
+                        .Replace("//usings", usingsCode)
+                        .Replace("//global", globalCode)
+                        .Replace("//before", beforeCode)
+                        .Replace("//after", afterCode)
+                        .IndexOf("//code") + positionInBlock;
+                    break;
+            }
+
+            return adjustedPosition;
         }
 
         private Model.CompletionItemKind GetCompletionItemKind(ImmutableArray<string> tags)
