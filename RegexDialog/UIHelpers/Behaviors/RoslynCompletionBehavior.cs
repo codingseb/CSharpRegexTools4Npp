@@ -175,7 +175,7 @@ namespace RegexDialog.Behaviors
                 Console.WriteLine($"[RoslynCompletion] {message}");
 
                 // Ajouter un log visuel pour le débogage
-                System.Diagnostics.Trace.WriteLine($"[RoslynCompletion] {message}");
+                Trace.WriteLine($"[RoslynCompletion] {message}");
             }
         }
 

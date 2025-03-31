@@ -1019,7 +1019,9 @@
                                             FontSize="12"
                                             SyntaxHighlighting="C#"
                                             ShowLineNumbers="{Binding ShowLinesNumbersCSharpTextSourceEditorOption}"
-                                            ScrollViewer.HorizontalScrollBarVisibility="Auto" >
+                                            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                                            behaviors:RoslynCompletionBehaviorExtension.EnableCompletion="True"
+                                            behaviors:RoslynCompletionBehaviorExtension.TemplateCode="{Binding Source={x:Static local:Res.TextSourceContainer}}">
                                             <avalonEdit:TextEditor.ContextMenu>
                                                 <ContextMenu>
                                                     <MenuItem Header="Cut" Command="ApplicationCommands.Cut"/>
