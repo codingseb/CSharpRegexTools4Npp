@@ -55,12 +55,14 @@ namespace RegexDialog.Behaviors
             {
                 // Si l'utilisateur tape un caractère qui n'est pas valide pour un identifiant,
                 // fermer la fenêtre de complétion
-                if (!char.IsLetterOrDigit(e.Text[0]) && e.Text[0] != '_' && e.Text[0] != '.')
+                if (!char.IsLetterOrDigit(e.Text[0]) && e.Text[0] != '_')
                 {
                     LogDebug("Closing completion window due to non-identifier character");
                     _completionWindow.Close();
                 }
-                return;
+
+                if(e.Text[0] != '.')
+                    return;
             }
 
             // Déclencher l'autocomplétion dans ces cas :

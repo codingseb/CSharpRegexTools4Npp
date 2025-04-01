@@ -52,11 +52,12 @@ namespace RegexDialog.Behaviors
 
         private async void Caret_PositionChanged(object sender, EventArgs e)
         {
+            var caretOffset = _editor.CaretOffset;
+            var document = _editor.Document;
+
             if (_signatureTooltip != null && _signatureTooltip.IsOpen)
             {
                 // Vérifier si nous sommes toujours dans une liste d'arguments
-                var caretOffset = _editor.CaretOffset;
-                var document = _editor.Document;
 
                 // Trouver la parenthèse fermante correspondante
                 int openParenCount = 1;
@@ -92,6 +93,11 @@ namespace RegexDialog.Behaviors
                     _signatureTooltip.IsOpen = false;
                     _signatureTooltip = null;
                 }
+            }
+            else if(caretOffset > 0 && (document.Text[caretOffset - 1] == '(' || document.Text[caretOffset - 1] == ','))
+            {
+                if(_editor.IsInitialized)
+                    await ShowSignatureHelpAsync();
             }
         }
 

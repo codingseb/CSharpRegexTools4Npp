@@ -13,6 +13,8 @@ namespace RegexDialog.Model
 {
     public class CompletionData : ICompletionData
     {
+        private static readonly Dictionary<CompletionItemKind, BitmapImage> imageCache = [];
+
         public string Text { get; set; }
         public string Description { get; set; }
         public CompletionItemKind Kind { get; set; }
@@ -34,13 +36,21 @@ namespace RegexDialog.Model
 
         public void Complete(TextArea textArea, ISegment completionSegment, EventArgs insertionRequestEventArgs)
         {
-            textArea.Document.Replace(completionSegment, Text);
+            string completion = Text;
+
+            if (Kind == CompletionItemKind.Method || Kind == CompletionItemKind.Extension)
+                completion += "(";
+
+            textArea.Document.Replace(completionSegment, completion);
         }
 
         private ImageSource GetImageForKind(CompletionItemKind kind)
         {
             try
             {
+                if (imageCache.ContainsKey(kind))
+                    return imageCache[kind];
+
                 // Construire le chemin de l'image en fonction du type
                 string imageName = kind.ToString();
                 string resourcePath = $"/RegexDialog;component/img/{imageName}.png";
@@ -58,6 +68,8 @@ namespace RegexDialog.Model
                     bitmap.CacheOption = BitmapCacheOption.OnLoad; // Charger en mémoire et fermer le flux
                     bitmap.EndInit();
                     bitmap.Freeze(); // Pour une utilisation thread-safe
+
+                    imageCache[kind] = bitmap;
 
                     return bitmap;
                 }
