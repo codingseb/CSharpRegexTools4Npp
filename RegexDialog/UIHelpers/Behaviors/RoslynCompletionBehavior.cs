@@ -18,7 +18,7 @@ namespace RegexDialog.Behaviors
         private string _templateCode;
 
         // Pour le débogage
-        private readonly bool _isDebugMode = true;
+        private readonly bool _isDebugMode = false;
 
         public RoslynCompletionBehavior(TextEditor editor, string templateCode)
         {

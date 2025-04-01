@@ -23,7 +23,7 @@ namespace RegexDialog.Behaviors
         private readonly RoslynService _roslynService;
         private string _templateCode;
         private MethodSignatureTooltip _signatureTooltip;
-        private readonly bool _isDebugMode = true;
+        private readonly bool _isDebugMode = false;
 
         public RoslynSignatureHelpBehavior(TextEditor editor, string templateCode)
         {
