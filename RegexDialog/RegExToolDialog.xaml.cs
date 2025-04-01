@@ -254,7 +254,7 @@ namespace RegexDialog
             });
         }
 
-        private async void KeyboardHookManager_KeyPressed(object sender, KeyPressedEventArgs e)
+        private void KeyboardHookManager_KeyPressed(object sender, KeyPressedEventArgs e)
         {
             hotkeyToAction ??= new()
             {

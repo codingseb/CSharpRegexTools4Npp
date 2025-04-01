@@ -2,7 +2,9 @@
 using ICSharpCode.AvalonEdit.Document;
 using ICSharpCode.AvalonEdit.Editing;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -25,10 +27,7 @@ namespace RegexDialog.Model
         {
             get
             {
-                if (_image == null)
-                {
-                    _image = GetImageForKind(Kind);
-                }
+                _image ??= GetImageForKind(Kind);
                 return _image;
             }
         }
@@ -96,5 +95,27 @@ namespace RegexDialog.Model
         Constant,
         Struct,
         Other
+    }
+
+    public class SignatureHelpItem
+    {
+        public string PrefixDisplayParts { get; set; }
+        public string SeparatorDisplayParts { get; set; }
+        public string SuffixDisplayParts { get; set; }
+        public List<ParameterItem> Parameters { get; set; } = [];
+        public int ArgumentIndex { get; set; }
+        public string Documentation { get; set; }
+
+        public override string ToString()
+        {
+            return $"{PrefixDisplayParts}{string.Join(SeparatorDisplayParts, Parameters.Select(p => p.DisplayParts))}{SuffixDisplayParts}";
+        }
+    }
+
+    public class ParameterItem
+    {
+        public string Name { get; set; }
+        public string DisplayParts { get; set; }
+        public string Documentation { get; set; }
     }
 }

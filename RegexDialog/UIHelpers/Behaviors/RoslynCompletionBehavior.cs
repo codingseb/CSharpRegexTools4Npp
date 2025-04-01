@@ -19,7 +19,7 @@ namespace RegexDialog.Behaviors
         private string _templateCode;
 
         // Pour le débogage
-        private bool _isDebugMode = true;
+        private readonly bool _isDebugMode = true;
 
         public RoslynCompletionBehavior(TextEditor editor, string templateCode)
         {
@@ -121,18 +121,7 @@ namespace RegexDialog.Behaviors
 
                 // Définir la position de début et de fin
                 int caretOffset = _editor.CaretOffset;
-                int startOffset = caretOffset;
-
-                // Si nous sommes après un point, reculer d'un caractère
-                if (caretOffset > 0 && _editor.Document.GetCharAt(caretOffset - 1) == '.')
-                {
-                    startOffset = caretOffset;
-                }
-                else
-                {
-                    // Sinon, trouver le début du mot actuel
-                    startOffset = FindWordStart(caretOffset);
-                }
+                int startOffset = (caretOffset > 0 && _editor.Document.GetCharAt(caretOffset - 1) == '.') ? caretOffset : FindWordStart(caretOffset);
 
                 LogDebug($"Setting completion window range: {startOffset} to {caretOffset}");
                 _completionWindow.StartOffset = startOffset;
@@ -140,6 +129,11 @@ namespace RegexDialog.Behaviors
 
                 LogDebug("Showing completion window");
                 _completionWindow.Show();
+
+                if(startOffset < caretOffset)
+                {
+                    _completionWindow.CompletionList.SelectItem(_editor.Document.GetText(startOffset, caretOffset - startOffset));
+                }
 
                 LogDebug("Completion window should be visible now");
             }
@@ -201,10 +195,13 @@ namespace RegexDialog.Behaviors
     // Attached behavior pour l'utilisation en XAML
     public static class RoslynCompletionBehaviorExtension
     {
-        private static readonly Dictionary<TextEditor, RoslynCompletionBehavior> _behaviors =
-            new Dictionary<TextEditor, RoslynCompletionBehavior>();
+        private static readonly Dictionary<TextEditor, RoslynCompletionBehavior> _behaviors = [];
+
+        private static readonly Dictionary<TextEditor, RoslynSignatureHelpBehavior> _signatureHelpBehaviors = [];
 
         public static RoslynCompletionBehavior GetBehaviorForEditor(TextEditor editor) => _behaviors.TryGetValue(editor, out RoslynCompletionBehavior behavior) ? behavior : null;
+
+        public static RoslynSignatureHelpBehavior GetSignatureHelpBehaviorForEditor(TextEditor editor) => _signatureHelpBehaviors.TryGetValue(editor, out RoslynSignatureHelpBehavior behavior) ? behavior : null;
 
         #region EnableCompletion Property
 
@@ -250,8 +247,10 @@ namespace RegexDialog.Behaviors
 
         private static void OnEnableCompletionChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (!(d is TextEditor editor))
+            if (d is not TextEditor editor)
+            {
                 return;
+            }
 
             var enableCompletion = (bool)e.NewValue;
             var templateCode = GetTemplateCode(editor);
@@ -263,6 +262,12 @@ namespace RegexDialog.Behaviors
                     var behavior = new RoslynCompletionBehavior(editor, templateCode);
                     _behaviors[editor] = behavior;
                 }
+
+                if (!_signatureHelpBehaviors.ContainsKey(editor))
+                {
+                    var signatureHelpBehavior = new RoslynSignatureHelpBehavior(editor, templateCode);
+                    _signatureHelpBehaviors[editor] = signatureHelpBehavior;
+                }
             }
             else
             {
@@ -271,17 +276,30 @@ namespace RegexDialog.Behaviors
                     behavior.Detach();
                     _behaviors.Remove(editor);
                 }
+
+                if (_signatureHelpBehaviors.TryGetValue(editor, out var signatureHelpBehavior))
+                {
+                    signatureHelpBehavior.Detach();
+                    _signatureHelpBehaviors.Remove(editor);
+                }
             }
         }
 
         private static void OnTemplateCodeChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
         {
-            if (!(d is TextEditor editor))
+            if (d is not TextEditor editor)
+            {
                 return;
+            }
 
             if (_behaviors.TryGetValue(editor, out var behavior))
             {
                 behavior.UpdateTemplateCode((string)e.NewValue);
+            }
+
+            if (_signatureHelpBehaviors.TryGetValue(editor, out var signatureHelpBehavior))
+            {
+                signatureHelpBehavior.UpdateTemplateCode((string)e.NewValue);
             }
         }
     }

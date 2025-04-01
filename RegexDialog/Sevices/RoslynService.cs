@@ -16,6 +16,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Globalization;
 using Microsoft.CodeAnalysis.Tags;
+using RegexDialog.Model;
 
 namespace RegexDialog.Services
 {
@@ -32,7 +33,7 @@ namespace RegexDialog.Services
         private static readonly Regex removeAllRegionRegex = new(@"#(?<region>\w+)\r?\n(.*?)\r?\n#end\k<region>", RegexOptions.Singleline);
 
         // Pour le debugging
-        private bool _isDebugMode = true;
+        private readonly bool _isDebugMode = true;
 
         public RoslynService()
         {
@@ -40,13 +41,11 @@ namespace RegexDialog.Services
             _references =
             [
                 MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(File).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Enumerable).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Regex).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(Match).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(List<>).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(StringBuilder).Assembly.Location),
-                MetadataReference.CreateFromFile(typeof(INotifyPropertyChanged).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(ObservableCollection<>).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(IEnumerable<>).Assembly.Location),
                 MetadataReference.CreateFromFile(typeof(CultureInfo).Assembly.Location),
@@ -67,8 +66,7 @@ namespace RegexDialog.Services
             return match.Success ? match.Groups[1].Value : "";
         }
 
-        public async Task<IEnumerable<Model.CompletionData>> GetCompletionItemsAsync(
-            string editorContent, int position, string templateCode)
+        public async Task<IEnumerable<Model.CompletionData>> GetCompletionItemsAsync(string editorContent, int position, string templateCode)
         {
             try
             {
@@ -76,10 +74,9 @@ namespace RegexDialog.Services
 
                 string codeToAnalyze;
                 int adjustedPosition;
-                int positionInBloc;
 
                 // Déterminer la région actuelle
-                var currentRegion = DetermineRegion(editorContent, position, out positionInBloc);
+                var currentRegion = DetermineRegion(editorContent, position, out int positionInBloc);
                 LogDebug($"Current region: {currentRegion}");
 
                 // Extraire les parties du code de l'utilisateur selon les régions
@@ -103,7 +100,7 @@ namespace RegexDialog.Services
 
                 // Calculer la position ajustée
                 adjustedPosition = CalculateAdjustedPosition(templateCode, currentRegion, positionInBloc,
-                                                          usingsCode, globalCode, beforeCode, afterCode, mainCode);
+                                                          usingsCode, globalCode, beforeCode, afterCode);
 
                 LogDebug($"Adjusted position: {adjustedPosition}");
 
@@ -131,7 +128,7 @@ namespace RegexDialog.Services
                 if (completionService == null)
                 {
                     LogDebug("CompletionService is null");
-                    return Enumerable.Empty<Model.CompletionData>();
+                    return [];
                 }
 
                 // Obtenir les suggestions de complétion
@@ -140,7 +137,7 @@ namespace RegexDialog.Services
                 if (completionList == null)
                 {
                     LogDebug("CompletionList is null");
-                    return Enumerable.Empty<Model.CompletionData>();
+                    return [];
                 }
 
                 // Correction : utiliser ItemsList au lieu de Items (obsolète)
@@ -168,7 +165,172 @@ namespace RegexDialog.Services
             {
                 LogDebug($"Error in GetCompletionItemsAsync: {ex.Message}");
                 LogDebug(ex.StackTrace);
-                return Enumerable.Empty<Model.CompletionData>();
+                return [];
+            }
+        }
+
+        public async Task<IEnumerable<SignatureHelpItem>> GetSignatureHelpItemsAsync(
+    string editorContent, int position, string templateCode)
+        {
+            try
+            {
+                LogDebug($"GetSignatureHelpItemsAsync called with position {position}");
+
+                string codeToAnalyze;
+                int adjustedPosition;
+
+                // Déterminer la région actuelle
+                var currentRegion = DetermineRegion(editorContent, position, out int positionInBloc);
+                LogDebug($"Current region: {currentRegion}");
+
+                // Extraire les parties du code de l'utilisateur selon les régions
+                string usingsCode = ExtractRegionContent(editorContent, usingsRegex);
+                string globalCode = ExtractRegionContent(editorContent, globalRegex);
+                string beforeCode = ExtractRegionContent(editorContent, beforeRegex);
+                string afterCode = ExtractRegionContent(editorContent, afterRegex);
+
+                // Le code principal est ce qui n'est pas dans une région spéciale
+                string mainCode = removeAllRegionRegex.Replace(editorContent, "");
+
+                // Injecter le code dans le template
+                codeToAnalyze = templateCode
+                    .Replace("//usings", usingsCode)
+                    .Replace("//global", globalCode)
+                    .Replace("//code", mainCode)
+                    .Replace("//before", beforeCode)
+                    .Replace("//after", afterCode);
+
+                LogDebug("Code to analyze created");
+
+                // Calculer la position ajustée
+                adjustedPosition = CalculateAdjustedPosition(templateCode, currentRegion, positionInBloc,
+                    usingsCode, globalCode, beforeCode, afterCode);
+
+                LogDebug($"Adjusted position: {adjustedPosition}");
+                LogDebug($"Code to analyze: {codeToAnalyze}");
+
+                // Créer le workspace pour l'analyse
+                using var workspace = new AdhocWorkspace();
+                var projectId = ProjectId.CreateNewId();
+                var projectInfo = ProjectInfo.Create(
+                    projectId, VersionStamp.Create(), "SignatureHelpProject", "SignatureHelpProject",
+                    LanguageNames.CSharp, compilationOptions: _compilationOptions,
+                    metadataReferences: _references);
+
+                var project = workspace.AddProject(projectInfo);
+
+                // Ajouter le document avec le code à analyser
+                var sourceText = SourceText.From(codeToAnalyze);
+                var document = workspace.AddDocument(project.Id, "SignatureHelp.cs", sourceText);
+
+                // Obtenir l'arbre syntaxique et le modèle sémantique
+                var syntaxRoot = await document.GetSyntaxRootAsync();
+                var semanticModel = await document.GetSemanticModelAsync();
+
+                if (syntaxRoot == null || semanticModel == null)
+                {
+                    LogDebug("SyntaxRoot or SemanticModel is null");
+                    return [];
+                }
+
+                // Trouver l'invocation de méthode ou l'expression de création à la position actuelle
+                var token = syntaxRoot.FindToken(adjustedPosition);
+                var node = token.Parent;
+
+                // Trouver la liste d'arguments la plus proche
+                while (node != null &&
+                      node is not Microsoft.CodeAnalysis.CSharp.Syntax.ArgumentListSyntax &&
+                      node is not Microsoft.CodeAnalysis.CSharp.Syntax.AttributeArgumentListSyntax &&
+                      node is not Microsoft.CodeAnalysis.CSharp.Syntax.BracketedArgumentListSyntax)
+                {
+                    node = node.Parent;
+                }
+
+                if (node == null)
+                {
+                    LogDebug("No argument list found at position");
+                    return [];
+                }
+
+                // Obtenir la méthode ou le constructeur appelé
+                var invocationOrCreation = node.Parent;
+                if (invocationOrCreation == null)
+                {
+                    LogDebug("No invocation or creation expression found");
+                    return [];
+                }
+
+                // Obtenir le symbole pour la méthode
+                var symbolInfo = semanticModel.GetSymbolInfo(invocationOrCreation);
+                if (symbolInfo.Symbol == null && (symbolInfo.CandidateSymbols == null || !symbolInfo.CandidateSymbols.Any()))
+                {
+                    LogDebug("No symbol found for invocation");
+                    return [];
+                }
+
+                // Obtenir toutes les méthodes candidates (surcharges)
+                var methodSymbols = symbolInfo.CandidateSymbols.Length > 0
+                    ? symbolInfo.CandidateSymbols.ToArray()
+                    : [symbolInfo.Symbol];
+
+                // Trouver l'index de l'argument actuel
+                var argumentList = (Microsoft.CodeAnalysis.CSharp.Syntax.BaseArgumentListSyntax)node;
+                int currentArgumentIndex = 0;
+
+                foreach (var arg in argumentList.Arguments)
+                {
+                    if (arg.Span.Contains(adjustedPosition))
+                    {
+                        break;
+                    }
+                    else if (arg.Span.End < adjustedPosition)
+                    {
+                        currentArgumentIndex++;
+                    }
+                }
+
+                // Si nous sommes juste après une virgule, nous sommes au prochain argument
+                var prevChar = adjustedPosition > 0 ? codeToAnalyze[adjustedPosition - 1] : '\0';
+                //if (prevChar == ',')
+                //{
+                //    currentArgumentIndex++;
+                //}
+
+                // Créer les éléments d'aide à la signature
+                var result = new List<SignatureHelpItem>();
+
+                foreach (var methodSymbol in methodSymbols.OfType<IMethodSymbol>())
+                {
+                    var signatureItem = new SignatureHelpItem
+                    {
+                        PrefixDisplayParts = methodSymbol.Name + "(",
+                        SeparatorDisplayParts = ", ",
+                        SuffixDisplayParts = ")",
+                        ArgumentIndex = currentArgumentIndex,
+                        Documentation = methodSymbol.GetDocumentationCommentXml() ?? ""
+                    };
+
+                    foreach (var parameter in methodSymbol.Parameters)
+                    {
+                        signatureItem.Parameters.Add(new ParameterItem
+                        {
+                            Name = parameter.Name,
+                            DisplayParts = parameter.Type.ToDisplayString() + " " + parameter.Name,
+                            Documentation = parameter.GetDocumentationCommentXml() ?? ""
+                        });
+                    }
+
+                    result.Add(signatureItem);
+                }
+
+                LogDebug($"Returning {result.Count} signature help items");
+                return result;
+            }
+            catch (Exception ex)
+            {
+                LogDebug($"Error in GetSignatureHelpItemsAsync: {ex.Message}");
+                LogDebug(ex.StackTrace);
+                return [];
             }
         }
 
@@ -176,7 +338,7 @@ namespace RegexDialog.Services
         {
             Usings,
             Global,
-            ReplaceMethod,
+            MainCodeMethod,
             BeforeMethod,
             AfterMethod
         }
@@ -214,7 +376,7 @@ namespace RegexDialog.Services
 
             positionInBloc = position - Math.Max(0,removeAllRegionRegex.Matches(editorContent).Cast<Match>().DefaultIfEmpty().Max(m => m == null ? 0 : m.Index + m.Length));
             // Par défaut, on est dans la méthode Replace
-            return CodeRegion.ReplaceMethod;
+            return CodeRegion.MainCodeMethod;
         }
 
         private bool IsPositionInMatch(int position, Match match)
@@ -225,7 +387,7 @@ namespace RegexDialog.Services
 
         private int CalculateAdjustedPosition(string template, CodeRegion region, int positionInBlock,
                                             string usingsCode, string globalCode,
-                                            string beforeCode, string afterCode, string mainCode)
+                                            string beforeCode, string afterCode)
         {
             int adjustedPosition = 0;
 
@@ -253,7 +415,7 @@ namespace RegexDialog.Services
                         .Replace("//before", beforeCode)
                         .IndexOf("//after") + positionInBlock;
                     break;
-                case CodeRegion.ReplaceMethod:
+                case CodeRegion.MainCodeMethod:
                     adjustedPosition = template
                         .Replace("//usings", usingsCode)
                         .Replace("//global", globalCode)
