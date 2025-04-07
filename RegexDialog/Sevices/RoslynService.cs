@@ -169,8 +169,7 @@ namespace RegexDialog.Services
             }
         }
 
-        public async Task<IEnumerable<SignatureHelpItem>> GetSignatureHelpItemsAsync(
-    string editorContent, int position, string templateCode)
+        public async Task<IEnumerable<SignatureHelpItem>> GetSignatureHelpItemsAsync(string editorContent, int position, string templateCode)
         {
             try
             {
