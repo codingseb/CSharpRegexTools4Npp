@@ -51,6 +51,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="FodyWeavers.xsd" />
+    <None Update="LaunchExcelVbsScript.vbs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
 		<None Update="Resources\ModeV2.xsd" />
 		<None Update="Resources\Regex_syntax_color.xshd" />
   </ItemGroup>
