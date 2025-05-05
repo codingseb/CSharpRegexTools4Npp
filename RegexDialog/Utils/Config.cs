@@ -199,7 +199,10 @@ namespace RegexDialog
                         ExcelSheets.ForEach(sheetSelection => sheetSelection.PropertyChanged += SubPropertyChanged_PropertyChanged);
                     }
                 }
-                catch { }
+                catch(Exception exception) 
+                {
+                    MessageBox.Show(exception.Message);
+                }
                 finally
                 {
                     isInit = true;
