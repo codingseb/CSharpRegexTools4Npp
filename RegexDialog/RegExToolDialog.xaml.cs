@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -724,6 +723,7 @@ namespace RegexDialog
                                               GetMatchesFor(GetCellText(cell))
                                                 .Select(match =>
                                                 {
+                                                    match.Parent = excelSheetResult;
                                                     match.InfoSup = cell.Address.ToString();
                                                     return match;
                                                 }));
@@ -1377,7 +1377,7 @@ namespace RegexDialog
         {
             try
             {
-                if (sender is TreeViewItem treeViewItem && treeViewItem.DataContext is RegexResult regexResult)
+                if (sender is TreeViewItem treeViewItem && treeViewItem.DataContext is RegexResult regexResult && regexResult is not RegexExcelSheetResult)
                 {
                     if (regexResult.FileName.Length > 0
                         && !GetCurrentFileName().Equals(regexResult.FileName, StringComparison.OrdinalIgnoreCase)
@@ -1385,6 +1385,10 @@ namespace RegexDialog
                         && regexResult is not RegexFileResult)
                     {
                         SetPosition?.Invoke(regexResult.Index, regexResult.Length);
+                    }
+                    else if(Config.Instance.TextSourceOn == RegexTextSource.Excel)
+                    {
+                        OpenCellInExcel(regexResult);
                     }
 
                     e.Handled = true;
@@ -1400,19 +1404,43 @@ namespace RegexDialog
                 if (e.Key == Key.Enter
                     && sender is TreeViewItem treeViewItem
                     && treeViewItem.DataContext is RegexResult regexResult
-                    && regexResult.FileName.Length > 0
-                    && !GetCurrentFileName().Equals(regexResult.FileName, StringComparison.OrdinalIgnoreCase))
+                    && regexResult is not RegexExcelSheetResult)
                 {
-                    if ((TryOpen?.Invoke(regexResult.FileName, false) ?? false)
+                    if (regexResult.FileName.Length > 0
+                        && !GetCurrentFileName().Equals(regexResult.FileName, StringComparison.OrdinalIgnoreCase)
+                        && (TryOpen?.Invoke(regexResult.FileName, false) ?? false)
                         && regexResult is not RegexFileResult)
                     {
                         SetPosition?.Invoke(regexResult.Index, regexResult.Length);
+                    }
+                    else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
+                    {
+                        OpenCellInExcel(regexResult);
                     }
 
                     e.Handled = true;
                 }
             }
             catch { }
+        }
+        
+        private void OpenCellInExcel(RegexResult regexResult)
+        {
+            var searchResult = regexResult;
+            RegexExcelSheetResult excelSheetResult = null;
+
+            while (searchResult != null)
+            {
+                if (searchResult is RegexExcelSheetResult result)
+                    excelSheetResult = result;
+                searchResult = searchResult.Parent;
+            }
+
+            if (excelSheetResult != null)
+            {
+                string launchExcelVbsScriptPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "LaunchExcelVbsScript.vbs");
+                Process.Start(launchExcelVbsScriptPath, $"\"{Config.Instance.TextSourceExcelPath}\" \"{excelSheetResult.SheetName}\" \"{regexResult.InfoSup}\"");
+            }
         }
 
         private void RegexLanguageElement_StackPanel_MouseDown(object sender, MouseButtonEventArgs e)

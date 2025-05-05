@@ -83,8 +83,7 @@ namespace RegexDialog {
         ///    }
         ///    //endmatch
         ///
-        ///    //group
-        ///    pu [rest of string was truncated]&quot;;.
+        ///    public string B [rest of string was truncated]&quot;;.
         /// </summary>
         public static string CSharpReplaceAutoCompleteTemplate {
             get {
