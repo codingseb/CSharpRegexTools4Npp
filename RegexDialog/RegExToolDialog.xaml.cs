@@ -12,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -1389,21 +1388,7 @@ namespace RegexDialog
                     }
                     else if(Config.Instance.TextSourceOn == RegexTextSource.Excel)
                     {
-                        var searchResult = regexResult;
-                        RegexExcelSheetResult excelSheetResult = null;
-
-                        while (searchResult != null)
-                        {
-                            if(searchResult is RegexExcelSheetResult)
-                                excelSheetResult = (RegexExcelSheetResult)searchResult;
-                            searchResult = searchResult.Parent;
-                        }
-
-                        if (excelSheetResult != null)
-                        {
-                            string launchExcelVbsScriptPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "LaunchExcelVbsScript.vbs");
-                            Process.Start(launchExcelVbsScriptPath, $"\"{Config.Instance.TextSourceExcelPath}\" \"{excelSheetResult.SheetName}\" \"{regexResult.InfoSup}\"");
-                        }
+                        OpenCellInExcel(regexResult);
                     }
 
                     e.Handled = true;
@@ -1430,27 +1415,32 @@ namespace RegexDialog
                     }
                     else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
                     {
-                        var searchResult = regexResult;
-                        RegexExcelSheetResult excelSheetResult = null;
-
-                        while (searchResult != null)
-                        {
-                            if (searchResult is RegexExcelSheetResult)
-                                excelSheetResult = (RegexExcelSheetResult)searchResult;
-                            searchResult = searchResult.Parent;
-                        }
-
-                        if (excelSheetResult != null)
-                        {
-                            string launchExcelVbsScriptPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "LaunchExcelVbsScript.vbs");
-                            Process.Start(launchExcelVbsScriptPath, $"\"{Config.Instance.TextSourceExcelPath}\" \"{excelSheetResult.SheetName}\" \"{regexResult.InfoSup}\"");
-                        }
+                        OpenCellInExcel(regexResult);
                     }
 
                     e.Handled = true;
                 }
             }
             catch { }
+        }
+        
+        private void OpenCellInExcel(RegexResult regexResult)
+        {
+            var searchResult = regexResult;
+            RegexExcelSheetResult excelSheetResult = null;
+
+            while (searchResult != null)
+            {
+                if (searchResult is RegexExcelSheetResult result)
+                    excelSheetResult = result;
+                searchResult = searchResult.Parent;
+            }
+
+            if (excelSheetResult != null)
+            {
+                string launchExcelVbsScriptPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "LaunchExcelVbsScript.vbs");
+                Process.Start(launchExcelVbsScriptPath, $"\"{Config.Instance.TextSourceExcelPath}\" \"{excelSheetResult.SheetName}\" \"{regexResult.InfoSup}\"");
+            }
         }
 
         private void RegexLanguageElement_StackPanel_MouseDown(object sender, MouseButtonEventArgs e)
