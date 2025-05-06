@@ -26,7 +26,7 @@ namespace RegexDialog
         [JsonIgnore]
         public ICommand EvaluateCommand => new RelayCommand(_ =>
         {
-            using(IXLWorkbook workbook = new XLWorkbook(Config.Instance.TextSourceExcelPath.MakeCopyIfLocked()))
+            using(XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath.MakeCopyIfLocked()))
             {
                 try
                 {
