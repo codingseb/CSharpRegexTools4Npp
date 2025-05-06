@@ -8,6 +8,7 @@ using Microsoft.Win32;
 using Newtonsoft.Json;
 using Ookii.Dialogs.Wpf;
 using RegexDialog.Behaviors;
+using RegexDialog.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -702,7 +703,7 @@ namespace RegexDialog
                     }
                     else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
                     {
-                        using (XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath))
+                        using (XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath.MakeCopyIfLocked()))
                         {
                             var elementNb = 0;
                             MatchResultsTreeView.ItemsSource = Config.Instance.ExcelSheets
@@ -1143,7 +1144,7 @@ namespace RegexDialog
                 }
                 else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
                 {
-                    using (XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath))
+                    using (XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath.MakeCopyIfLocked()))
                     {
                         Config.Instance.ExcelSheets
                           .FindAll(sheetSelection => sheetSelection.IsSelected)
@@ -1257,7 +1258,7 @@ namespace RegexDialog
                 }
                 else if (Config.Instance.TextSourceOn == RegexTextSource.Excel)
                 {
-                    using (XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath))
+                    using (XLWorkbook workbook = new(Config.Instance.TextSourceExcelPath.MakeCopyIfLocked()))
                     {
                         bool found = false;
                         string sheetName = string.Empty;

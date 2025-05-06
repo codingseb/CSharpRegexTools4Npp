@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
+using RegexDialog.Utils;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -188,7 +189,7 @@ namespace RegexDialog
                 isInit = false;
                 try
                 {
-                    using (XLWorkbook workbook = new(TextSourceExcelPath))
+                    using (XLWorkbook workbook = new(TextSourceExcelPath.MakeCopyIfLocked()))
                     {
                         ExcelSheets.ForEach(sheetSelection => sheetSelection.PropertyChanged -= SubPropertyChanged_PropertyChanged);
 

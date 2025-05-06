@@ -1,6 +1,7 @@
 ﻿using ClosedXML.Excel;
 using DocumentFormat.OpenXml.Bibliography;
 using Newtonsoft.Json;
+using RegexDialog.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace RegexDialog
         [JsonIgnore]
         public ICommand EvaluateCommand => new RelayCommand(_ =>
         {
-            using(IXLWorkbook workbook = new XLWorkbook(Config.Instance.TextSourceExcelPath))
+            using(IXLWorkbook workbook = new XLWorkbook(Config.Instance.TextSourceExcelPath.MakeCopyIfLocked()))
             {
                 try
                 {
