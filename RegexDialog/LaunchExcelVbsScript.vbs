@@ -46,7 +46,6 @@ End If
 xl.Visible = True
 
 ' Force Excel to the foreground
-xl.WindowState = -4143 ' xlMaximized
 Set sh = CreateObject("WScript.Shell")
 sh.AppActivate xl.Caption
 
