@@ -12,7 +12,7 @@ namespace RegexDialog.Utils
 
                 if (!File.Exists(destinationFile) || File.GetLastWriteTime(sourceFile) != File.GetLastWriteTime(destinationFile))
                 {
-                    File.Copy(sourceFile, destinationFile);                    
+                    File.Copy(sourceFile, destinationFile, true);                    
                 }
 
                 return destinationFile;
