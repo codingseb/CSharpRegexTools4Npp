@@ -234,7 +234,7 @@ namespace RegexDialog
         }
 
         private string ConvertToInputGestureText(KeyPressedEventArgs e) =>
-            $"{(e.Control ? "Ctrl+" : "")}{(e.Alt ? "Alt+" : "")}{(e.Shift ? "Shift+" : "")}{e.Key}";
+            $"{(e.Control ? "Ctrl+" : "")}{(e.Alt ? "Alt+" : "")}{(e.Shift ? "Shift+" : "")}{Regex.Replace(e.Key.ToString(), @"D(?=\d)", "")}";
 
         private readonly Dictionary<string, RoutedUICommand> hotkeyToCommand = new()
         {
@@ -256,6 +256,10 @@ namespace RegexDialog
 
         private async void KeyboardHookManager_KeyPressed(object sender, KeyPressedEventArgs e)
         {
+            List<Key> modifiers = [Key.LeftAlt, Key.RightAlt, Key.LeftCtrl, Key.RightCtrl, Key.LeftShift, Key.RightShift];
+            if (modifiers.Contains(e.Key))
+                return;
+
             hotkeyToAction ??= new()
             {
                 [$"Ctrl+{Key.Enter}"] = IsMatch,
@@ -269,7 +273,11 @@ namespace RegexDialog
                 ["Ctrl+R"] = ReplaceAll,
                 ["Ctrl+Shift+R"] = ReplaceAll,
                 ["Ctrl+Shift+C"] = ShowInCSharp,
-                ["Ctrl+F4"] = Close
+                ["Ctrl+F4"] = Close,
+                ["Alt+1"] = () => OptionTabControl.SelectedIndex = 0,
+                ["Alt+2"] = () => OptionTabControl.SelectedIndex = 1,
+                ["Alt+3"] = () => OptionTabControl.SelectedIndex = 2,
+                ["Alt+4"] = () => OptionTabControl.SelectedIndex = 3,
             };
 
             try
@@ -786,7 +794,6 @@ namespace RegexDialog
             try
             {
                 SetToHistory();
-
                 int files = 0;
                 string text;
 

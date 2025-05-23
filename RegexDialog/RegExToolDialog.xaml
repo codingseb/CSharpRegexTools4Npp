@@ -591,7 +591,7 @@
                 Name="OptionTabControl"
                 SelectedIndex="{Binding OptionTabControlSelectedTabItemIndex}"
                 Grid.Column="4">
-                <TabItem Name="RegexTabItem" Header="Regex _Language Elements" >
+                <TabItem Name="RegexTabItem" Header="Regex Language Elements" ToolTip="[Alt+1]" >
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition x:Name="RegexLanguageElementFirstRow" Height="*" MinHeight="50" />
@@ -720,7 +720,7 @@
                         </Border>
                     </Grid>
                 </TabItem>
-                <TabItem Name="ReplaceTabItem" Header="_Replace Elements" >
+                <TabItem Name="ReplaceTabItem" Header="Replace Elements" ToolTip="[Alt+2]">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition x:Name="ReplaceLanguageElementFirstRow" Height="*" MinHeight="50" />
@@ -751,7 +751,7 @@
                                      ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="RegOptionsTabItem" Header="Regex Op_tions" >
+                <TabItem x:Name="RegOptionsTabItem" Header="Regex Options" ToolTip="[Alt+3]">
                     <Grid>
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" MinHeight="50" />
@@ -789,7 +789,7 @@
                                  ScrollViewer.VerticalScrollBarVisibility="Auto"/>
                     </Grid>
                 </TabItem>
-                <TabItem x:Name="TextSourceTabItem" Header="Ot_her Options">
+                <TabItem x:Name="TextSourceTabItem" Header="Other Options" ToolTip="[Alt+4]">
                     <DockPanel>
                         <GroupBox Header="Results" 
                                   DockPanel.Dock="Bottom">
@@ -831,7 +831,7 @@
                                          IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='CSharpScript'}"/>
                                     <RadioButton x:Name="ExcelTextSourceRadioButton" 
                                          Margin="5,0"
-                                         Content="_Excel"
+                                         Content="E_xcel"
                                          IsChecked="{Binding TextSourceOn, Converter={converters:EnumBooleanConverter}, ConverterParameter='Excel'}"/>
                                 </WrapPanel>
 
