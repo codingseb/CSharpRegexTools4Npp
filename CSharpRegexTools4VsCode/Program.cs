@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Windows;
+using RegexDialog;
 
 namespace CSharpRegexTools4VsCode
 {
@@ -9,6 +10,9 @@ namespace CSharpRegexTools4VsCode
         [STAThread]
         static void Main()
         {
+            // Use a separate AppData folder so VS Code and Notepad++ configs don't conflict
+            PathUtils.AppDataFolderName = "CSharpRegexTools4VsCode";
+
             var app = new Application
             {
                 ShutdownMode = ShutdownMode.OnExplicitShutdown

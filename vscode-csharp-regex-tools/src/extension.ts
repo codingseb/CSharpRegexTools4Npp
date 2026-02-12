@@ -86,12 +86,13 @@ function registerEditorHandlers(conn: MessageConnection) {
         });
     });
 
-    conn.onRequest(editorSetPosition, ({ index, length }) => {
+    conn.onRequest(editorSetPosition, async ({ index, length }) => {
         const editor = getActiveEditor();
         const start = offsetToPosition(editor.document, index);
         const end = offsetToPosition(editor.document, index + length);
         editor.selection = new vscode.Selection(start, end);
         editor.revealRange(new vscode.Range(start, end), vscode.TextEditorRevealType.InCenterIfOutsideViewport);
+        await vscode.window.showTextDocument(editor.document, editor.viewColumn);
     });
 
     conn.onRequest(editorSetSelection, ({ index, length }) => {

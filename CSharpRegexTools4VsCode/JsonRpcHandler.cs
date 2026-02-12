@@ -1,5 +1,7 @@
 using System;
+using System.Runtime.InteropServices;
 using System.Windows;
+using System.Windows.Interop;
 using Microsoft.VisualStudio.Threading;
 using RegexDialog;
 using StreamJsonRpc;
@@ -8,6 +10,44 @@ namespace CSharpRegexTools4VsCode
 {
     class JsonRpcHandler
     {
+        [DllImport("user32.dll")]
+        private static extern bool SetForegroundWindow(IntPtr hWnd);
+
+        [DllImport("user32.dll")]
+        private static extern IntPtr GetForegroundWindow();
+
+        [DllImport("user32.dll")]
+        private static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+
+        [DllImport("kernel32.dll")]
+        private static extern uint GetCurrentThreadId();
+
+        [DllImport("user32.dll")]
+        private static extern bool AttachThreadInput(uint idAttach, uint idAttachTo, bool fAttach);
+
+        [DllImport("user32.dll")]
+        private static extern bool BringWindowToTop(IntPtr hWnd);
+
+        private static void ForceForegroundWindow(IntPtr hWnd)
+        {
+            var foregroundWindow = GetForegroundWindow();
+            var foregroundThread = GetWindowThreadProcessId(foregroundWindow, out _);
+            var currentThread = GetCurrentThreadId();
+
+            if (foregroundThread != currentThread)
+            {
+                AttachThreadInput(currentThread, foregroundThread, true);
+                BringWindowToTop(hWnd);
+                SetForegroundWindow(hWnd);
+                AttachThreadInput(currentThread, foregroundThread, false);
+            }
+            else
+            {
+                BringWindowToTop(hWnd);
+                SetForegroundWindow(hWnd);
+            }
+        }
+
         private readonly Application app;
         private readonly JoinableTaskContext jtc;
         private readonly JoinableTaskFactory jtf;
@@ -44,6 +84,9 @@ namespace CSharpRegexTools4VsCode
             {
                 if (dialog != null)
                 {
+                    if (dialog.WindowState == WindowState.Minimized)
+                        dialog.WindowState = WindowState.Normal;
+                    ForceForegroundWindow(new WindowInteropHelper(dialog).Handle);
                     dialog.Activate();
                     return;
                 }
@@ -78,6 +121,7 @@ namespace CSharpRegexTools4VsCode
                     GetCurrentFileName = () => InvokeOnRpcSync<string>("editor/getCurrentFileName")
                 };
 
+                dialog.Title = "[VS Code] " + dialog.Title;
                 dialog.Closed += (s, e) => dialog = null;
                 dialog.Show();
             });

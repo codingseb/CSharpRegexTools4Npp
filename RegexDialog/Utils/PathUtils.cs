@@ -7,6 +7,12 @@ namespace RegexDialog
     public static class PathUtils
     {
         /// <summary>
+        /// The subfolder name used under AppData for this application.
+        /// Set this before accessing Config or any AppData path to use a different folder per host IDE.
+        /// </summary>
+        public static string AppDataFolderName { get; set; } = "CSharpRegexTools4Npp";
+
+        /// <summary>
         /// The directory where the current application started
         /// </summary>
         public static string StartupPath
@@ -24,7 +30,7 @@ namespace RegexDialog
         {
             get
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "CSharpRegexTools4Npp");
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), AppDataFolderName);
             }
         }
 
@@ -35,7 +41,7 @@ namespace RegexDialog
         {
             get
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "CSharpRegexTools4Npp");
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), AppDataFolderName);
             }
         }
 

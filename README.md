@@ -60,6 +60,40 @@ To Launch the tools use one of these 3 methods :
   
 ![Text-sources](https://raw.githubusercontent.com/codingseb/CSharpRegexTools4Npp/master/doc/Text-Sources.png) 
 
+## VS Code Extension
+
+The same regex tools dialog is also available as a VS Code extension.
+
+### Prerequisites
+
+- .NET Framework 4.8.1
+- Visual Studio 2022+ (for building the C# host)
+- Node.js (for building the TypeScript extension)
+
+### Quick Start (Development)
+
+```
+cd vscode-csharp-regex-tools
+dev.bat
+```
+
+This builds the C# host exe, the TypeScript extension, and launches VS Code in Extension Development Host mode.
+
+### Installation (Release)
+
+```
+cd vscode-csharp-regex-tools
+release.bat
+```
+
+This builds everything in Release mode and copies the extension to `%USERPROFILE%\.vscode\extensions\csharp-regex-tools`. Restart VS Code to load.
+
+### Usage in VS Code
+
+- Press `Alt+Shift+H` or open the command palette (`Ctrl+Shift+P`) and search for "C# Regex Tools: Open"
+- The WPF dialog opens as a separate window with `[VS Code]` in the title
+- Settings are stored separately from the Notepad++ plugin in `%APPDATA%\CSharpRegexTools4VsCode\`
+
 ## Credits
 Based on : [NotepadPlusPlusPluginPack](https://github.com/kbilsted/NotepadPlusPlusPluginPack.Net) and from version 1.3.0.0 on [NppCSharpPluginPack](https://github.com/molsonkiko/NppCSharpPluginPack) ([Apache-2.0 license](https://github.com/molsonkiko/NppCSharpPluginPack?tab=Apache-2.0-1-ov-file#readme)) Merged manually with a part of the version used in [CS-Script.Npp](https://github.com/oleg-shilo/cs-script.npp) (under MIT license) for better x64 support and remodified for the way I use it.  
 use :  
