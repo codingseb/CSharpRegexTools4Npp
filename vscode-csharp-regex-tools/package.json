@@ -1,0 +1,52 @@
+{
+  "name": "csharp-regex-tools",
+  "displayName": "C# Regex Tools",
+  "description": "Regex tools using the .NET regex engine with syntax highlighting, match listing, replace, and C# scripting",
+  "version": "0.1.0",
+  "publisher": "CSharpRegexTools",
+  "engines": {
+    "vscode": "^1.85.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./dist/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "csharpRegexTools.open",
+        "title": "C# Regex Tools: Open"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "csharpRegexTools.open",
+        "key": "alt+shift+h"
+      }
+    ],
+    "configuration": {
+      "title": "C# Regex Tools",
+      "properties": {
+        "csharpRegexTools.executablePath": {
+          "type": "string",
+          "default": "",
+          "description": "Override the path to CSharpRegexTools4VsCode.exe. Leave empty to use the bundled executable."
+        }
+      }
+    }
+  },
+  "scripts": {
+    "build": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node",
+    "watch": "esbuild src/extension.ts --bundle --outfile=dist/extension.js --external:vscode --format=cjs --platform=node --watch",
+    "package": "npm run build -- --minify"
+  },
+  "dependencies": {
+    "vscode-jsonrpc": "^8.2.0"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.85.0",
+    "esbuild": "^0.20.0",
+    "typescript": "^5.3.0"
+  }
+}

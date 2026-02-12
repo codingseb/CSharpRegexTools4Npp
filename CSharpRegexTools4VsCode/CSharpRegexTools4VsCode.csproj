@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net481</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+    <OutputPath>bin\$(Configuration)\$(Platform)</OutputPath>
+    <Nullable>disable</Nullable>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    <Platforms>x64;x86</Platforms>
+    <RootNamespace>CSharpRegexTools4VsCode</RootNamespace>
+    <AssemblyName>CSharpRegexTools4VsCode</AssemblyName>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="StreamJsonRpc" Version="2.19.27" />
+    <PackageReference Include="Costura.Fody" Version="6.0.0" PrivateAssets="all" />
+    <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\RegexDialog\RegexDialog.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FodyWeavers.xml" />
+  </ItemGroup>
+  <Target Name="CopyToVsCodeExtension" AfterTargets="Build">
+    <PropertyGroup>
+      <VsCodeExtBinDir>$([System.IO.Path]::GetFullPath('$(MSBuildProjectDirectory)\..\vscode-csharp-regex-tools\bin\$(Platform)'))</VsCodeExtBinDir>
+    </PropertyGroup>
+    <MakeDir Directories="$(VsCodeExtBinDir)" />
+    <Copy SourceFiles="$(OutputPath)\$(AssemblyName).exe" DestinationFolder="$(VsCodeExtBinDir)" SkipUnchangedFiles="true" />
+  </Target>
+</Project>
